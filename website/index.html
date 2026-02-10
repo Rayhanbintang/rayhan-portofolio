@@ -864,8 +864,11 @@
         <div class="chat-container">
             <div class="chat-window">
                 <div class="chat-header">
-                    <div class="chat-status"></div>
-                    <h3>DevOps Assistant</h3>
+                    <div class="chat-status" id="chatStatus"></div>
+                    <div>
+                        <h3>DevOps Assistant</h3>
+                        <p style="margin: 0; font-size: 0.75rem; color: var(--text-muted);" id="botMode">Connecting...</p>
+                    </div>
                 </div>
                 <div class="chat-messages" id="chatMessages">
                     <div class="message bot">
@@ -892,13 +895,9 @@
                             class="chat-input" 
                             id="chatInput" 
                             placeholder="Type your question here..."
-                            disabled
                         >
-                        <button class="chat-send-btn" id="chatSendBtn" disabled>Send</button>
+                        <button class="chat-send-btn" id="chatSendBtn">Send</button>
                     </div>
-                    <p style="margin-top: 0.75rem; font-size: 0.85rem; color: var(--text-muted); font-family: 'JetBrains Mono', monospace;">
-                        💡 Note: Chat functionality requires backend integration (see documentation)
-                    </p>
                 </div>
             </div>
         </div>
@@ -934,17 +933,50 @@
     </footer>
 
     <script>
-        // Placeholder for chat functionality
-        // This would connect to your backend chatbot API
+        // Chatbot functionality
+        const API_URL = 'https://sue-vary-cruise-indicated.trycloudflare.com';
         
         const chatInput = document.getElementById('chatInput');
         const chatSendBtn = document.getElementById('chatSendBtn');
         const chatMessages = document.getElementById('chatMessages');
+        const chatStatus = document.getElementById('chatStatus');
+        const botMode = document.getElementById('botMode');
 
-        // Example: To enable the chat when backend is ready, uncomment below:
-        /*
-        chatInput.disabled = false;
-        chatSendBtn.disabled = false;
+        // Check backend status on load
+        checkBackendStatus();
+
+        async function checkBackendStatus() {
+            try {
+                const response = await fetch(`${API_URL}/health`);
+                const data = await response.json();
+                updateBotStatus(data.mode);
+            } catch (error) {
+                updateBotStatus('offline');
+            }
+        }
+
+        function updateBotStatus(mode) {
+            chatStatus.style.animation = 'none';
+            
+            if (mode === 'offline') {
+                chatStatus.style.background = '#ef4444';
+                botMode.textContent = 'Offline';
+                chatInput.disabled = true;
+                chatSendBtn.disabled = true;
+            } else if (mode === 'rule-based') {
+                chatStatus.style.background = 'var(--accent)';
+                chatStatus.style.animation = 'pulse 2s infinite';
+                botMode.textContent = 'Rule-based mode';
+                chatInput.disabled = false;
+                chatSendBtn.disabled = false;
+            } else if (mode === 'ai-powered') {
+                chatStatus.style.background = 'var(--success)';
+                chatStatus.style.animation = 'pulse 2s infinite';
+                botMode.textContent = 'AI-powered mode';
+                chatInput.disabled = false;
+                chatSendBtn.disabled = false;
+            }
+        }
 
         function sendMessage() {
             const message = chatInput.value.trim();
@@ -953,26 +985,36 @@
             // Add user message to chat
             addMessage('user', 'You', message);
             chatInput.value = '';
+            chatSendBtn.disabled = true;
 
             // Show typing indicator
             showTyping();
 
-            // Send to your backend API
-            fetch('YOUR_API_ENDPOINT', {
+            // Send to backend API
+            fetch(`${API_URL}/chat`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ message: message })
+                body: JSON.stringify({ message }),
             })
             .then(response => response.json())
             .then(data => {
                 hideTyping();
+                
+                // Update status if mode changed
+                if (data.mode) {
+                    updateBotStatus(data.mode);
+                }
+                
                 addMessage('bot', 'DevOps Assistant', data.reply);
+                chatSendBtn.disabled = false;
             })
             .catch(error => {
                 hideTyping();
                 addMessage('bot', 'DevOps Assistant', 'Sorry, I encountered an error. Please try again.');
+                updateBotStatus('offline');
+                chatSendBtn.disabled = false;
             });
         }
 
@@ -1014,7 +1056,6 @@
         chatInput.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') sendMessage();
         });
-        */
     </script>
 </body>
 </html>
