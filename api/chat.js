@@ -1,4 +1,4 @@
-export default function handler(req, res) {
+export default async function handler(req, res) {
   // Only allow POST
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
@@ -10,13 +10,87 @@ export default function handler(req, res) {
     return res.status(400).json({ error: 'Message is required' });
   }
 
-  // Get rule-based response
-  const reply = getRuleBasedResponse(message);
+  // Check if Ollama is available
+  const ollamaAvailable = await checkOllama();
+  
+  if (ollamaAvailable) {
+    // Use AI-powered response
+    try {
+      const aiReply = await getOllamaResponse(message);
+      return res.status(200).json({
+        reply: aiReply,
+        mode: 'ai-powered',
+        model: 'llama3'
+      });
+    } catch (error) {
+      // Fallback to rule-based if AI fails
+      const reply = getRuleBasedResponse(message);
+      return res.status(200).json({
+        reply,
+        mode: 'rule-based'
+      });
+    }
+  } else {
+    // Use rule-based response
+    const reply = getRuleBasedResponse(message);
+    return res.status(200).json({
+      reply,
+      mode: 'rule-based'
+    });
+  }
+}
 
-  res.status(200).json({
-    reply,
-    mode: 'rule-based'
+// Check if Ollama is available
+async function checkOllama() {
+  const OLLAMA_URL = process.env.OLLAMA_URL || 'http://localhost:11434';
+  
+  try {
+    const response = await fetch(`${OLLAMA_URL}/api/tags`, {
+      method: 'GET',
+      signal: AbortSignal.timeout(2000) // 2 second timeout
+    });
+    return response.ok;
+  } catch (error) {
+    return false;
+  }
+}
+
+// Get response from Ollama
+async function getOllamaResponse(message) {
+  const OLLAMA_URL = process.env.OLLAMA_URL || 'http://localhost:11434';
+  const OLLAMA_MODEL = process.env.OLLAMA_MODEL || 'llama3';
+  
+  const systemPrompt = `You are a helpful assistant for Rayhan Abdurrahim, a DevOps Engineer.
+
+You can answer questions about:
+- His expertise: AWS, Kubernetes, Terraform, Docker, CI/CD
+- Services: Infrastructure design, cloud migration, automation, security
+- Availability: Currently available for consulting projects
+- Rates: $100-150/hour depending on project scope
+- Contact: Use the contact form on the website
+
+Be friendly, professional, and concise. If asked technical questions, demonstrate deep knowledge.
+If someone wants to hire him, encourage them to use the contact form.`;
+
+  const response = await fetch(`${OLLAMA_URL}/api/generate`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      model: OLLAMA_MODEL,
+      prompt: `${systemPrompt}\n\nUser: ${message}\n\nAssistant:`,
+      stream: false
+    }),
+    signal: AbortSignal.timeout(30000) // 30 second timeout
   });
+
+  if (!response.ok) {
+    throw new Error('Ollama request failed');
+  }
+
+  const data = await response.json();
+  return data.response;
 }
 
 function getRuleBasedResponse(message) {
