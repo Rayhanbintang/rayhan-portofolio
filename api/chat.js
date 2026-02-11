@@ -20,7 +20,7 @@ export default async function handler(req, res) {
       return res.status(200).json({
         reply: aiReply,
         mode: 'ai-powered',
-        model: 'llama3.2:3b'
+        model: 'rayhan-assistant'
       });
     } catch (error) {
       // Fallback to rule-based if AI fails
@@ -58,57 +58,7 @@ async function checkOllama() {
 // Get response from Ollama
 async function getOllamaResponse(message) {
   const OLLAMA_URL = process.env.OLLAMA_URL || 'http://localhost:11434';
-  const OLLAMA_MODEL = process.env.OLLAMA_MODEL || 'llama3.2:3b';
-  
-  // Load knowledge base
-  const skills = require('./data/rayhan-skills.json');
-  const projects = require('./data/rayhan-projects.json');
-  const services = require('./data/rayhan-services.json');
-  const experience = require('./data/rayhan-experience.json');
-  
-  const systemPrompt = `You are a helpful assistant for ${skills.name}, a ${skills.title}.
-
-SUMMARY: ${skills.summary}
-
-SKILLS & EXPERTISE:
-${Object.entries(skills.skills).map(([category, items]) => 
-  `- ${category.toUpperCase()}: ${items.join(', ')}`
-).join('\n')}
-
-EXPERIENCE: ${skills.experience_years} years
-
-WORK HISTORY:
-${experience.work_experience.map(exp => 
-  `- ${exp.position} at ${exp.company} (${exp.period})`
-).join('\n')}
-
-EDUCATION:
-${experience.education.map(edu => 
-  `- ${edu.degree} from ${edu.institution} ${edu.year ? `(${edu.year})` : `(${edu.period})`}`
-).join('\n')}
-
-CERTIFICATIONS:
-${experience.certifications.map(cert => 
-  `- ${cert.name} (${cert.issuer}) - Valid: ${cert.validity}`
-).join('\n')}
-
-SERVICES OFFERED:
-${services.services.map(s => `- ${s}`).join('\n')}
-
-RATES: ${services.rates.hourly}
-${services.rates.note}
-
-NOTABLE PROJECTS:
-${projects.projects.map(p => 
-  `- ${p.client}: ${p.title} - ${p.description} (${p.technologies.join(', ')})`
-).join('\n')}
-
-CONTACT: ${services.contact.preferred_method}
-Email: ${skills.contact.email}
-Response time: ${services.contact.response_time}
-
-Be friendly, professional, and concise. If asked technical questions, demonstrate deep knowledge.
-If someone wants to hire him, encourage them to use the contact form.`;
+  const OLLAMA_MODEL = process.env.OLLAMA_MODEL || 'rayhan-assistant';
 
   const response = await fetch(`${OLLAMA_URL}/api/generate`, {
     method: 'POST',
@@ -117,7 +67,7 @@ If someone wants to hire him, encourage them to use the contact form.`;
     },
     body: JSON.stringify({
       model: OLLAMA_MODEL,
-      prompt: `${systemPrompt}\n\nUser: ${message}\n\nAssistant:`,
+      prompt: message,
       stream: false
     }),
     signal: AbortSignal.timeout(30000) // 30 second timeout
