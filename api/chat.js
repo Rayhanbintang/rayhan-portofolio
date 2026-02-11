@@ -20,7 +20,7 @@ export default async function handler(req, res) {
       return res.status(200).json({
         reply: aiReply,
         mode: 'ai-powered',
-        model: 'llama3'
+        model: 'llama3.2:3b'
       });
     } catch (error) {
       // Fallback to rule-based if AI fails
