@@ -1,0 +1,19 @@
+{
+  "services": [
+    "Cloud Architecture Design",
+    "Infrastructure Migration (on-prem to cloud)",
+    "CI/CD Pipeline Implementation",
+    "Container Orchestration Setup",
+    "Monitoring & Observability Solutions",
+    "DevOps Consulting & Training"
+  ],
+  "rates": {
+    "hourly": "$100-150/hour",
+    "note": "Project-based pricing available, long-term contracts negotiable"
+  },
+  "contact": {
+    "email": "rayhanbintang.work@gmail.com",
+    "response_time": "within 24 hours",
+    "preferred_method": "Contact form on website"
+  }
+}

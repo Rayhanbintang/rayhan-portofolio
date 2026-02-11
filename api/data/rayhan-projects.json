@@ -1,0 +1,67 @@
+{
+  "projects": [
+    {
+      "client": "Artajasa",
+      "title": "GKE to Amazon EKS Migration",
+      "description": "Led assessment, architecture design, and secure AWS network setup to migrate Kubernetes workloads from GKE to Amazon EKS",
+      "technologies": ["Amazon EKS", "Kubernetes", "AWS Networking", "Security"],
+      "impact": "Ensured scalability and operational stability"
+    },
+    {
+      "client": "Panin Dai-Ichi Life",
+      "title": "On-Premise Rancher to Amazon ECS Migration",
+      "description": "Migrated container workloads from on-premise Rancher to Amazon ECS",
+      "technologies": ["Amazon ECS", "Rancher", "AWS Networking", "Security"],
+      "impact": "Successful platform migration with security implementation"
+    },
+    {
+      "client": "BRI Danareksa",
+      "title": "DR Site & API Management Migration",
+      "description": "Designed and implemented AWS-based disaster recovery site and migrated on-premise API management to Amazon API Gateway",
+      "technologies": ["AWS", "Amazon API Gateway", "Disaster Recovery", "Security"],
+      "impact": "Secure network and access controls implementation"
+    },
+    {
+      "client": "Hibank",
+      "title": "GKE to Amazon EKS Migration",
+      "description": "Supported Kubernetes migration from GKE to Amazon EKS through assessment and architecture design",
+      "technologies": ["Amazon EKS", "Kubernetes", "AWS Security", "Networking"],
+      "impact": "AWS security and networking best practices implementation"
+    },
+    {
+      "client": "Bank Jawa Barat",
+      "title": "Greenfield AWS Platform with EKS & GitLab",
+      "description": "Built greenfield AWS environment with Amazon EKS and GitLab CI/CD",
+      "technologies": ["Amazon EKS", "GitLab CI/CD", "AWS", "Terraform"],
+      "impact": "Complete architecture design with network segmentation and security baseline"
+    },
+    {
+      "client": "Telkomsel",
+      "title": "Virtual Assistant - OpenShift to Amazon EKS Migration",
+      "description": "Migrated Virtual Assistant platform from on-premise OpenShift to Amazon EKS",
+      "technologies": ["Amazon EKS", "OpenShift", "Kubernetes", "AWS Security"],
+      "impact": "Secure AWS network and security setup"
+    },
+    {
+      "client": "Telkomsel",
+      "title": "MePro Application - OpenShift to Amazon EKS Migration",
+      "description": "Led migration of MePro application from on-premise OpenShift to Amazon EKS",
+      "technologies": ["Amazon EKS", "OpenShift", "AWS Security"],
+      "impact": "Platform assessment and architecture design implementation"
+    },
+    {
+      "client": "Telkomsel",
+      "title": "MePro Extension - AWS Modernization",
+      "description": "Modernized existing AWS environment by enhancing architecture and integrating CloudFront and Redis",
+      "technologies": ["AWS", "CloudFront", "Redis"],
+      "impact": "Improved performance, scalability, and reliability"
+    },
+    {
+      "client": "PT. Bayan Resources Tbk",
+      "title": "Disaster Recovery Site on AWS",
+      "description": "Delivered procurement and implementation of AWS-based disaster recovery site",
+      "technologies": ["AWS", "Disaster Recovery", "Security"],
+      "impact": "Architecture design with secure network and access configuration"
+    }
+  ]
+}

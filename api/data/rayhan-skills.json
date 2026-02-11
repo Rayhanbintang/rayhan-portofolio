@@ -1,0 +1,24 @@
+{
+  "name": "Rayhan Bintang Abdurrahim",
+  "title": "Technical Consultant - DevOps Specialist",
+  "summary": "AWS-certified DevOps and Cloud Engineer with 5 years of experience designing, migrating, and operating containerized platforms on AWS",
+  "skills": {
+    "cloud": ["Amazon Web Services (AWS)", "Amazon EKS", "Amazon ECS", "Amazon API Gateway", "CloudFront", "VPC", "Multi-AZ architectures"],
+    "containers": ["Kubernetes", "Docker", "Amazon EKS", "Amazon ECS", "OpenShift", "Rancher"],
+    "iac": ["Terraform", "Infrastructure as Code"],
+    "cicd": ["GitLab CI/CD", "CI/CD Pipeline Management"],
+    "os": ["Red Hat Enterprise Linux", "Windows Server"],
+    "programming": ["Python"],
+    "other": ["AI-Assisted Engineering (Amazon Q)", "Disaster Recovery", "Cloud Migration", "Security & Compliance"]
+  },
+  "experience_years": "5",
+  "availability": "Currently employed at PT Mitra Integrasi Informatika",
+  "location": "Jakarta",
+  "contact": {
+    "email": "rayhanbintang.work@gmail.com",
+    "phone": "+62 82216115286",
+    "github": "GitHub profile available",
+    "linkedin": "https://www.linkedin.com/in/rayhanbintang/",
+    "credly": "Credly profile available"
+  }
+}

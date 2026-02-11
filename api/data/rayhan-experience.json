@@ -1,0 +1,68 @@
+{
+  "work_experience": [
+    {
+      "company": "PT Mitra Integrasi Informatika",
+      "position": "Technical Consultant - DevOps Specialist",
+      "period": "Feb 2025 - Present",
+      "description": "DevOps and cloud engineer specializing in building, operating, and optimizing containerized platforms on AWS, with hands-on experience in both Amazon EKS and Amazon ECS"
+    },
+    {
+      "company": "PT Mastersystem Infotama",
+      "position": "System Engineer",
+      "period": "Dec 2021 - Jul 2024",
+      "description": "Specializing in designing and implementing resilient cloud solutions on AWS, tailored to meet unique and evolving client requirements"
+    },
+    {
+      "company": "PT Pertamina Training Center",
+      "position": "Junior Advisory Shared Service - Human Capital",
+      "period": "Sept 2020 - Dec 2021",
+      "description": "Analyzed company policies and employee behavior, driving development of customized internal application to optimize operational efficiency"
+    }
+  ],
+  "education": [
+    {
+      "institution": "Bandung Institute of Technology",
+      "degree": "Bachelor's Degree in Biomedical Engineering",
+      "year": "2020",
+      "location": "Bandung"
+    },
+    {
+      "institution": "Japanese Language Training",
+      "degree": "Business Communication & Technical Japanese",
+      "period": "Jul 2024 - Feb 2025",
+      "description": "Completed structured Japanese language training with focus on business communication and technical discussions"
+    }
+  ],
+  "certifications": [
+    {
+      "name": "AWS Certified DevOps Engineer – Professional",
+      "issuer": "Amazon Web Services (AWS)",
+      "validity": "Jun 2025 - Jun 2028"
+    },
+    {
+      "name": "AWS Certified Security – Specialty",
+      "issuer": "Amazon Web Services (AWS)",
+      "validity": "Nov 2025 - Nov 2028"
+    },
+    {
+      "name": "AWS Certified Solutions Architect - Professional",
+      "issuer": "Amazon Web Services (AWS)",
+      "validity": "Apr 2024 - Apr 2027"
+    },
+    {
+      "name": "Red Hat Certified System Administrator (RHCSA)",
+      "issuer": "Red Hat",
+      "validity": "Sept 2023 - Sept 2026"
+    },
+    {
+      "name": "AWS Certified Solutions Architect - Associate",
+      "issuer": "Amazon Web Services (AWS)",
+      "validity": "May 2022 - Apr 2027"
+    },
+    {
+      "name": "AWS Certified SysOps Administrator - Associate",
+      "issuer": "Amazon Web Services (AWS)",
+      "validity": "July 2022 - July 2025"
+    }
+  ]
+}
