@@ -258,6 +258,9 @@
         const chatStatus = document.getElementById('chatStatus');
         const botMode = document.getElementById('botMode');
 
+        // Conversation history (stored in browser session)
+        let conversationHistory = [];
+
         // Check backend status on load
         checkBackendStatus();
 
@@ -303,16 +306,25 @@
             chatInput.value = '';
             chatSendBtn.disabled = true;
 
+            // Add to conversation history
+            conversationHistory.push({
+                role: 'user',
+                content: message
+            });
+
             // Show typing indicator
             showTyping();
 
-            // Send to backend API
+            // Send to backend API with conversation history
             fetch(`${API_URL}/chat`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ message }),
+                body: JSON.stringify({ 
+                    message,
+                    conversationHistory: conversationHistory.slice(0, -1) // Send history without current message
+                }),
             })
             .then(response => response.json())
             .then(data => {
@@ -322,6 +334,12 @@
                 if (data.mode) {
                     updateBotStatus(data.mode);
                 }
+                
+                // Add assistant response to history
+                conversationHistory.push({
+                    role: 'assistant',
+                    content: data.reply
+                });
                 
                 addMessage('bot', 'DevOps Assistant', data.reply);
                 chatSendBtn.disabled = false;

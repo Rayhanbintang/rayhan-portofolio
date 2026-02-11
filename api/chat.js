@@ -4,7 +4,7 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const { message } = req.body;
+  const { message, conversationHistory } = req.body;
 
   if (!message) {
     return res.status(400).json({ error: 'Message is required' });
@@ -16,7 +16,7 @@ export default async function handler(req, res) {
   if (ollamaAvailable) {
     // Use AI-powered response
     try {
-      const aiReply = await getOllamaResponse(message);
+      const aiReply = await getOllamaResponse(message, conversationHistory || []);
       return res.status(200).json({
         reply: aiReply,
         mode: 'ai-powered',
@@ -56,11 +56,20 @@ async function checkOllama() {
 }
 
 // Get response from Ollama
-async function getOllamaResponse(message) {
+async function getOllamaResponse(message, conversationHistory) {
   const OLLAMA_URL = process.env.OLLAMA_URL || 'http://localhost:11434';
   const OLLAMA_MODEL = process.env.OLLAMA_MODEL || 'rayhan-assistant';
 
-  // Use /api/chat with empty context to avoid accumulation
+  // Build messages array with history (limit to last 10 messages to prevent slowdown)
+  const recentHistory = conversationHistory.slice(-10);
+  const messages = [
+    ...recentHistory,
+    {
+      role: 'user',
+      content: message
+    }
+  ];
+
   const response = await fetch(`${OLLAMA_URL}/api/chat`, {
     method: 'POST',
     headers: {
@@ -68,18 +77,13 @@ async function getOllamaResponse(message) {
     },
     body: JSON.stringify({
       model: OLLAMA_MODEL,
-      messages: [
-        {
-          role: 'user',
-          content: message
-        }
-      ],
+      messages: messages,
       stream: false,
       options: {
-        num_ctx: 2048  // Limit context window
+        num_ctx: 4096  // Increased for conversation context
       }
     }),
-    signal: AbortSignal.timeout(45000) // 45 second timeout
+    signal: AbortSignal.timeout(60000) // 60 second timeout for longer conversations
   });
 
   if (!response.ok) {
