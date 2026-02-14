@@ -30,6 +30,7 @@
         <div class="grid-background"></div>
         <div class="hero-content">
             <div class="hero-badge">DevOps Engineer</div>
+            <img src="professional shot.jpg" alt="Rayhan Bintang Abdurrahim" class="profile-photo">
             <h1>Rayhan Bintang Abdurrahim</h1>
             <p class="tagline">$ infrastructure as code --ship-fast --document-all</p>
             <div class="cta-buttons">
@@ -285,13 +286,13 @@
             } else if (mode === 'rule-based') {
                 chatStatus.style.background = 'var(--accent)';
                 chatStatus.style.animation = 'pulse 2s infinite';
-                botMode.textContent = 'Rule-based mode';
+                botMode.textContent = 'Rule-based mode - my machine is off :( comeback later for the AI-chatbot';
                 chatInput.disabled = false;
                 chatSendBtn.disabled = false;
             } else if (mode === 'ai-powered') {
                 chatStatus.style.background = 'var(--success)';
                 chatStatus.style.animation = 'pulse 2s infinite';
-                botMode.textContent = 'AI-powered mode (please be patient, running on my own machine, it will work :)';
+                botMode.textContent = 'AI-powered mode - please be patient, running on my local machine, it will work :)';
                 chatInput.disabled = false;
                 chatSendBtn.disabled = false;
             }

@@ -156,6 +156,17 @@ nav a:hover {
     font-family: 'JetBrains Mono', monospace;
 }
 
+.profile-photo {
+    width: 180px;
+    height: 180px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid var(--primary);
+    box-shadow: 0 0 30px rgba(0, 217, 255, 0.4);
+    margin: 0 auto 2rem;
+    display: block;
+}
+
 .hero h1 {
     font-size: 4rem;
     font-weight: 800;
