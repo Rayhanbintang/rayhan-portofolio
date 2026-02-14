@@ -61,7 +61,7 @@ if [ -n "$VERCEL_TOKEN" ] && [ -n "$VERCEL_PROJECT_ID" ] && [ -n "$VERCEL_ENV_ID
         
         # Trigger rebuild by creating empty commit
         echo "Triggering Vercel rebuild..."
-        git commit --allow-empty -m "Update OLLAMA_URL to $NGROK_URL"
+        git commit --allow-empty -m "Update OLLAMA_URL to current ngrock tunnel"
         git push
         echo "✓ Rebuild triggered"
     fi
