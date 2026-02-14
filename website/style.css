@@ -157,14 +157,21 @@ nav a:hover {
 }
 
 .profile-photo {
-    width: 180px;
-    height: 180px;
+    width: 280px;
+    height: 280px;
     border-radius: 50%;
     object-fit: cover;
     border: 4px solid var(--primary);
     box-shadow: 0 0 30px rgba(0, 217, 255, 0.4);
     margin: 0 auto 2rem;
     display: block;
+}
+
+@media (max-width: 768px) {
+    .profile-photo {
+        width: 180px;
+        height: 180px;
+    }
 }
 
 .hero h1 {
