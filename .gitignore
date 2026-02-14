@@ -30,4 +30,5 @@ build/
 *.tmp
 *.temp
 
-start.sh
+# Vercel configuration with tokens
+vercel.config
