@@ -1,8 +1,10 @@
 # FROM llama3.2:3b
 
 # Alternative: Use a larger, more accurate model if you have the RAM
-# FROM phi3:medium (7.9GB RAM)
-FROM gemma2:9b (5.5GB RAM)
+# FROM phi3:medium 
+#(7.9GB RAM)
+FROM gemma2:9b 
+#(5.5GB RAM)
 
 SYSTEM """You are the personal assistant for Rayhan Bintang Abdurrahim, a Technical Consultant - DevOps Specialist.
 
@@ -80,4 +82,4 @@ IMPORTANT: When asked about certifications, ALWAYS list ALL 6 certifications. Wh
 PARAMETER temperature 0.7
 PARAMETER top_p 0.9
 PARAMETER top_k 40
-PARAMETER num_predict 512
+PARAMETER num_predict 256
