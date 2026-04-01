@@ -1,3 +1,7 @@
+html {
+    scroll-behavior: smooth;
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -655,6 +659,70 @@ section {
     box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
 }
 
+.project-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Certifications */
+.certifications {
+    margin-top: 4rem;
+    text-align: center;
+}
+
+.certifications h3 {
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+    color: var(--text);
+}
+
+.cert-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: center;
+    margin-top: 1rem;
+}
+
+.cert-badge {
+    width: 100px;
+    height: 100px;
+    border-radius: 8px;
+    transition: transform 0.3s;
+    cursor: pointer;
+}
+
+.cert-badge:hover {
+    transform: scale(1.1);
+}
+
+/* Suggested questions */
+.suggested-questions {
+    display: flex;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    border-top: 1px solid var(--border);
+    flex-wrap: wrap;
+}
+
+.suggestion-btn {
+    padding: 0.4rem 0.9rem;
+    background: rgba(0, 217, 255, 0.08);
+    border: 1px solid rgba(0, 217, 255, 0.2);
+    border-radius: 2rem;
+    color: var(--primary);
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: 'Outfit', sans-serif;
+}
+
+.suggestion-btn:hover {
+    background: rgba(0, 217, 255, 0.18);
+    border-color: var(--primary);
+}
+
 /* Footer */
 footer {
     text-align: center;
@@ -668,7 +736,7 @@ footer {
 /* Responsive */
 @media (max-width: 768px) {
     .hero h1 {
-        font-size: 2.5rem;
+        font-size: 2rem;
     }
 
     .hero .tagline {
@@ -685,7 +753,21 @@ footer {
     }
 
     .chat-window {
-        height: 500px;
+        height: 400px;
+    }
+
+    .skill-card,
+    .project-card .project-content {
+        padding: 1.5rem;
+    }
+
+    .suggested-questions {
+        gap: 0.4rem;
+    }
+
+    .suggestion-btn {
+        font-size: 0.75rem;
+        padding: 0.35rem 0.7rem;
     }
 }
 
