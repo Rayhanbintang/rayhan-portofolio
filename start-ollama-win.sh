@@ -12,7 +12,7 @@ WINDOWS_HOST=$(ip route show | grep -i default | awk '{print $3}')
 echo "Windows host IP: $WINDOWS_HOST"
 
 # Verify Ollama is accessible
-if curl -s http://${WINDOWS_HOST}:11434/api/tags > /dev/null; then
+if curl -s http://localhost:11434/api/tags > /dev/null; then
     echo "✓ Ollama is accessible from WSL"
 else
     echo "✗ Cannot reach Ollama. Make sure it's running on Windows."
@@ -22,7 +22,7 @@ fi
 # Check if ngrok is running
 if ! pgrep -x "ngrok" > /dev/null; then
     echo "Starting ngrok..."
-    ngrok http ${WINDOWS_HOST}:11434 --log=stdout > ngrok.log 2>&1 &
+    ngrok http localhost:11434 --log=stdout > ngrok.log 2>&1 &
     sleep 5  # Give ngrok more time to start
 else
     echo "ngrok already running"
@@ -49,7 +49,7 @@ if [ -z "$NGROK_URL" ]; then
 fi
 
 if [ -z "$NGROK_URL" ]; then
-    echo "Failed to get ngrok URL. Debug info:"
+    echo "Failed to get ngrok URL. Debug info:"what
     echo ""
     echo "=== ngrok API response ==="
     curl -s http://localhost:4040/api/tunnels | jq . || curl -s http://localhost:4040/api/tunnels

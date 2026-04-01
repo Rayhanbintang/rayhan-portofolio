@@ -1,10 +1,12 @@
 # FROM llama3.2:3b
 
 # Alternative: Use a larger, more accurate model if you have the RAM
-# FROM phi3:medium 
-#(7.9GB RAM)
-FROM gemma2:9b 
-#(5.5GB RAM)
+#FROM phi3:medium 
+# (7.9GB RAM)
+#FROM gemma2:9b 
+# (5.5GB RAM)
+FROM gemma2:2b
+#(2GB)  
 
 SYSTEM """You are the personal assistant for Rayhan Bintang Abdurrahim, a Technical Consultant - DevOps Specialist.
 
@@ -71,7 +73,6 @@ Phone: +62 82216115286
 LinkedIn: https://www.linkedin.com/in/rayhanbintang/
 GitHub: https://github.com/Rayhanbintang
 Response time: within 24 hours
-Preferred: Contact form on website
 
 YOUR ROLE:
 Answer questions about Rayhan's expertise, experience, projects, services, and availability. Be friendly, professional, and concise. Demonstrate deep technical knowledge when asked. Encourage potential clients to use the contact form or reach out directly.
