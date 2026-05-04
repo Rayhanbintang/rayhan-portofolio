@@ -4,6 +4,12 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Rayhan Bintang Abdurrahim — Architecture</title>
+<meta name="description" content="Rayhan Bintang Abdurrahim — Technical Consultant & DevOps Specialist. 5 years on AWS, EKS/ECS migrations, Terraform IaC. 7× certified. Jakarta.">
+<meta property="og:title" content="Rayhan Bintang Abdurrahim — DevOps Engineer">
+<meta property="og:description" content="Interactive AWS architecture portfolio. EKS migrations, Terraform, GitLab CI/CD. 7× certified.">
+<meta property="og:url" content="https://rayhan-portfolio-seven.vercel.app">
+<meta property="og:type" content="website">
+<meta name="google-site-verification" content="google805e565b94158e9b">
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
@@ -388,10 +394,12 @@
   .chat-header .dots span:nth-child(2) { background: oklch(0.78 0.15 80); }
   .chat-header .dots span:nth-child(3) { background: oklch(0.72 0.15 150); }
   .chat-header .title { flex: 1; color: var(--ink-3); }
+  .chat-mode { display: flex; flex-direction: column; gap: 2px; text-align: right; }
   .chat-header .status { color: var(--ink-3); }
   .chat-header .status[data-mode="ai-powered"] { color: var(--ok); }
   .chat-header .status[data-mode="rule-based"] { color: var(--warn); }
-  .chat-header .status[data-mode="offline"] { color: oklch(0.65 0.18 30); }
+  .chat-header .status[data-mode="offline"] { color: var(--warn); }
+  #chat-desc { font-size: 10px; color: var(--ink-3); }
   .chat-body { flex: 1; padding: 18px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; font-family: 'JetBrains Mono', monospace; font-size: 13px; }
   .msg { display: flex; gap: 10px; align-items: flex-start; }
   .msg-avatar { width: 26px; height: 26px; border-radius: 6px; flex-shrink: 0; display: grid; place-items: center; font-size: 11px; font-weight: 700; }
@@ -483,6 +491,7 @@
     <div class="breadcrumbs mono">~/<span>portfolio</span>/<span>rayhan</span> · <span style="color: var(--ok);">healthy</span> · uptime <span>3y 4mo</span></div>
     <div class="topbar-actions">
       <a class="btn" href="#chat">$ ask</a>
+      <a class="btn" href="projects.html">All projects →</a>
       <a class="btn btn-primary" href="assets/Rayhan%20Bintang%20Abdurrahim_1426.pdf" target="_blank">↓ resume.pdf</a>
     </div>
   </div>
@@ -915,7 +924,10 @@
       <div class="chat-header mono">
         <div class="dots"><span></span><span></span><span></span></div>
         <span class="title">~/devops-assistant</span>
-        <span class="status" id="chat-status" data-mode="checking">● checking…</span>
+        <div class="chat-mode">
+          <span class="status" id="chat-status" data-mode="checking">● checking…</span>
+          <span id="chat-desc"></span>
+        </div>
       </div>
       <div class="chat-body" id="chat-body">
         <div class="msg bot">
@@ -1084,17 +1096,19 @@ function appendTyping() {
 
 const messages = [];
 const chatStatus = document.getElementById('chat-status');
+const chatDesc = document.getElementById('chat-desc');
 
-const STATUS_LABEL = {
-  'ai-powered': '● ai-powered',
-  'rule-based': '● rule-based',
-  'offline':    '● offline',
-  'checking':   '● checking…'
+const STATUS_CONFIG = {
+  'ai-powered': { label: '● connected',       desc: 'running LLM on my local pc, please be patient' },
+  'rule-based': { label: '● rule-based mode', desc: 'my pc is napping, try again later' },
+  'offline':    { label: '● rule-based mode', desc: 'my pc is napping, try again later' },
+  'checking':   { label: '● checking…',       desc: '' }
 };
 function setStatus(mode) {
-  if (!STATUS_LABEL[mode]) return;
-  chatStatus.dataset.mode = mode;
-  chatStatus.textContent = STATUS_LABEL[mode];
+  const cfg = STATUS_CONFIG[mode] || STATUS_CONFIG['checking'];
+  chatStatus.dataset.mode = mode === 'offline' ? 'offline' : mode;
+  chatStatus.textContent = cfg.label;
+  chatDesc.textContent = cfg.desc;
 }
 
 (async () => {

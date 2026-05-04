@@ -1,0 +1,321 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Projects — Rayhan Bintang Abdurrahim</title>
+<meta name="description" content="Full project portfolio of Rayhan Bintang Abdurrahim — 9 enterprise cloud engagements across Indonesian banking, telco, and finance, plus personal builds.">
+<meta property="og:title" content="Projects — Rayhan Bintang Abdurrahim">
+<meta property="og:description" content="Enterprise EKS/ECS migrations, AWS greenfield builds, DR sites, and personal side-gigs. 9 client engagements shipped.">
+<meta property="og:url" content="https://rayhan-portfolio-seven.vercel.app/projects.html">
+<meta property="og:type" content="website">
+<meta name="google-site-verification" content="google805e565b94158e9b">
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: oklch(0.16 0.025 250);
+    --bg-2: oklch(0.20 0.028 250);
+    --bg-3: oklch(0.24 0.030 250);
+    --line: oklch(0.32 0.030 250);
+    --line-soft: oklch(0.26 0.025 250);
+    --ink: oklch(0.96 0.010 250);
+    --ink-2: oklch(0.78 0.020 250);
+    --ink-3: oklch(0.58 0.020 250);
+    --accent: oklch(0.78 0.16 220);
+    --accent-2: oklch(0.78 0.16 60);
+    --ok: oklch(0.78 0.16 150);
+    --warn: oklch(0.80 0.16 80);
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Inter', system-ui, sans-serif;
+    font-feature-settings: 'ss01', 'cv11';
+    overflow-x: hidden;
+  }
+  .mono { font-family: 'JetBrains Mono', ui-monospace, monospace; }
+  a { color: inherit; text-decoration: none; }
+  button { font: inherit; color: inherit; background: none; border: none; cursor: pointer; padding: 0; }
+
+  .grid-bg {
+    position: fixed; inset: 0; pointer-events: none; z-index: 0;
+    background-image: radial-gradient(circle, oklch(0.30 0.030 250) 1px, transparent 1px);
+    background-size: 28px 28px;
+    mask-image: radial-gradient(ellipse at center, black 30%, transparent 80%);
+  }
+  .root { position: relative; z-index: 1; }
+
+  /* topbar */
+  .topbar {
+    position: sticky; top: 0; z-index: 50;
+    backdrop-filter: blur(10px);
+    background: oklch(0.16 0.025 250 / 0.7);
+    border-bottom: 1px solid var(--line-soft);
+  }
+  .topbar-inner {
+    max-width: 1400px; margin: 0 auto; padding: 14px 28px;
+    display: flex; align-items: center; gap: 20px;
+  }
+  .brand {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 700; font-size: 14px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .brand-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--ok); box-shadow: 0 0 8px var(--ok); animation: pulse 2s infinite; }
+  @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.4; } }
+  .breadcrumbs { color: var(--ink-3); font-family: 'JetBrains Mono', monospace; font-size: 12px; flex: 1; }
+  .breadcrumbs span { color: var(--ink); }
+  .topbar-actions { display: flex; gap: 8px; }
+  .btn {
+    padding: 8px 14px; border-radius: 8px; border: 1px solid var(--line);
+    font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 500;
+    background: var(--bg-2); color: var(--ink);
+    transition: all 0.15s;
+    display: inline-flex; align-items: center; gap: 6px;
+  }
+  .btn:hover { border-color: var(--accent); background: var(--bg-3); }
+  .btn-primary { background: var(--accent); color: oklch(0.15 0.025 250); border-color: var(--accent); font-weight: 600; }
+  .btn-primary:hover { background: oklch(0.85 0.16 220); }
+
+  /* sections */
+  .section {
+    max-width: 1400px; margin: 80px auto 0; padding: 0 28px;
+  }
+  .section-head {
+    display: flex; align-items: end; justify-content: space-between; margin-bottom: 28px;
+    border-bottom: 1px solid var(--line-soft); padding-bottom: 18px;
+  }
+  .section-head h2 {
+    font-size: 36px; font-weight: 700; margin: 0; letter-spacing: -0.02em;
+  }
+  .section-head .tag {
+    font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--ink-3);
+  }
+  .section-head .tag span { color: var(--accent); }
+
+  /* project cards grid */
+  .project-cards {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+  .proj-card {
+    background: var(--bg-2);
+    border: 1px solid var(--line-soft);
+    border-radius: 14px;
+    padding: 24px;
+    transition: all 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+  .proj-card:hover { border-color: var(--accent); transform: translateY(-2px); box-shadow: 0 12px 30px -10px oklch(0.05 0.05 250 / 0.6); }
+  .proj-card::before {
+    content: attr(data-num);
+    position: absolute; top: 16px; right: 18px;
+    font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--ink-3);
+  }
+  .client-badge {
+    display: inline-block;
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    background: var(--bg-3); border: 1px solid var(--line-soft);
+    color: var(--ink-3); padding: 2px 8px; border-radius: 4px;
+    margin-bottom: 10px; letter-spacing: 0.04em;
+  }
+  .proj-card h3 {
+    font-size: 18px; margin: 0 0 10px; font-weight: 700; letter-spacing: -0.02em;
+    padding-right: 40px;
+  }
+  .proj-impact {
+    font-size: 14px; color: var(--ink-2); line-height: 1.5; margin: 0 0 16px;
+  }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; }
+  .chip {
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    padding: 3px 8px; border-radius: 4px;
+    background: var(--bg-3); border: 1px solid var(--line-soft); color: var(--ink-2);
+  }
+
+  /* era divider */
+  .era-label {
+    font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--ink-3);
+    letter-spacing: 0.08em; text-transform: uppercase;
+    margin: 28px 0 14px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .era-label::after {
+    content: ''; flex: 1; height: 1px; background: var(--line-soft);
+  }
+
+  /* footer */
+  footer {
+    max-width: 1400px; margin: 80px auto 0; padding: 28px;
+    border-top: 1px solid var(--line-soft);
+    display: flex; justify-content: space-between; align-items: center;
+    font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--ink-3);
+  }
+
+  @media (max-width: 980px) {
+    .project-cards { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="grid-bg"></div>
+<div class="root">
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="brand mono"><span class="brand-dot"></span> RA::DevOps</div>
+    <div class="breadcrumbs mono">~/<span>portfolio</span>/<span>rayhan</span>/<span>projects</span></div>
+    <div class="topbar-actions">
+      <a class="btn" href="index.html">← home</a>
+      <a class="btn btn-primary" href="assets/Rayhan%20Bintang%20Abdurrahim_1426.pdf" target="_blank">↓ resume.pdf</a>
+    </div>
+  </div>
+</header>
+
+<!-- ENTERPRISE WORK -->
+<section class="section" id="work">
+  <div class="section-head">
+    <h2>Work in production.</h2>
+    <span class="tag mono">// 9 engagements · <span>all shipped</span></span>
+  </div>
+
+  <div class="era-label">PT Mitra Integrasi Informatika · Feb 2025 – present</div>
+  <div class="project-cards">
+
+    <div class="proj-card" data-num="#01">
+      <span class="client-badge mono">Artajasa</span>
+      <h3>GKE to Amazon EKS Migration</h3>
+      <p class="proj-impact">Led assessment, architecture design, and secure AWS network setup to migrate Kubernetes workloads from Google Kubernetes Engine to Amazon EKS. Ensured scalability and operational stability post-migration.</p>
+      <div class="chips">
+        <span class="chip">Amazon EKS</span><span class="chip">Kubernetes</span><span class="chip">AWS Networking</span><span class="chip">Security</span>
+      </div>
+    </div>
+
+    <div class="proj-card" data-num="#02">
+      <span class="client-badge mono">Hibank</span>
+      <h3>GKE to Amazon EKS Migration</h3>
+      <p class="proj-impact">Supported Kubernetes migration from GKE to Amazon EKS through comprehensive platform assessment and architecture design. Implemented AWS security and networking best practices throughout.</p>
+      <div class="chips">
+        <span class="chip">Amazon EKS</span><span class="chip">Kubernetes</span><span class="chip">AWS Security</span><span class="chip">Networking</span>
+      </div>
+    </div>
+
+    <div class="proj-card" data-num="#03">
+      <span class="client-badge mono">Panin Dai-Ichi Life</span>
+      <h3>On-Premise Rancher to Amazon ECS Migration</h3>
+      <p class="proj-impact">Migrated container workloads from on-premise Rancher to Amazon ECS — full platform migration with security implementation and minimal disruption to production operations.</p>
+      <div class="chips">
+        <span class="chip">Amazon ECS</span><span class="chip">Rancher</span><span class="chip">AWS Networking</span><span class="chip">Security</span>
+      </div>
+    </div>
+
+    <div class="proj-card" data-num="#04">
+      <span class="client-badge mono">BRI Danareksa</span>
+      <h3>DR Site & API Management Migration</h3>
+      <p class="proj-impact">Designed and implemented an AWS-based disaster recovery site and migrated on-premise API management to Amazon API Gateway. Delivered secure network architecture and access controls.</p>
+      <div class="chips">
+        <span class="chip">AWS</span><span class="chip">Amazon API Gateway</span><span class="chip">Disaster Recovery</span><span class="chip">Security</span>
+      </div>
+    </div>
+
+    <div class="proj-card" data-num="#05">
+      <span class="client-badge mono">Bank Jawa Barat</span>
+      <h3>Greenfield AWS Platform with EKS & GitLab</h3>
+      <p class="proj-impact">Built a greenfield AWS environment from scratch — Amazon EKS cluster, GitLab CI/CD pipelines, full network segmentation, and a security baseline. Complete architecture design with Terraform IaC.</p>
+      <div class="chips">
+        <span class="chip">Amazon EKS</span><span class="chip">GitLab CI/CD</span><span class="chip">Terraform</span><span class="chip">AWS</span>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="era-label" style="margin-top: 40px;">PT Mastersystem Infotama · Dec 2021 – Jul 2024</div>
+  <div class="project-cards">
+
+    <div class="proj-card" data-num="#06">
+      <span class="client-badge mono">Telkomsel</span>
+      <h3>Virtual Assistant — OpenShift to Amazon EKS</h3>
+      <p class="proj-impact">Migrated Telkomsel's Virtual Assistant platform from on-premise OpenShift to Amazon EKS. Delivered secure AWS network configuration and end-to-end security setup at enterprise scale.</p>
+      <div class="chips">
+        <span class="chip">Amazon EKS</span><span class="chip">OpenShift</span><span class="chip">Kubernetes</span><span class="chip">AWS Security</span>
+      </div>
+    </div>
+
+    <div class="proj-card" data-num="#07">
+      <span class="client-badge mono">Telkomsel</span>
+      <h3>MePro — OpenShift to Amazon EKS Migration</h3>
+      <p class="proj-impact">Led migration of the MePro application from on-premise OpenShift to Amazon EKS. Performed platform assessment and architecture design with full AWS security implementation.</p>
+      <div class="chips">
+        <span class="chip">Amazon EKS</span><span class="chip">OpenShift</span><span class="chip">AWS Security</span>
+      </div>
+    </div>
+
+    <div class="proj-card" data-num="#08">
+      <span class="client-badge mono">Telkomsel</span>
+      <h3>MePro Extension — AWS Modernization</h3>
+      <p class="proj-impact">Modernized the existing MePro AWS environment by enhancing the architecture and integrating CloudFront for global delivery and Redis for caching. Improved performance, scalability, and reliability.</p>
+      <div class="chips">
+        <span class="chip">AWS</span><span class="chip">CloudFront</span><span class="chip">Redis</span>
+      </div>
+    </div>
+
+    <div class="proj-card" data-num="#09">
+      <span class="client-badge mono">PT. Bayan Resources Tbk</span>
+      <h3>Disaster Recovery Site on AWS</h3>
+      <p class="proj-impact">Delivered procurement and implementation of an AWS-based disaster recovery site. Designed secure network architecture with strict access controls to meet enterprise continuity requirements.</p>
+      <div class="chips">
+        <span class="chip">AWS</span><span class="chip">Disaster Recovery</span><span class="chip">Security</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- SIDE-GIG & PERSONAL -->
+<section class="section" id="personal">
+  <div class="section-head">
+    <h2>Personal builds.</h2>
+    <span class="tag mono">// side-gig · <span>self-hosted</span></span>
+  </div>
+  <div class="project-cards">
+
+    <div class="proj-card" data-num="⚡">
+      <span class="client-badge mono">side-gig</span>
+      <h3>This Portfolio — Interactive Architecture Site</h3>
+      <p class="proj-impact">Personal portfolio built as an interactive AWS-style architecture diagram — because a DevOps engineer's site should look like a system diagram. Features a self-hosted AI assistant running on a local Ollama instance, tunneled via ngrok and served through a Vercel serverless endpoint. Rule-based fallback kicks in automatically when the local LLM is offline.</p>
+      <div class="chips">
+        <span class="chip">Vanilla HTML/CSS/JS</span><span class="chip">Vercel</span><span class="chip">Ollama</span><span class="chip">Ngrok</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<footer>
+  <div>© 2026 Rayhan Bintang Abdurrahim · built with infrastructure-as-code principles</div>
+  <div>uptime 100% · last deploy: just now</div>
+</footer>
+
+</div>
+
+<script>
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    const id = a.getAttribute('href');
+    if (id.length > 1) {
+      const target = document.querySelector(id);
+      if (target) { e.preventDefault(); target.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+    }
+  });
+});
+</script>
+
+</body>
+</html>
