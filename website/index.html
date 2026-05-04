@@ -1,507 +1,1131 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rayhan Abdurrahim - AWS DevOps Engineer | Kubernetes & Terraform Expert</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Rayhan Bintang Abdurrahim — Architecture</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: oklch(0.16 0.025 250);
+    --bg-2: oklch(0.20 0.028 250);
+    --bg-3: oklch(0.24 0.030 250);
+    --line: oklch(0.32 0.030 250);
+    --line-soft: oklch(0.26 0.025 250);
+    --ink: oklch(0.96 0.010 250);
+    --ink-2: oklch(0.78 0.020 250);
+    --ink-3: oklch(0.58 0.020 250);
+    --accent: oklch(0.78 0.16 220);
+    --accent-2: oklch(0.78 0.16 60);
+    --ok: oklch(0.78 0.16 150);
+    --warn: oklch(0.80 0.16 80);
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Inter', system-ui, sans-serif;
+    font-feature-settings: 'ss01', 'cv11';
+    overflow-x: hidden;
+  }
+  .mono { font-family: 'JetBrains Mono', ui-monospace, monospace; }
+  a { color: inherit; text-decoration: none; }
+  button { font: inherit; color: inherit; background: none; border: none; cursor: pointer; padding: 0; }
 
-    <!-- SEO Meta Tags -->
-    <meta name="description" content="AWS-certified DevOps Engineer with 5+ years experience. Specializing in Kubernetes, Terraform, AWS EKS, and Infrastructure as Code. Based in Jakarta, Indonesia.">
-    <meta name="keywords" content="DevOps Engineer, AWS, Kubernetes, Terraform, Docker, Infrastructure as Code, Jakarta, Indonesia, Cloud Migration, EKS, CI/CD">
-    <meta name="author" content="Rayhan Bintang Abdurrahim">
-    <meta name="robots" content="index, follow">
-    <link rel="canonical" href="https://rayhan-portofolio-seven.vercel.app">
+  /* dotted grid background */
+  .grid-bg {
+    position: fixed; inset: 0; pointer-events: none; z-index: 0;
+    background-image: radial-gradient(circle, oklch(0.30 0.030 250) 1px, transparent 1px);
+    background-size: 28px 28px;
+    mask-image: radial-gradient(ellipse at center, black 30%, transparent 80%);
+  }
 
-    <!-- Geo Tags -->
-    <meta name="geo.region" content="ID-JK">
-    <meta name="geo.placename" content="Jakarta">
-    <meta name="geo.position" content="-6.2088;106.8456">
-    <meta name="ICBM" content="-6.2088, 106.8456">
+  .root { position: relative; z-index: 1; }
 
-    <!-- Open Graph -->
-    <meta property="og:title" content="Rayhan Abdurrahim - DevOps Engineer">
-    <meta property="og:description" content="AWS-certified DevOps Engineer specializing in Kubernetes, Terraform, and Infrastructure as Code">
-    <meta property="og:image" content="https://rayhan-portofolio-seven.vercel.app/assets/featured-image.png">
-    <meta property="og:url" content="https://rayhan-portofolio-seven.vercel.app">
-    <meta property="og:type" content="website">
+  /* topbar */
+  .topbar {
+    position: sticky; top: 0; z-index: 50;
+    backdrop-filter: blur(10px);
+    background: oklch(0.16 0.025 250 / 0.7);
+    border-bottom: 1px solid var(--line-soft);
+  }
+  .topbar-inner {
+    max-width: 1400px; margin: 0 auto; padding: 14px 28px;
+    display: flex; align-items: center; gap: 20px;
+  }
+  .brand {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 700; font-size: 14px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .brand-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--ok); box-shadow: 0 0 8px var(--ok); animation: pulse 2s infinite; }
+  @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.4; } }
+  .breadcrumbs { color: var(--ink-3); font-family: 'JetBrains Mono', monospace; font-size: 12px; flex: 1; }
+  .breadcrumbs span { color: var(--ink); }
+  .topbar-actions { display: flex; gap: 8px; }
+  .btn {
+    padding: 8px 14px; border-radius: 8px; border: 1px solid var(--line);
+    font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 500;
+    background: var(--bg-2); color: var(--ink);
+    transition: all 0.15s;
+    display: inline-flex; align-items: center; gap: 6px;
+  }
+  .btn:hover { border-color: var(--accent); background: var(--bg-3); }
+  .btn-primary { background: var(--accent); color: oklch(0.15 0.025 250); border-color: var(--accent); font-weight: 600; }
+  .btn-primary:hover { background: oklch(0.85 0.16 220); }
 
-    <!-- Twitter Card -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Rayhan Abdurrahim - DevOps Engineer">
-    <meta name="twitter:description" content="Infrastructure as Code specialist. AWS, Kubernetes, Terraform expert.">
-    <meta name="twitter:image" content="https://rayhan-portofolio-seven.vercel.app/assets/featured-image.png">
+  /* hero / canvas */
+  .hero {
+    max-width: 1400px; margin: 0 auto; padding: 28px 28px 0;
+  }
+  .hero-meta {
+    display: flex; align-items: center; gap: 12px; font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    color: var(--ink-3); margin-bottom: 18px; letter-spacing: 0.04em;
+  }
+  .hero-meta .pill {
+    border: 1px solid var(--line); padding: 4px 10px; border-radius: 999px;
+  }
+  .hero-meta .pill.live { color: var(--ok); border-color: oklch(0.40 0.10 150); }
+  .hero-meta .pill.live::before { content: '●'; margin-right: 6px; animation: pulse 2s infinite; }
+  .hero h1 {
+    font-family: 'Inter', sans-serif;
+    font-size: clamp(36px, 5vw, 72px);
+    line-height: 1.02;
+    margin: 0 0 28px;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    max-width: 18ch;
+    text-wrap: balance;
+  }
+  .hero h1 .accent { color: var(--accent); }
+  .hero h1 .strike { color: var(--ink-3); text-decoration: line-through; text-decoration-thickness: 3px; }
+  .hero p.lede {
+    font-size: 19px; line-height: 1.5; color: var(--ink-2); max-width: 720px; margin: 0 0 24px;
+  }
+  .hero p.lede code {
+    font-family: 'JetBrains Mono', monospace;
+    background: var(--bg-2); border: 1px solid var(--line-soft); padding: 1px 6px; border-radius: 4px;
+    font-size: 14px; color: var(--accent);
+  }
+  .hero-cta { display: flex; gap: 10px; flex-wrap: wrap; }
 
-    <!-- Favicon -->
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='75' font-size='75' fill='%2300d9ff'>RA</text></svg>">
+  /* DIAGRAM */
+  .diagram-wrap {
+    position: relative; max-width: 1400px; margin: 60px auto 0; padding: 0 28px;
+  }
+  .diagram-title { display: flex; align-items: baseline; gap: 12px; margin-bottom: 20px; }
+  .diagram-title h2 { font-size: 14px; font-family: 'JetBrains Mono', monospace; color: var(--ink-3); margin: 0; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; }
+  .diagram-title .hint { font-size: 12px; color: var(--ink-3); font-family: 'JetBrains Mono', monospace; }
+  .diagram-title .hint kbd {
+    border: 1px solid var(--line); padding: 1px 6px; border-radius: 4px; background: var(--bg-2); font-size: 11px;
+  }
+  .diagram {
+    position: relative;
+    height: 760px;
+    border: 1px solid var(--line-soft);
+    border-radius: 16px;
+    background:
+      linear-gradient(var(--bg-2), var(--bg-2)),
+      radial-gradient(circle at 50% 50%, oklch(0.22 0.04 250), var(--bg-2));
+    background-blend-mode: normal;
+    overflow: hidden;
+  }
+  .diagram::before {
+    content: ''; position: absolute; inset: 0;
+    background-image:
+      linear-gradient(var(--line-soft) 1px, transparent 1px),
+      linear-gradient(90deg, var(--line-soft) 1px, transparent 1px);
+    background-size: 60px 60px;
+    opacity: 0.25;
+    mask-image: radial-gradient(ellipse at center, black 40%, transparent 90%);
+  }
+  .diagram svg.lines { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+  .node {
+    position: absolute; transform: translate(-50%, -50%);
+    background: var(--bg-3);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 14px 16px;
+    min-width: 180px;
+    cursor: pointer;
+    transition: all 0.2s;
+    z-index: 2;
+  }
+  .node:hover, .node.active {
+    border-color: var(--accent);
+    background: oklch(0.27 0.04 250);
+    transform: translate(-50%, -50%) translateY(-2px);
+    box-shadow: 0 12px 30px -10px oklch(0.05 0.05 250 / 0.6), 0 0 0 1px var(--accent);
+  }
+  .node-head {
+    display: flex; align-items: center; gap: 10px; margin-bottom: 6px;
+  }
+  .node-icon {
+    width: 28px; height: 28px; border-radius: 6px;
+    background: var(--bg-2); border: 1px solid var(--line);
+    display: grid; place-items: center;
+    font-size: 14px;
+  }
+  .node-title { font-family: 'JetBrains Mono', monospace; font-weight: 600; font-size: 13px; }
+  .node-meta { font-family: 'JetBrains Mono', monospace; font-size: 10.5px; color: var(--ink-3); letter-spacing: 0.04em; }
+  .node-status { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--ok); display: flex; align-items: center; gap: 5px; margin-top: 6px; }
+  .node-status::before { content: ''; width: 6px; height: 6px; background: var(--ok); border-radius: 50%; box-shadow: 0 0 6px var(--ok); }
+
+  .node.center {
+    min-width: 220px;
+    background: linear-gradient(180deg, oklch(0.30 0.05 220), oklch(0.22 0.04 250));
+    border-color: var(--accent);
+    padding: 18px;
+  }
+  .node.center .node-title { font-size: 16px; }
+  .avatar {
+    width: 56px; height: 56px; border-radius: 50%; object-fit: cover;
+    border: 2px solid var(--accent);
+    box-shadow: 0 0 0 4px oklch(0.30 0.05 220);
+  }
+  .center-name { font-size: 17px; font-weight: 700; margin: 10px 0 2px; font-family: 'Inter', sans-serif; letter-spacing: -0.01em; }
+  .center-role { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--ink-2); }
+
+  /* sub-region labels */
+  .region-label {
+    position: absolute;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--ink-3);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    background: var(--bg-2);
+    padding: 3px 8px;
+    border: 1px dashed var(--line);
+    border-radius: 4px;
+    z-index: 1;
+  }
+
+  /* sections */
+  .section {
+    max-width: 1400px; margin: 80px auto 0; padding: 0 28px;
+  }
+  .section-head {
+    display: flex; align-items: end; justify-content: space-between; margin-bottom: 28px;
+    border-bottom: 1px solid var(--line-soft); padding-bottom: 18px;
+  }
+  .section-head h2 {
+    font-size: 36px; font-weight: 700; margin: 0; letter-spacing: -0.02em;
+  }
+  .section-head .tag {
+    font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--ink-3);
+  }
+  .section-head .tag span { color: var(--accent); }
+
+  /* skills */
+  .skills-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+  .skill-card {
+    background: var(--bg-2);
+    border: 1px solid var(--line-soft);
+    border-radius: 12px;
+    padding: 22px;
+    transition: all 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+  .skill-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+  .skill-card::before {
+    content: attr(data-port);
+    position: absolute; top: 14px; right: 16px;
+    font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--ink-3);
+  }
+  .skill-icon {
+    width: 40px; height: 40px; border-radius: 8px;
+    background: var(--bg-3); border: 1px solid var(--line);
+    display: grid; place-items: center; font-size: 18px;
+    margin-bottom: 14px;
+  }
+  .skill-card h3 { font-size: 17px; margin: 0 0 8px; font-weight: 600; letter-spacing: -0.01em; }
+  .skill-card p { font-size: 13.5px; color: var(--ink-2); line-height: 1.5; margin: 0 0 14px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; }
+  .chip {
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    padding: 3px 8px; border-radius: 4px;
+    background: var(--bg-3); border: 1px solid var(--line-soft); color: var(--ink-2);
+  }
+
+  /* certifications */
+  .certs-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 14px;
+  }
+  .cert {
+    aspect-ratio: 1;
+    background: var(--bg-2);
+    border: 1px solid var(--line-soft);
+    border-radius: 12px;
+    padding: 16px;
+    display: grid; place-items: center;
+    transition: all 0.2s;
+    position: relative;
+  }
+  .cert:hover { border-color: var(--accent); transform: translateY(-3px); background: var(--bg-3); }
+  .cert img { max-width: 100%; max-height: 100%; }
+  .cert-name {
+    position: absolute; bottom: -8px; left: 50%; transform: translateX(-50%) translateY(8px);
+    background: var(--bg-3); border: 1px solid var(--accent);
+    color: var(--ink); font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    padding: 4px 8px; border-radius: 4px; white-space: nowrap;
+    opacity: 0; transition: all 0.2s; pointer-events: none;
+  }
+  .cert:hover .cert-name { opacity: 1; transform: translateX(-50%) translateY(4px); }
+
+  /* projects */
+  .projects { display: flex; flex-direction: column; gap: 18px; }
+  .project {
+    border: 1px solid var(--line-soft);
+    border-radius: 14px;
+    background: var(--bg-2);
+    overflow: hidden;
+    display: grid;
+    grid-template-columns: 360px 1fr;
+    transition: all 0.2s;
+  }
+  .project:hover { border-color: var(--accent); }
+  .project-visual {
+    position: relative; min-height: 280px;
+    background: var(--bg-3);
+    border-right: 1px solid var(--line-soft);
+    overflow: hidden;
+  }
+  .project-visual::before {
+    content: ''; position: absolute; inset: 0;
+    background-image:
+      linear-gradient(oklch(0.30 0.04 250) 1px, transparent 1px),
+      linear-gradient(90deg, oklch(0.30 0.04 250) 1px, transparent 1px);
+    background-size: 24px 24px;
+  }
+  .project-svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .project-body { padding: 28px 32px; display: flex; flex-direction: column; }
+  .project-id { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--ink-3); letter-spacing: 0.05em; margin-bottom: 6px; }
+  .project-body h3 { font-size: 24px; margin: 0 0 14px; letter-spacing: -0.02em; font-weight: 700; }
+  .project-body ul {
+    list-style: none; padding: 0; margin: 0 0 18px;
+    display: flex; flex-direction: column; gap: 8px;
+  }
+  .project-body li {
+    font-size: 14px; color: var(--ink-2); line-height: 1.5;
+    padding-left: 18px; position: relative;
+  }
+  .project-body li::before {
+    content: '→'; position: absolute; left: 0; color: var(--accent); font-family: 'JetBrains Mono', monospace;
+  }
+  .project-body li b { color: var(--ink); font-weight: 600; }
+
+  /* timeline */
+  .timeline {
+    position: relative; padding-left: 28px;
+    border-left: 1px dashed var(--line);
+    display: flex; flex-direction: column; gap: 28px;
+  }
+  .tl-item { position: relative; }
+  .tl-item::before {
+    content: ''; position: absolute; left: -34px; top: 4px;
+    width: 12px; height: 12px; border-radius: 50%;
+    background: var(--bg); border: 2px solid var(--accent);
+  }
+  .tl-item.now::before { background: var(--accent); box-shadow: 0 0 12px var(--accent); }
+  .tl-date { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--accent); margin-bottom: 4px; }
+  .tl-item h4 { margin: 0 0 6px; font-size: 18px; font-weight: 600; }
+  .tl-item p { margin: 0; color: var(--ink-2); font-size: 14px; line-height: 1.55; max-width: 700px; }
+
+  /* stack wall */
+  .stack-wall { display: flex; flex-wrap: wrap; gap: 10px; }
+  .stack-tag {
+    font-family: 'JetBrains Mono', monospace; font-size: 13px;
+    padding: 8px 14px; border-radius: 8px;
+    background: var(--bg-2); border: 1px solid var(--line-soft); color: var(--ink-2);
+    transition: all 0.15s;
+  }
+  .stack-tag:hover { border-color: var(--accent); color: var(--ink); transform: translateY(-1px); }
+  .stack-tag .dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; margin-right: 8px; vertical-align: middle; }
+
+  /* chat */
+  .chat-wrap {
+    display: grid; grid-template-columns: 1fr 1.6fr; gap: 18px;
+    background: var(--bg-2); border: 1px solid var(--line-soft); border-radius: 14px; overflow: hidden;
+  }
+  .chat-side {
+    padding: 28px; border-right: 1px solid var(--line-soft);
+    display: flex; flex-direction: column; gap: 18px;
+  }
+  .chat-side h3 { margin: 0; font-size: 22px; letter-spacing: -0.02em; }
+  .chat-side p { margin: 0; color: var(--ink-2); font-size: 14px; line-height: 1.5; }
+  .quick-q { display: flex; flex-direction: column; gap: 8px; }
+  .quick-q button {
+    padding: 10px 12px; border: 1px solid var(--line-soft); border-radius: 8px;
+    text-align: left; background: var(--bg-3); font-size: 13px; color: var(--ink-2);
+    transition: all 0.15s;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .quick-q button:hover { border-color: var(--accent); color: var(--ink); transform: translateX(2px); }
+  .chat-window {
+    background: oklch(0.13 0.025 250);
+    display: flex; flex-direction: column; min-height: 460px;
+  }
+  .chat-header {
+    padding: 14px 18px; border-bottom: 1px solid var(--line-soft);
+    display: flex; align-items: center; gap: 10px;
+    font-family: 'JetBrains Mono', monospace; font-size: 12px;
+  }
+  .chat-header .dots { display: flex; gap: 5px; }
+  .chat-header .dots span { width: 10px; height: 10px; border-radius: 50%; background: var(--line); }
+  .chat-header .dots span:nth-child(1) { background: oklch(0.65 0.15 30); }
+  .chat-header .dots span:nth-child(2) { background: oklch(0.78 0.15 80); }
+  .chat-header .dots span:nth-child(3) { background: oklch(0.72 0.15 150); }
+  .chat-header .title { flex: 1; color: var(--ink-3); }
+  .chat-header .status { color: var(--ok); }
+  .chat-body { flex: 1; padding: 18px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; font-family: 'JetBrains Mono', monospace; font-size: 13px; }
+  .msg { display: flex; gap: 10px; align-items: flex-start; }
+  .msg-avatar { width: 26px; height: 26px; border-radius: 6px; flex-shrink: 0; display: grid; place-items: center; font-size: 11px; font-weight: 700; }
+  .msg.user .msg-avatar { background: var(--accent-2); color: oklch(0.15 0.025 250); }
+  .msg.bot .msg-avatar { background: var(--accent); color: oklch(0.15 0.025 250); }
+  .msg-bubble { padding: 10px 14px; border-radius: 10px; max-width: 80%; line-height: 1.5; }
+  .msg.bot .msg-bubble { background: var(--bg-3); border: 1px solid var(--line-soft); }
+  .msg.user .msg-bubble { background: oklch(0.30 0.10 220); border: 1px solid oklch(0.40 0.12 220); }
+  .chat-input {
+    border-top: 1px solid var(--line-soft); padding: 12px;
+    display: flex; gap: 8px;
+  }
+  .chat-input input {
+    flex: 1; background: var(--bg-3); border: 1px solid var(--line-soft);
+    color: var(--ink); padding: 10px 12px; border-radius: 8px;
+    font-family: 'JetBrains Mono', monospace; font-size: 13px;
+    outline: none;
+  }
+  .chat-input input:focus { border-color: var(--accent); }
+  .typing { display: flex; gap: 4px; align-items: center; padding: 10px; }
+  .typing span { width: 6px; height: 6px; border-radius: 50%; background: var(--ink-3); animation: typing 1.2s infinite; }
+  .typing span:nth-child(2) { animation-delay: 0.15s; }
+  .typing span:nth-child(3) { animation-delay: 0.3s; }
+  @keyframes typing { 0%,60%,100% { opacity: 0.3; transform: translateY(0); } 30% { opacity: 1; transform: translateY(-3px); } }
+
+  /* contact */
+  .contact-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px;
+  }
+  .contact-card {
+    background: var(--bg-2); border: 1px solid var(--line-soft); border-radius: 12px;
+    padding: 24px; transition: all 0.2s; display: flex; flex-direction: column; gap: 8px;
+  }
+  .contact-card:hover { border-color: var(--accent); transform: translateY(-3px); background: var(--bg-3); }
+  .contact-label { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--ink-3); letter-spacing: 0.06em; text-transform: uppercase; }
+  .contact-value { font-size: 16px; font-weight: 600; }
+  .contact-card .arrow { margin-top: auto; color: var(--accent); font-family: 'JetBrains Mono', monospace; font-size: 13px; }
+
+  /* footer */
+  footer {
+    max-width: 1400px; margin: 80px auto 0; padding: 28px;
+    border-top: 1px solid var(--line-soft);
+    display: flex; justify-content: space-between; align-items: center;
+    font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--ink-3);
+  }
+
+  /* inspector overlay */
+  .inspector {
+    position: fixed; right: 28px; bottom: 28px;
+    width: 340px;
+    background: oklch(0.18 0.025 250 / 0.96);
+    backdrop-filter: blur(12px);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 16px;
+    z-index: 60;
+    box-shadow: 0 20px 50px -10px black;
+    transform: translateY(20px); opacity: 0; pointer-events: none;
+    transition: all 0.2s;
+  }
+  .inspector.visible { transform: translateY(0); opacity: 1; pointer-events: auto; }
+  .inspector h4 { margin: 0 0 4px; font-size: 13px; font-family: 'JetBrains Mono', monospace; }
+  .inspector .insp-meta { font-family: 'JetBrains Mono', monospace; font-size: 10.5px; color: var(--ink-3); margin-bottom: 10px; }
+  .inspector p { margin: 0; font-size: 13px; color: var(--ink-2); line-height: 1.5; }
+  .inspector .insp-close { position: absolute; top: 10px; right: 12px; color: var(--ink-3); font-family: 'JetBrains Mono', monospace; font-size: 14px; }
+  .inspector .insp-close:hover { color: var(--ink); }
+  .inspector .insp-link { display: inline-block; margin-top: 12px; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--accent); }
+
+  @media (max-width: 980px) {
+    .skills-grid { grid-template-columns: 1fr 1fr; }
+    .certs-grid { grid-template-columns: repeat(4, 1fr); }
+    .project { grid-template-columns: 1fr; }
+    .project-visual { min-height: 200px; border-right: none; border-bottom: 1px solid var(--line-soft); }
+    .chat-wrap { grid-template-columns: 1fr; }
+    .chat-side { border-right: none; border-bottom: 1px solid var(--line-soft); }
+    .contact-grid { grid-template-columns: 1fr 1fr; }
+    .diagram { height: 1100px; }
+  }
+</style>
 </head>
 <body>
-    <!-- Navigation -->
-    <nav>
-        <div class="container">
-            <div class="logo">RA://DevOps</div>
-            <ul>
-                <li><a href="#home">Home</a></li>
-                <li><a href="#skills">Skills</a></li>
-                <li><a href="#projects">Projects</a></li>
-                <li><a href="#chat">Chat</a></li>
-                <li><a href="#contact">Contact</a></li>
-            </ul>
+
+<div class="grid-bg"></div>
+<div class="root">
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="brand mono"><span class="brand-dot"></span> RA::DevOps</div>
+    <div class="breadcrumbs mono">~/<span>portfolio</span>/<span>rayhan</span> · <span style="color: var(--ok);">healthy</span> · uptime <span>3y 4mo</span></div>
+    <div class="topbar-actions">
+      <a class="btn" href="#chat">$ ask</a>
+      <a class="btn btn-primary" href="assets/Rayhan%20Bintang%20Abdurrahim_1426.pdf" target="_blank">↓ resume.pdf</a>
+    </div>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-meta mono">
+    <span class="pill live">deployed</span>
+    <span class="pill">region: ap-southeast-3</span>
+    <span class="pill">v2026.05</span>
+    <span class="pill">fresh-coffee: true</span>
+  </div>
+  <h1>I build infra that <span class="strike">breaks at 3am</span> <span class="accent">scales at 3am.</span></h1>
+  <p class="lede">Technical Consultant · DevOps Specialist at <strong style="color: var(--ink);">PT Mitra Integrasi Informatika</strong>. 5 years architecting AWS, leading EKS &amp; ECS migrations, and writing <code>terraform apply -auto-approve</code> with confidence — for clients like Telkomsel, BRI Danareksa &amp; Bank Jawa Barat. <strong style="color: var(--ink);">7× AWS / Red Hat certified.</strong></p>
+  <div class="hero-cta">
+    <a class="btn btn-primary" href="#diagram">↳ Explore the architecture</a>
+    <a class="btn" href="#projects">View projects</a>
+    <a class="btn" href="#chat">Talk to my AI assistant</a>
+  </div>
+</section>
+
+<!-- INTERACTIVE DIAGRAM -->
+<section class="diagram-wrap" id="diagram">
+  <div class="diagram-title">
+    <h2 class="mono">// architecture-of-rayhan.tf</h2>
+    <span class="hint mono">click any node to inspect <kbd>·</kbd> <kbd>esc</kbd> to close</span>
+  </div>
+  <div class="diagram" id="diagram-canvas">
+    <svg class="lines" id="diagram-lines" preserveAspectRatio="none"></svg>
+
+    <span class="region-label" style="top: 24px; left: 28px;">VPC :: cloud-infrastructure</span>
+    <span class="region-label" style="top: 24px; right: 28px;">VPC :: delivery-pipeline</span>
+    <span class="region-label" style="bottom: 24px; left: 28px;">VPC :: orchestration</span>
+    <span class="region-label" style="bottom: 24px; right: 28px;">VPC :: observability</span>
+
+    <!-- Center: ME -->
+    <div class="node center" data-node="me" style="left: 50%; top: 50%;">
+      <div style="display: flex; flex-direction: column; align-items: center; gap: 4px;">
+        <img class="avatar" src="assets/professional-shot.jpg" alt="Rayhan" />
+        <div class="center-name">Rayhan Bintang</div>
+        <div class="center-role mono">role: principal-human-engineer</div>
+        <div class="node-status">healthy · accepting traffic</div>
+      </div>
+    </div>
+
+    <!-- Cloud Infrastructure (top-left) -->
+    <div class="node" data-node="cloud" style="left: 18%; top: 22%;">
+      <div class="node-head"><span class="node-icon">☁️</span><span class="node-title">cloud-infra</span></div>
+      <div class="node-meta">aws · ec2 · vpc · rds</div>
+      <div class="node-status">5 services up</div>
+    </div>
+
+    <!-- Containers (top-center-ish) -->
+    <div class="node" data-node="containers" style="left: 36%; top: 14%;">
+      <div class="node-head"><span class="node-icon">🐳</span><span class="node-title">containers</span></div>
+      <div class="node-meta">k8s · docker · helm</div>
+      <div class="node-status">42 pods · 3 nodes</div>
+    </div>
+
+    <!-- IaC -->
+    <div class="node" data-node="iac" style="left: 64%; top: 14%;">
+      <div class="node-head"><span class="node-icon">🔧</span><span class="node-title">iac</span></div>
+      <div class="node-meta">terraform · ansible</div>
+      <div class="node-status">drift: 0</div>
+    </div>
+
+    <!-- CI/CD -->
+    <div class="node" data-node="cicd" style="left: 82%; top: 22%;">
+      <div class="node-head"><span class="node-icon">🔄</span><span class="node-title">ci-cd</span></div>
+      <div class="node-meta">gitlab · jenkins</div>
+      <div class="node-status">green pipeline</div>
+    </div>
+
+    <!-- Security (bottom-left) -->
+    <div class="node" data-node="security" style="left: 18%; top: 78%;">
+      <div class="node-head"><span class="node-icon">🔒</span><span class="node-title">security</span></div>
+      <div class="node-meta">iam · waf · kms</div>
+      <div class="node-status">0 critical findings</div>
+    </div>
+
+    <!-- Observability (bottom-center-ish) -->
+    <div class="node" data-node="observability" style="left: 36%; top: 86%;">
+      <div class="node-head"><span class="node-icon">📊</span><span class="node-title">observability</span></div>
+      <div class="node-meta">prom · grafana · cw</div>
+      <div class="node-status">all SLOs met</div>
+    </div>
+
+    <!-- Projects -->
+    <div class="node" data-node="projects" style="left: 64%; top: 86%;">
+      <div class="node-head"><span class="node-icon">📦</span><span class="node-title">projects</span></div>
+      <div class="node-meta">3 deployments live</div>
+      <div class="node-status">99.9% uptime</div>
+    </div>
+
+    <!-- Contact -->
+    <div class="node" data-node="contact" style="left: 82%; top: 78%;">
+      <div class="node-head"><span class="node-icon">📡</span><span class="node-title">contact</span></div>
+      <div class="node-meta">inbox: open</div>
+      <div class="node-status">accepting requests</div>
+    </div>
+  </div>
+</section>
+
+<!-- inspector -->
+<div class="inspector" id="inspector">
+  <button class="insp-close" onclick="closeInspector()">[esc]</button>
+  <div class="mono insp-meta">node:<span id="insp-id"></span></div>
+  <h4 id="insp-title"></h4>
+  <p id="insp-body"></p>
+  <a class="insp-link" id="insp-link" href="#">jump to section →</a>
+</div>
+
+<!-- SKILLS -->
+<section class="section" id="skills">
+  <div class="section-head">
+    <h2>Skills, by service.</h2>
+    <span class="tag mono">// 6 services · <span>all green</span></span>
+  </div>
+  <div class="skills-grid">
+    <div class="skill-card" data-port=":443">
+      <div class="skill-icon">☁️</div>
+      <h3>Cloud Infrastructure</h3>
+      <p>Scalable AWS solutions — high availability, sane bills, no surprise NAT charges.</p>
+      <div class="chips"><span class="chip">AWS</span><span class="chip">EC2</span><span class="chip">EKS</span><span class="chip">VPC</span><span class="chip">RDS</span></div>
+    </div>
+    <div class="skill-card" data-port=":8080">
+      <div class="skill-icon">🔧</div>
+      <h3>Infrastructure as Code</h3>
+      <p>Terraform-first, manual-clicks-last. Modules, state hygiene, drift detection.</p>
+      <div class="chips"><span class="chip">Terraform</span><span class="chip">Ansible</span><span class="chip">CloudFormation</span></div>
+    </div>
+    <div class="skill-card" data-port=":6443">
+      <div class="skill-icon">🐳</div>
+      <h3>Container Orchestration</h3>
+      <p>Kubernetes that behaves: probes that work, autoscaling that doesn't oscillate.</p>
+      <div class="chips"><span class="chip">Kubernetes</span><span class="chip">Docker</span><span class="chip">EKS</span><span class="chip">Helm</span></div>
+    </div>
+    <div class="skill-card" data-port=":2375">
+      <div class="skill-icon">🔄</div>
+      <h3>CI / CD Pipelines</h3>
+      <p>Automated deploys that fail safely. Canary, blue/green, rollback in one click.</p>
+      <div class="chips"><span class="chip">GitLab CI</span><span class="chip">Jenkins</span><span class="chip">CodePipeline</span></div>
+    </div>
+    <div class="skill-card" data-port=":22">
+      <div class="skill-icon">🔒</div>
+      <h3>Security & Compliance</h3>
+      <p>Least-privilege everything. Threat detection, encryption, automated audit reports.</p>
+      <div class="chips"><span class="chip">IAM</span><span class="chip">GuardDuty</span><span class="chip">SecHub</span><span class="chip">WAF</span></div>
+    </div>
+    <div class="skill-card" data-port=":9090">
+      <div class="skill-icon">📊</div>
+      <h3>Monitoring & Observability</h3>
+      <p>Dashboards your SREs will actually look at. Alerts that mean something.</p>
+      <div class="chips"><span class="chip">CloudWatch</span><span class="chip">Prometheus</span><span class="chip">Grafana</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- CERTIFICATIONS -->
+<section class="section" id="certs">
+  <div class="section-head">
+    <h2>Certifications.</h2>
+    <span class="tag mono">// 7 valid · <span>0 expiring soon</span></span>
+  </div>
+  <div class="certs-grid">
+    <a class="cert" href="https://www.credly.com/earner/earned/badge/2ad25613-cfb3-479b-b8c4-1fe0a1ca3753" target="_blank"><img src="assets/cert-aws-sap.png" alt="" /><span class="cert-name">AWS SA Pro</span></a>
+    <a class="cert" href="https://www.credly.com/earner/earned/badge/95f9da04-baf8-4321-a959-be0e52283961" target="_blank"><img src="assets/cert-aws-devops.png" alt="" /><span class="cert-name">AWS DevOps Pro</span></a>
+    <a class="cert" href="https://www.credly.com/earner/earned/badge/545106f9-77ef-45be-b6b1-b37d041832a5" target="_blank"><img src="assets/cert-aws-security.png" alt="" /><span class="cert-name">AWS Security Specialty</span></a>
+    <a class="cert" href="https://www.credly.com/earner/earned/badge/7349f1d5-e3d5-44c7-bc25-6559657e6732" target="_blank"><img src="assets/cert-aws-genai.png" alt="" /><span class="cert-name">AWS Gen AI Pro</span></a>
+    <a class="cert" href="https://www.credly.com/earner/earned/badge/1727cb0e-3cac-41d2-aaaa-786b9d835aee" target="_blank"><img src="assets/cert-aws-saa.png" alt="" /><span class="cert-name">AWS SA Associate</span></a>
+    <a class="cert" href="https://www.credly.com/earner/earned/badge/db137dff-c065-4e05-b87d-1778a3b6f200" target="_blank"><img src="assets/cert-aws-sysops.png" alt="" /><span class="cert-name">AWS SysOps</span></a>
+    <a class="cert" href="https://www.credly.com/earner/earned/badge/e91c25eb-c829-4e06-9773-e02d7ddbec43" target="_blank"><img src="assets/cert-rhcsa.png" alt="" /><span class="cert-name">RHCSA</span></a>
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section class="section" id="projects">
+  <div class="section-head">
+    <h2>Projects in production.</h2>
+    <span class="tag mono">// 3 deployments · <span>healthy</span></span>
+  </div>
+  <div class="projects">
+    <article class="project">
+      <div class="project-visual">
+        <svg class="project-svg" viewBox="0 0 360 280" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+          <defs>
+            <pattern id="dots1" width="14" height="14" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1" fill="oklch(0.40 0.04 250)" /></pattern>
+          </defs>
+          <rect width="360" height="280" fill="url(#dots1)" opacity="0.35"/>
+          <!-- AZ A -->
+          <rect x="30" y="30" width="140" height="100" rx="8" fill="none" stroke="oklch(0.78 0.16 220)" stroke-width="1.2" stroke-dasharray="4 3"/>
+          <text x="40" y="46" font-family="JetBrains Mono" font-size="9" fill="oklch(0.78 0.16 220)">az-a</text>
+          <rect x="44" y="58" width="50" height="22" rx="4" fill="oklch(0.30 0.04 250)" stroke="oklch(0.50 0.04 250)"/>
+          <text x="69" y="73" font-family="JetBrains Mono" font-size="9" fill="oklch(0.85 0.01 250)" text-anchor="middle">eks-1</text>
+          <rect x="100" y="58" width="50" height="22" rx="4" fill="oklch(0.30 0.04 250)" stroke="oklch(0.50 0.04 250)"/>
+          <text x="125" y="73" font-family="JetBrains Mono" font-size="9" fill="oklch(0.85 0.01 250)" text-anchor="middle">rds</text>
+          <rect x="44" y="92" width="106" height="22" rx="4" fill="oklch(0.30 0.04 250)" stroke="oklch(0.50 0.04 250)"/>
+          <text x="97" y="107" font-family="JetBrains Mono" font-size="9" fill="oklch(0.85 0.01 250)" text-anchor="middle">redis · postgres</text>
+          <!-- AZ B -->
+          <rect x="190" y="30" width="140" height="100" rx="8" fill="none" stroke="oklch(0.78 0.16 60)" stroke-width="1.2" stroke-dasharray="4 3"/>
+          <text x="200" y="46" font-family="JetBrains Mono" font-size="9" fill="oklch(0.78 0.16 60)">az-b</text>
+          <rect x="204" y="58" width="50" height="22" rx="4" fill="oklch(0.30 0.04 250)" stroke="oklch(0.50 0.04 250)"/>
+          <text x="229" y="73" font-family="JetBrains Mono" font-size="9" fill="oklch(0.85 0.01 250)" text-anchor="middle">eks-2</text>
+          <rect x="260" y="58" width="50" height="22" rx="4" fill="oklch(0.30 0.04 250)" stroke="oklch(0.50 0.04 250)"/>
+          <text x="285" y="73" font-family="JetBrains Mono" font-size="9" fill="oklch(0.85 0.01 250)" text-anchor="middle">rds-r</text>
+          <rect x="204" y="92" width="106" height="22" rx="4" fill="oklch(0.30 0.04 250)" stroke="oklch(0.50 0.04 250)"/>
+          <text x="257" y="107" font-family="JetBrains Mono" font-size="9" fill="oklch(0.85 0.01 250)" text-anchor="middle">redis · postgres</text>
+          <!-- ALB top -->
+          <rect x="120" y="160" width="120" height="26" rx="6" fill="oklch(0.78 0.16 220)" opacity="0.9"/>
+          <text x="180" y="177" font-family="JetBrains Mono" font-size="10" fill="oklch(0.15 0.025 250)" text-anchor="middle" font-weight="700">ALB + WAF</text>
+          <!-- lines -->
+          <path d="M180 160 L100 130 M180 160 L260 130" stroke="oklch(0.78 0.16 220)" stroke-width="1" stroke-dasharray="3 3" fill="none"/>
+          <!-- bottom: pipeline -->
+          <rect x="30" y="220" width="300" height="36" rx="6" fill="none" stroke="oklch(0.50 0.04 250)" stroke-dasharray="4 3"/>
+          <text x="42" y="236" font-family="JetBrains Mono" font-size="9" fill="oklch(0.65 0.02 250)">ci/cd · 15+ microservices</text>
+          <circle cx="60" cy="246" r="3" fill="oklch(0.78 0.16 150)"/>
+          <circle cx="100" cy="246" r="3" fill="oklch(0.78 0.16 150)"/>
+          <circle cx="140" cy="246" r="3" fill="oklch(0.78 0.16 150)"/>
+          <circle cx="180" cy="246" r="3" fill="oklch(0.78 0.16 150)"/>
+          <circle cx="220" cy="246" r="3" fill="oklch(0.78 0.16 150)"/>
+          <circle cx="260" cy="246" r="3" fill="oklch(0.78 0.16 150)"/>
+          <circle cx="300" cy="246" r="3" fill="oklch(0.78 0.16 150)"/>
+        </svg>
+      </div>
+      <div class="project-body">
+        <div class="project-id mono">deployment/01 · region:ap-southeast-3</div>
+        <h3>Multi-AZ AWS Production Environment</h3>
+        <ul>
+          <li><b>99.9% uptime</b> with multi-AZ failover</li>
+          <li><b>Zero-downtime deploys</b> across 15+ microservices</li>
+          <li><b>70% faster</b> deployment via automated CI/CD</li>
+          <li>Cost-optimized: NAT, ALB+WAF, EKS node-group separation</li>
+        </ul>
+        <div class="chips"><span class="chip">AWS</span><span class="chip">EKS</span><span class="chip">Terraform</span><span class="chip">PostgreSQL</span><span class="chip">Redis</span></div>
+      </div>
+    </article>
+
+    <article class="project">
+      <div class="project-visual">
+        <svg class="project-svg" viewBox="0 0 360 280" preserveAspectRatio="xMidYMid meet">
+          <defs>
+            <pattern id="dots2" width="14" height="14" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1" fill="oklch(0.40 0.04 250)"/></pattern>
+          </defs>
+          <rect width="360" height="280" fill="url(#dots2)" opacity="0.35"/>
+          <!-- shield -->
+          <path d="M180 30 L240 50 L240 120 Q240 175 180 200 Q120 175 120 120 L120 50 Z"
+                fill="none" stroke="oklch(0.78 0.16 60)" stroke-width="1.5"/>
+          <text x="180" y="100" font-family="JetBrains Mono" font-size="11" fill="oklch(0.78 0.16 60)" text-anchor="middle">SECURITY</text>
+          <text x="180" y="116" font-family="JetBrains Mono" font-size="11" fill="oklch(0.78 0.16 60)" text-anchor="middle">PERIMETER</text>
+          <!-- layers around -->
+          <g font-family="JetBrains Mono" font-size="9" fill="oklch(0.85 0.01 250)">
+            <rect x="20" y="40" width="80" height="22" rx="4" fill="oklch(0.30 0.04 250)" stroke="oklch(0.50 0.04 250)"/>
+            <text x="60" y="55" text-anchor="middle">IAM</text>
+            <rect x="20" y="80" width="80" height="22" rx="4" fill="oklch(0.30 0.04 250)" stroke="oklch(0.50 0.04 250)"/>
+            <text x="60" y="95" text-anchor="middle">GuardDuty</text>
+            <rect x="20" y="120" width="80" height="22" rx="4" fill="oklch(0.30 0.04 250)" stroke="oklch(0.50 0.04 250)"/>
+            <text x="60" y="135" text-anchor="middle">SecHub</text>
+            <rect x="260" y="40" width="80" height="22" rx="4" fill="oklch(0.30 0.04 250)" stroke="oklch(0.50 0.04 250)"/>
+            <text x="300" y="55" text-anchor="middle">KMS</text>
+            <rect x="260" y="80" width="80" height="22" rx="4" fill="oklch(0.30 0.04 250)" stroke="oklch(0.50 0.04 250)"/>
+            <text x="300" y="95" text-anchor="middle">WAF</text>
+            <rect x="260" y="120" width="80" height="22" rx="4" fill="oklch(0.30 0.04 250)" stroke="oklch(0.50 0.04 250)"/>
+            <text x="300" y="135" text-anchor="middle">CloudTrail</text>
+          </g>
+          <!-- compliance bar -->
+          <rect x="40" y="220" width="280" height="14" rx="3" fill="oklch(0.30 0.04 250)"/>
+          <rect x="40" y="220" width="280" height="14" rx="3" fill="oklch(0.78 0.16 150)"/>
+          <text x="180" y="231" font-family="JetBrains Mono" font-size="9" fill="oklch(0.15 0.025 250)" text-anchor="middle" font-weight="700">100% compliance coverage</text>
+          <text x="40" y="252" font-family="JetBrains Mono" font-size="9" fill="oklch(0.65 0.02 250)">MTTR ↓ 60%</text>
+          <text x="320" y="252" font-family="JetBrains Mono" font-size="9" fill="oklch(0.65 0.02 250)" text-anchor="end">e2e encrypted</text>
+        </svg>
+      </div>
+      <div class="project-body">
+        <div class="project-id mono">deployment/02 · zone:trust-boundary</div>
+        <h3>Enterprise Security Architecture</h3>
+        <ul>
+          <li><b>100% compliance</b> with automated reporting</li>
+          <li>Real-time threat detection (GuardDuty + SecHub)</li>
+          <li>End-to-end <b>encryption via KMS</b> across all data layers</li>
+          <li><b>MTTR reduced 60%</b> with automated incident response</li>
+        </ul>
+        <div class="chips"><span class="chip">AWS Security</span><span class="chip">GuardDuty</span><span class="chip">IAM</span><span class="chip">KMS</span></div>
+      </div>
+    </article>
+
+    <article class="project">
+      <div class="project-visual">
+        <svg class="project-svg" viewBox="0 0 360 280" preserveAspectRatio="xMidYMid meet">
+          <defs>
+            <pattern id="dots3" width="14" height="14" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1" fill="oklch(0.40 0.04 250)"/></pattern>
+          </defs>
+          <rect width="360" height="280" fill="url(#dots3)" opacity="0.35"/>
+          <!-- ALB -->
+          <rect x="120" y="22" width="120" height="22" rx="4" fill="oklch(0.78 0.16 220)" opacity="0.9"/>
+          <text x="180" y="37" font-family="JetBrains Mono" font-size="10" fill="oklch(0.15 0.025 250)" text-anchor="middle" font-weight="700">ALB</text>
+          <!-- two nodes -->
+          <rect x="40" y="70" width="130" height="80" rx="6" fill="oklch(0.30 0.04 250)" stroke="oklch(0.78 0.16 220)"/>
+          <text x="105" y="86" font-family="JetBrains Mono" font-size="10" fill="oklch(0.85 0.01 250)" text-anchor="middle">node-1 (HA)</text>
+          <rect x="50" y="98" width="50" height="18" rx="3" fill="oklch(0.20 0.03 250)"/>
+          <text x="75" y="111" font-family="JetBrains Mono" font-size="8" fill="oklch(0.85 0.01 250)" text-anchor="middle">api</text>
+          <rect x="110" y="98" width="50" height="18" rx="3" fill="oklch(0.20 0.03 250)"/>
+          <text x="135" y="111" font-family="JetBrains Mono" font-size="8" fill="oklch(0.85 0.01 250)" text-anchor="middle">workers</text>
+          <rect x="50" y="122" width="110" height="18" rx="3" fill="oklch(0.20 0.03 250)"/>
+          <text x="105" y="135" font-family="JetBrains Mono" font-size="8" fill="oklch(0.85 0.01 250)" text-anchor="middle">ingress · cert-manager</text>
+
+          <rect x="190" y="70" width="130" height="80" rx="6" fill="oklch(0.30 0.04 250)" stroke="oklch(0.78 0.16 220)"/>
+          <text x="255" y="86" font-family="JetBrains Mono" font-size="10" fill="oklch(0.85 0.01 250)" text-anchor="middle">node-2 (HA)</text>
+          <rect x="200" y="98" width="50" height="18" rx="3" fill="oklch(0.20 0.03 250)"/>
+          <text x="225" y="111" font-family="JetBrains Mono" font-size="8" fill="oklch(0.85 0.01 250)" text-anchor="middle">api</text>
+          <rect x="260" y="98" width="50" height="18" rx="3" fill="oklch(0.20 0.03 250)"/>
+          <text x="285" y="111" font-family="JetBrains Mono" font-size="8" fill="oklch(0.85 0.01 250)" text-anchor="middle">workers</text>
+          <rect x="200" y="122" width="110" height="18" rx="3" fill="oklch(0.20 0.03 250)"/>
+          <text x="255" y="135" font-family="JetBrains Mono" font-size="8" fill="oklch(0.85 0.01 250)" text-anchor="middle">ingress · cert-manager</text>
+
+          <!-- storage layer -->
+          <rect x="30" y="180" width="100" height="36" rx="4" fill="oklch(0.20 0.03 250)" stroke="oklch(0.50 0.04 250)"/>
+          <text x="80" y="202" font-family="JetBrains Mono" font-size="10" fill="oklch(0.85 0.01 250)" text-anchor="middle">MinIO · S3-API</text>
+          <rect x="140" y="180" width="80" height="36" rx="4" fill="oklch(0.20 0.03 250)" stroke="oklch(0.50 0.04 250)"/>
+          <text x="180" y="202" font-family="JetBrains Mono" font-size="10" fill="oklch(0.85 0.01 250)" text-anchor="middle">Redis</text>
+          <rect x="230" y="180" width="100" height="36" rx="4" fill="oklch(0.20 0.03 250)" stroke="oklch(0.50 0.04 250)"/>
+          <text x="280" y="202" font-family="JetBrains Mono" font-size="10" fill="oklch(0.85 0.01 250)" text-anchor="middle">PostgreSQL</text>
+
+          <!-- pipeline -->
+          <rect x="30" y="240" width="300" height="22" rx="4" fill="none" stroke="oklch(0.78 0.16 60)" stroke-dasharray="4 3"/>
+          <text x="180" y="255" font-family="JetBrains Mono" font-size="9" fill="oklch(0.78 0.16 60)" text-anchor="middle">GitLab CI/CD · zero cloud dependency</text>
+
+          <!-- lines -->
+          <path d="M180 44 L105 70 M180 44 L255 70" stroke="oklch(0.78 0.16 220)" stroke-dasharray="3 3" fill="none"/>
+          <path d="M105 150 L80 180 M255 150 L280 180" stroke="oklch(0.50 0.04 250)" stroke-dasharray="3 3" fill="none"/>
+        </svg>
+      </div>
+      <div class="project-body">
+        <div class="project-id mono">deployment/03 · location:on-prem</div>
+        <h3>On-Premise Kubernetes Platform</h3>
+        <ul>
+          <li><b>Dual-node HA</b> architecture with ALB load balancing</li>
+          <li>Full GitLab CI/CD integration — <b>release cycles cut 50%</b></li>
+          <li>Unified storage / cache / DB (MinIO, Redis, Postgres)</li>
+          <li>Self-hosted, <b>zero cloud dependency</b> — full cost control</li>
+        </ul>
+        <div class="chips"><span class="chip">Kubernetes</span><span class="chip">MinIO</span><span class="chip">GitLab</span><span class="chip">PostgreSQL</span></div>
+      </div>
+    </article>
+  </div>
+</section>
+
+<!-- TIMELINE -->
+<section class="section" id="timeline">
+  <div class="section-head">
+    <h2>git log --author=rayhan</h2>
+    <span class="tag mono">// commits since <span>2020</span></span>
+  </div>
+  <div class="timeline">
+    <div class="tl-item now">
+      <div class="tl-date mono">Feb 2025 — present</div>
+      <h4>Technical Consultant · DevOps Specialist <span style="color: var(--ink-3); font-weight: 400; font-size: 14px;">@ PT Mitra Integrasi Informatika</span></h4>
+      <p>Building and operating containerized platforms on AWS for enterprise clients — EKS &amp; ECS, GitLab CI/CD, Terraform IaC, secure resilient architectures. Recent migrations: <b>Artajasa</b> &amp; <b>Hibank</b> (GKE → EKS), <b>Panin Dai-Ichi</b> (on-prem Rancher → ECS), <b>BRI Danareksa</b> (DR site + API Gateway), <b>Bank Jawa Barat</b> (greenfield AWS w/ EKS &amp; GitLab).</p>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date mono">Dec 2021 — Jul 2024</div>
+      <h4>System Engineer <span style="color: var(--ink-3); font-weight: 400; font-size: 14px;">@ PT Mastersystem Infotama</span></h4>
+      <p>Designed resilient AWS solutions for enterprise clients. Led <b>Telkomsel</b>'s Virtual Assistant &amp; MePro migrations (OpenShift → EKS), modernized MePro with CloudFront + Redis, and delivered <b>Bayan Resources</b>' AWS-based DR site.</p>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date mono">Sep 2020 — Dec 2021</div>
+      <h4>Junior Advisory · Shared Service / Human Capital <span style="color: var(--ink-3); font-weight: 400; font-size: 14px;">@ Pertamina Training Center</span></h4>
+      <p>Analyzed company policies and employee behavior — drove the build of an internal application to optimize operations &amp; compliance. The "before I found Kubernetes" era.</p>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date mono">Jul 2024 — Feb 2025</div>
+      <h4>Japanese Language Training <span style="color: var(--ink-3); font-weight: 400; font-size: 14px;">· business + technical discussions</span></h4>
+      <p>Structured training focused on business communication and technical discussions in Japanese. お疲れ様。</p>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date mono">2020</div>
+      <h4>BSc Biomedical Engineering <span style="color: var(--ink-3); font-weight: 400; font-size: 14px;">@ Bandung Institute of Technology (ITB)</span></h4>
+      <p>Started in biomed, ended up routing packets across availability zones. Worth it.</p>
+    </div>
+  </div>
+</section>
+
+<!-- STACK WALL -->
+<section class="section" id="stack">
+  <div class="section-head">
+    <h2>What I run.</h2>
+    <span class="tag mono">// kubectl get tools <span>--all-namespaces</span></span>
+  </div>
+  <div class="stack-wall">
+    <span class="stack-tag mono"><span class="dot" style="background: oklch(0.78 0.16 60);"></span>AWS</span>
+    <span class="stack-tag mono"><span class="dot" style="background: oklch(0.78 0.16 220);"></span>Kubernetes</span>
+    <span class="stack-tag mono"><span class="dot" style="background: oklch(0.78 0.16 280);"></span>Terraform</span>
+    <span class="stack-tag mono"><span class="dot" style="background: oklch(0.78 0.16 220);"></span>Docker</span>
+    <span class="stack-tag mono"><span class="dot" style="background: oklch(0.78 0.16 30);"></span>Ansible</span>
+    <span class="stack-tag mono"><span class="dot" style="background: oklch(0.78 0.16 60);"></span>GitLab CI</span>
+    <span class="stack-tag mono"><span class="dot" style="background: oklch(0.78 0.16 80);"></span>Jenkins</span>
+    <span class="stack-tag mono"><span class="dot" style="background: oklch(0.78 0.16 30);"></span>Helm</span>
+    <span class="stack-tag mono"><span class="dot" style="background: oklch(0.78 0.16 0);"></span>Prometheus</span>
+    <span class="stack-tag mono"><span class="dot" style="background: oklch(0.78 0.16 80);"></span>Grafana</span>
+    <span class="stack-tag mono"><span class="dot" style="background: oklch(0.78 0.16 220);"></span>PostgreSQL</span>
+    <span class="stack-tag mono"><span class="dot" style="background: oklch(0.78 0.16 0);"></span>Redis</span>
+    <span class="stack-tag mono"><span class="dot" style="background: oklch(0.78 0.16 150);"></span>MinIO</span>
+    <span class="stack-tag mono"><span class="dot" style="background: oklch(0.78 0.16 60);"></span>Linux / RHEL</span>
+    <span class="stack-tag mono"><span class="dot" style="background: oklch(0.78 0.16 220);"></span>IAM</span>
+    <span class="stack-tag mono"><span class="dot" style="background: oklch(0.78 0.16 30);"></span>WAF</span>
+    <span class="stack-tag mono"><span class="dot" style="background: oklch(0.78 0.16 280);"></span>KMS</span>
+    <span class="stack-tag mono"><span class="dot" style="background: oklch(0.78 0.16 150);"></span>GuardDuty</span>
+  </div>
+</section>
+
+<!-- CHAT -->
+<section class="section" id="chat">
+  <div class="section-head">
+    <h2>Talk to my AI assistant.</h2>
+    <span class="tag mono">// llm-sidecar · <span>online</span></span>
+  </div>
+  <div class="chat-wrap">
+    <div class="chat-side">
+      <h3>Ask anything.</h3>
+      <p>It's a chatbot trained on Rayhan's experience, services, and availability. Use it like you'd use a coworker who never goes to lunch.</p>
+      <div class="quick-q">
+        <button data-q="What services do you offer?">› What services do you offer?</button>
+        <button data-q="Are you available for freelance work?">› Are you available for freelance?</button>
+        <button data-q="Tell me about your AWS experience.">› Tell me about your AWS experience.</button>
+        <button data-q="What's your approach to Kubernetes?">› Approach to Kubernetes?</button>
+        <button data-q="What's your typical engagement?">› Typical engagement model?</button>
+      </div>
+    </div>
+    <div class="chat-window">
+      <div class="chat-header mono">
+        <div class="dots"><span></span><span></span><span></span></div>
+        <span class="title">~/devops-assistant</span>
+        <span class="status">● connected</span>
+      </div>
+      <div class="chat-body" id="chat-body">
+        <div class="msg bot">
+          <div class="msg-avatar">RA</div>
+          <div class="msg-bubble">👋 Hi! I'm Rayhan's DevOps assistant. Ask me about infrastructure architecture, CI/CD, cloud migration, K8s, security & compliance, project timelines, or rates.</div>
         </div>
-    </nav>
+      </div>
+      <div class="chat-input">
+        <input type="text" id="chat-input" placeholder="Ask a question…" />
+        <button class="btn btn-primary" id="chat-send">Send ↵</button>
+      </div>
+    </div>
+  </div>
+</section>
 
-    <!-- Hero Section -->
-    <section id="home" class="hero">
-        <div class="grid-background"></div>
-        <div class="hero-content">
-            <div class="hero-badge">DevOps Engineer</div>
-            <img src="assets/professional-shot.jpg" alt="Rayhan Bintang Abdurrahim" class="profile-photo">
-            <h1>Rayhan Bintang Abdurrahim</h1>
-            <p class="tagline">$ infrastructure as code --ship-fast --document-all</p>
-            <div class="cta-buttons">
-                <a href="#chat" class="btn btn-primary">Ask Me Anything</a>
-                <a href="#projects" class="btn btn-secondary">View Projects</a>
-                <a href="assets/Rayhan Bintang Abdurrahim_1426.pdf" download class="btn btn-secondary">📄 Download Resume</a>
-            </div>
-        </div>
-        <div class="scroll-indicator"></div>
-    </section>
+<!-- CONTACT -->
+<section class="section" id="contact">
+  <div class="section-head">
+    <h2>Open a ticket.</h2>
+    <span class="tag mono">// inbox · <span>accepting requests</span></span>
+  </div>
+  <div class="contact-grid">
+    <a class="contact-card" href="mailto:rayhanbintang.work@gmail.com">
+      <div class="contact-label mono">📧 email · primary</div>
+      <div class="contact-value">rayhanbintang.work@gmail.com</div>
+      <div class="arrow mono">curl --fastest →</div>
+    </a>
+    <a class="contact-card" href="https://github.com/Rayhanbintang" target="_blank">
+      <div class="contact-label mono">💻 github · source</div>
+      <div class="contact-value">@Rayhanbintang</div>
+      <div class="arrow mono">git remote →</div>
+    </a>
+    <a class="contact-card" href="https://www.linkedin.com/in/rayhanbintang/" target="_blank">
+      <div class="contact-label mono">💼 linkedin · network</div>
+      <div class="contact-value">/in/rayhanbintang</div>
+      <div class="arrow mono">connect →</div>
+    </a>
+    <a class="contact-card" href="https://contra.com/rayhan_abdurrahim_c13378wy/work?r=rayhan_abdurrahim_c13378wy" target="_blank">
+      <div class="contact-label mono">🎯 contra · for hire</div>
+      <div class="contact-value">@rayhan_abdurrahim</div>
+      <div class="arrow mono">book me →</div>
+    </a>
+  </div>
+</section>
 
-    <!-- Skills Section -->
-    <section id="skills">
-        <div class="section-header">
-            <h2 class="section-title">Expertise & Skills</h2>
-            <p class="section-subtitle">Specialized in building and maintaining scalable infrastructure</p>
-        </div>
-        <div class="certifications">
-            <h3>Certifications</h3>
-            <div class="cert-badges">
-                <a href="https://www.credly.com/earner/earned/badge/2ad25613-cfb3-479b-b8c4-1fe0a1ca3753" target="_blank">
-                    <img src="https://images.credly.com/size/340x340/images/2d84e428-9078-49b6-a804-13c15383d0de/image.png"
-                         alt="AWS Certified Solutions Architect – Professional" class="cert-badge"
-                         title="AWS Certified Solutions Architect – Professional">
-                </a>
-                <a href="https://www.credly.com/earner/earned/badge/95f9da04-baf8-4321-a959-be0e52283961" target="_blank">
-                    <img src="https://images.credly.com/size/340x340/images/bd31ef42-d460-493e-8503-39592aaf0458/image.png"
-                         alt="AWS Certified DevOps Engineer – Professional" class="cert-badge"
-                         title="AWS Certified DevOps Engineer – Professional">
-                </a>
-                <a href="https://www.credly.com/earner/earned/badge/545106f9-77ef-45be-b6b1-b37d041832a5" target="_blank">
-                    <img src="https://images.credly.com/size/340x340/images/53acdae5-d69f-4dda-b650-d02ed7a50dd7/image.png"
-                         alt="AWS Certified Security – Specialty" class="cert-badge"
-                         title="AWS Certified Security – Specialty">
-                </a>
-                <a href="https://www.credly.com/earner/earned/badge/7349f1d5-e3d5-44c7-bc25-6559657e6732" target="_blank">
-                    <img src="https://images.credly.com/size/340x340/images/52c6e5ac-9516-4944-a4df-e31b23c9bbf2/blob"
-                         alt="AWS Certified Gen AI Developer – Professional" class="cert-badge"
-                         title="AWS Certified Gen AI Developer – Professional">
-                </a>
-                <div class="cert-row-break"></div>
-                <a href="https://www.credly.com/earner/earned/badge/1727cb0e-3cac-41d2-aaaa-786b9d835aee" target="_blank">
-                    <img src="https://images.credly.com/size/340x340/images/0e284c3f-5164-4b21-8660-0d84737941bc/image.png"
-                         alt="AWS Certified Solutions Architect – Associate" class="cert-badge"
-                         title="AWS Certified Solutions Architect – Associate">
-                </a>
-                <a href="https://www.credly.com/earner/earned/badge/db137dff-c065-4e05-b87d-1778a3b6f200" target="_blank">
-                    <img src="https://images.credly.com/size/340x340/images/f0d3fbb9-bfa7-4017-9989-7bde8eaf42b1/image.png"
-                         alt="AWS Certified SysOps Administrator – Associate" class="cert-badge"
-                         title="AWS Certified SysOps Administrator – Associate">
-                </a>
-                <a href="https://www.credly.com/earner/earned/badge/e91c25eb-c829-4e06-9773-e02d7ddbec43" target="_blank">
-                    <img src="https://images.credly.com/size/340x340/images/572de0ba-2c59-4816-a59d-b0e1687e45ee/image.png"
-                         alt="Red Hat Certified System Administrator (RHCSA)" class="cert-badge"
-                         title="Red Hat Certified System Administrator (RHCSA)">
-                </a>
-            </div>
-        </div>
+<footer>
+  <div>© 2026 Rayhan Bintang Abdurrahim · built with infrastructure-as-code principles</div>
+  <div>uptime 100% · last deploy: just now</div>
+</footer>
 
-        <div class="skills-grid">
-            <div class="skill-card">
-                <div class="skill-icon">☁️</div>
-                <h3>Cloud Infrastructure</h3>
-                <p>Design and implement scalable cloud solutions with AWS, focusing on high availability and cost optimization.</p>
-                <div class="tech-tags">
-                    <span class="tag">AWS</span>
-                    <span class="tag">EC2</span>
-                    <span class="tag">EKS</span>
-                    <span class="tag">VPC</span>
-                    <span class="tag">RDS</span>
-                </div>
-            </div>
+</div>
 
-            <div class="skill-card">
-                <div class="skill-icon">🔧</div>
-                <h3>Infrastructure as Code</h3>
-                <p>Automate infrastructure deployment and management using modern IaC tools and best practices.</p>
-                <div class="tech-tags">
-                    <span class="tag">Terraform</span>
-                    <span class="tag">Ansible</span>
-                    <span class="tag">CloudFormation</span>
-                </div>
-            </div>
+<script>
+// ============ DIAGRAM LINES ============
+const NODE_DATA = {
+  me: { title: 'principal-human-engineer', body: 'The center node. Everything else is a managed service of mine. Healthy, accepting traffic, occasionally context-switches to coffee.', link: '#hero' },
+  cloud: { title: 'cloud-infra :: AWS', body: 'EC2, EKS, VPC, RDS. I design multi-AZ, cost-optimized AWS systems with the kind of failover that lets you sleep through Friday-night incidents.', link: '#skills' },
+  containers: { title: 'containers :: K8s', body: 'Kubernetes that doesn\'t flap. EKS in prod, on-prem K8s for cost control. Helm charts, sane probes, autoscaling that doesn\'t fight itself.', link: '#skills' },
+  iac: { title: 'iac :: terraform', body: 'Terraform-first. Modules with versioning, remote state, drift detection. Ansible for the parts Terraform refuses to do.', link: '#skills' },
+  cicd: { title: 'ci-cd :: gitlab+jenkins', body: 'GitLab CI, Jenkins, CodePipeline. Canary, blue/green, rollback in one click. Pipelines that fail loudly and safely.', link: '#skills' },
+  security: { title: 'security :: zero-trust', body: 'IAM least-privilege, WAF, KMS, GuardDuty, Security Hub. 100% compliance coverage. The audit team likes me.', link: '#skills' },
+  observability: { title: 'observability :: prom+grafana', body: 'Prometheus, Grafana, CloudWatch. Alerts that mean something. Dashboards engineers actually open.', link: '#skills' },
+  projects: { title: 'projects :: shipped', body: '3 production deployments visible below. Multi-AZ AWS, enterprise security, and an on-prem K8s platform that runs without cloud bills.', link: '#projects' },
+  contact: { title: 'contact :: open inbox', body: 'Available for DevOps consulting, infrastructure projects, and emergencies that require an SRE who has seen things.', link: '#contact' }
+};
 
-            <div class="skill-card">
-                <div class="skill-icon">🐳</div>
-                <h3>Container Orchestration</h3>
-                <p>Deploy and manage containerized applications with Kubernetes and Docker for maximum scalability.</p>
-                <div class="tech-tags">
-                    <span class="tag">Kubernetes</span>
-                    <span class="tag">Docker</span>
-                    <span class="tag">EKS</span>
-                    <span class="tag">Helm</span>
-                </div>
-            </div>
+function drawLines() {
+  const svg = document.getElementById('diagram-lines');
+  const canvas = document.getElementById('diagram-canvas');
+  const rect = canvas.getBoundingClientRect();
+  svg.setAttribute('viewBox', `0 0 ${rect.width} ${rect.height}`);
+  svg.innerHTML = '';
 
-            <div class="skill-card">
-                <div class="skill-icon">🔄</div>
-                <h3>CI/CD Pipelines</h3>
-                <p>Build automated deployment pipelines that ensure fast, reliable, and secure software delivery.</p>
-                <div class="tech-tags">
-                    <span class="tag">GitLab CI</span>
-                    <span class="tag">Jenkins</span>
-                    <span class="tag">CodePipeline</span>
-                </div>
-            </div>
+  const center = canvas.querySelector('[data-node="me"]');
+  const centerRect = center.getBoundingClientRect();
+  const cx = centerRect.left - rect.left + centerRect.width / 2;
+  const cy = centerRect.top - rect.top + centerRect.height / 2;
 
-            <div class="skill-card">
-                <div class="skill-icon">🔒</div>
-                <h3>Security & Compliance</h3>
-                <p>Implement security best practices and compliance requirements across all infrastructure layers.</p>
-                <div class="tech-tags">
-                    <span class="tag">IAM</span>
-                    <span class="tag">GuardDuty</span>
-                    <span class="tag">SecHub</span>
-                    <span class="tag">WAF</span>
-                </div>
-            </div>
+  const nodes = canvas.querySelectorAll('.node:not(.center)');
+  nodes.forEach((node, i) => {
+    const r = node.getBoundingClientRect();
+    const nx = r.left - rect.left + r.width / 2;
+    const ny = r.top - rect.top + r.height / 2;
+    // bezier curve
+    const mx = (cx + nx) / 2;
+    const my = (cy + ny) / 2;
+    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    path.setAttribute('d', `M ${cx} ${cy} Q ${mx + (Math.random()*40-20)} ${my + (Math.random()*40-20)} ${nx} ${ny}`);
+    path.setAttribute('stroke', 'oklch(0.50 0.06 250)');
+    path.setAttribute('stroke-width', '1');
+    path.setAttribute('fill', 'none');
+    path.setAttribute('stroke-dasharray', '4 4');
+    svg.appendChild(path);
 
-            <div class="skill-card">
-                <div class="skill-icon">📊</div>
-                <h3>Monitoring & Observability</h3>
-                <p>Set up comprehensive monitoring solutions to ensure system health and performance.</p>
-                <div class="tech-tags">
-                    <span class="tag">CloudWatch</span>
-                    <span class="tag">Prometheus</span>
-                    <span class="tag">Grafana</span>
-                </div>
-            </div>
-        </div>
-    </section>
-    <section id="projects">
-        <div class="section-header">
-            <h2 class="section-title">Featured Projects</h2>
-            <p class="section-subtitle">Infrastructure solutions I've designed and implemented</p>
-        </div>
-        <div class="projects-grid">
-            <div class="project-card">
-                <div class="project-image">
-                    <img src="assets/aws-infrastructure.png" alt="AWS Multi-AZ Architecture" style="width: 100%; height: 100%; object-fit: cover;">
-                </div>
-                <div class="project-content">
-                    <h3>Multi-AZ AWS Production Environment</h3>
-                    <p>Production-grade AWS infrastructure achieving:
-                        <br>• 99.9% uptime with multi-AZ failover
-                        <br>• Zero-downtime deployments across 15+ microservices
-                        <br>• Automated CI/CD reducing deployment time by 70%
-                        <br>• Cost-optimized with NAT gateway, ALB + WAF, and EKS node group separation
-                    </p>
-                    <div class="tech-tags">
-                        <span class="tag">AWS</span>
-                        <span class="tag">EKS</span>
-                        <span class="tag">Terraform</span>
-                        <span class="tag">PostgreSQL</span>
-                        <span class="tag">Redis</span>
-                    </div>
-                </div>
-            </div>
+    // animated packet
+    const packet = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+    packet.setAttribute('r', '3');
+    packet.setAttribute('fill', 'oklch(0.78 0.16 220)');
+    const animate = document.createElementNS('http://www.w3.org/2000/svg', 'animateMotion');
+    animate.setAttribute('dur', (3 + i * 0.4) + 's');
+    animate.setAttribute('repeatCount', 'indefinite');
+    animate.setAttribute('path', `M ${cx} ${cy} Q ${mx} ${my} ${nx} ${ny}`);
+    packet.appendChild(animate);
+    svg.appendChild(packet);
+  });
+}
 
-            <div class="project-card">
-                <div class="project-image">
-                    <img src="assets/security-architecture.png" alt="Enterprise Security Architecture" style="width: 100%; height: 100%; object-fit: cover;">
-                </div>
-                <div class="project-content">
-                    <h3>Enterprise Security Architecture</h3>
-                    <p>Comprehensive security posture delivering:
-                        <br>• 100% compliance coverage with automated reporting
-                        <br>• Real-time threat detection via GuardDuty + Security Hub
-                        <br>• End-to-end encryption with KMS across all data layers
-                        <br>• Automated incident response workflows reducing MTTR by 60%
-                    </p>
-                    <div class="tech-tags">
-                        <span class="tag">AWS Security</span>
-                        <span class="tag">GuardDuty</span>
-                        <span class="tag">IAM</span>
-                        <span class="tag">KMS</span>
-                    </div>
-                </div>
-            </div>
+window.addEventListener('load', drawLines);
+window.addEventListener('resize', drawLines);
 
-            <div class="project-card">
-                <div class="project-image">
-                    <img src="assets/kubernetes-platform.png" alt="On-Premise Kubernetes Platform" style="width: 100%; height: 100%; object-fit: cover;">
-                </div>
-                <div class="project-content">
-                    <h3>On-Premise Kubernetes Platform</h3>
-                    <p>Production on-premise Kubernetes platform delivering:
-                        <br>• Dual-node HA architecture with ALB load balancing
-                        <br>• Full GitLab CI/CD integration cutting release cycles by 50%
-                        <br>• Unified storage, caching, and DB layer (Minio, Redis, PostgreSQL)
-                        <br>• Self-hosted, zero cloud dependency — full cost control
-                    </p>
-                    <div class="tech-tags">
-                        <span class="tag">Kubernetes</span>
-                        <span class="tag">Minio</span>
-                        <span class="tag">GitLab</span>
-                        <span class="tag">PostgreSQL</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+// inspector
+const inspector = document.getElementById('inspector');
+function openInspector(id) {
+  const data = NODE_DATA[id];
+  if (!data) return;
+  document.getElementById('insp-id').textContent = ' ' + id;
+  document.getElementById('insp-title').textContent = data.title;
+  document.getElementById('insp-body').textContent = data.body;
+  document.getElementById('insp-link').href = data.link;
+  inspector.classList.add('visible');
+  document.querySelectorAll('.node').forEach(n => n.classList.remove('active'));
+  document.querySelector(`[data-node="${id}"]`).classList.add('active');
+}
+function closeInspector() {
+  inspector.classList.remove('visible');
+  document.querySelectorAll('.node').forEach(n => n.classList.remove('active'));
+}
+document.querySelectorAll('.node').forEach(node => {
+  node.addEventListener('click', () => openInspector(node.dataset.node));
+  node.addEventListener('mouseenter', () => {
+    if (!inspector.classList.contains('visible')) openInspector(node.dataset.node);
+  });
+});
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeInspector(); });
+window.closeInspector = closeInspector;
 
-    <!-- Chat Section -->
-    <section id="chat">
-        <div class="section-header">
-            <h2 class="section-title">Ask Me Anything</h2>
-            <p class="section-subtitle">Chat with my AI assistant about my services, skills, and availability</p>
-        </div>
-        <div class="chat-container">
-            <div class="chat-window">
-                <div class="chat-header">
-                    <div class="chat-status" id="chatStatus"></div>
-                    <div>
-                        <h3>DevOps Assistant</h3>
-                        <p style="margin: 0; font-size: 0.75rem; color: var(--text-muted);" id="botMode">Connecting...</p>
-                    </div>
-                </div>
-                <div class="chat-messages" id="chatMessages">
-                    <div class="message bot">
-                        <div class="message-avatar">RA</div>
-                        <div class="message-content">
-                            <div class="message-name">DevOps Assistant</div>
-                            <div class="message-text">
-                                👋 Hi! I'm here to help answer questions about Rayhan's DevOps expertise, services, and availability. Feel free to ask me anything about:
-                                <br><br>
-                                • Infrastructure architecture and design<br>
-                                • CI/CD pipeline implementation<br>
-                                • Cloud migration strategies<br>
-                                • Kubernetes and containerization<br>
-                                • Security and compliance<br>
-                                • Project timelines and rates
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="suggested-questions">
-                    <button class="suggestion-btn" onclick="askSuggestion('What AWS certifications does Rayhan have?')">📜 Certifications</button>
-                    <button class="suggestion-btn" onclick="askSuggestion('What are Rayhan\'s recent projects?')">🏗️ Recent Projects</button>
-                    <button class="suggestion-btn" onclick="askSuggestion('How can I hire Rayhan?')">💼 Work Together</button>
-                </div>
-                <div class="chat-input-container">
-                    <div class="chat-input-wrapper">
-                        <input 
-                            type="text" 
-                            class="chat-input" 
-                            id="chatInput" 
-                            placeholder="Type your question here..."
-                        >
-                        <button class="chat-send-btn" id="chatSendBtn">Send</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+// ============ CHAT ============
+const chatBody = document.getElementById('chat-body');
+const chatInput = document.getElementById('chat-input');
+const chatSend = document.getElementById('chat-send');
 
-    <!-- Contact Section -->
-    <section id="contact">
-        <div class="contact-content">
-            <div class="section-header">
-                <h2 class="section-title">Let's Work Together</h2>
-                <p class="section-subtitle">Available for DevOps consulting and infrastructure projects</p>
-            </div>
-            <div class="contact-links">
-                <a href="mailto:rayhanbintang.work@gmail.com" class="contact-link">
-                    📧 Email
-                </a>
-                <a href="https://github.com/Rayhanbintang" class="contact-link" target="_blank">
-                    💻 GitHub
-                </a>
-                <a href="https://www.linkedin.com/in/rayhanbintang/" class="contact-link" target="_blank">
-                    💼 LinkedIn
-                </a>
-                <a href="https://contra.com/rayhan_abdurrahim_c13378wy/work?r=rayhan_abdurrahim_c13378wy" class="contact-link" target="_blank">
-                    🎯 Contra
-                </a>
-            </div>
-        </div>
-    </section>
+function appendMsg(role, text) {
+  const wrap = document.createElement('div');
+  wrap.className = 'msg ' + role;
+  const av = document.createElement('div');
+  av.className = 'msg-avatar';
+  av.textContent = role === 'user' ? 'YOU' : 'RA';
+  const bubble = document.createElement('div');
+  bubble.className = 'msg-bubble';
+  bubble.textContent = text;
+  wrap.appendChild(av);
+  wrap.appendChild(bubble);
+  chatBody.appendChild(wrap);
+  chatBody.scrollTop = chatBody.scrollHeight;
+  return bubble;
+}
 
-    <!-- Footer -->
-    <footer>
-        <p>&copy; 2026 Rayhan Bintang Abdurrahim • Built with infrastructure-as-code principles</p>
-    </footer>
+function appendTyping() {
+  const wrap = document.createElement('div');
+  wrap.className = 'msg bot typing-wrap';
+  wrap.innerHTML = '<div class="msg-avatar">RA</div><div class="msg-bubble"><div class="typing"><span></span><span></span><span></span></div></div>';
+  chatBody.appendChild(wrap);
+  chatBody.scrollTop = chatBody.scrollHeight;
+  return wrap;
+}
 
-    <script>
-        // Chatbot functionality
-        const API_URL = '/api'; // Use relative path for Vercel functions
-        
-        const chatInput = document.getElementById('chatInput');
-        const chatSendBtn = document.getElementById('chatSendBtn');
-        const chatMessages = document.getElementById('chatMessages');
-        const chatStatus = document.getElementById('chatStatus');
-        const botMode = document.getElementById('botMode');
+const messages = [];
 
-        // Conversation history (stored in browser session)
-        let conversationHistory = [];
+async function sendMessage(text) {
+  if (!text.trim()) return;
+  appendMsg('user', text);
+  const conversationHistory = messages.slice();
+  messages.push({ role: 'user', content: text });
+  chatInput.value = '';
+  const typing = appendTyping();
+  try {
+    const res = await fetch('/api/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message: text, conversationHistory })
+    });
+    if (!res.ok) throw new Error('chat request failed');
+    const data = await res.json();
+    const reply = data.reply;
+    typing.remove();
+    appendMsg('bot', reply || '(no response — try again?)');
+    messages.push({ role: 'assistant', content: reply });
+  } catch (e) {
+    typing.remove();
+    appendMsg('bot', 'Hmm, my LLM sidecar is napping. Try again or just email rayhanbintang.work@gmail.com directly.');
+  }
+}
 
-        // Check backend status on load
-        checkBackendStatus();
+chatSend.addEventListener('click', () => sendMessage(chatInput.value));
+chatInput.addEventListener('keydown', e => { if (e.key === 'Enter') sendMessage(chatInput.value); });
+document.querySelectorAll('.quick-q button').forEach(b => {
+  b.addEventListener('click', () => sendMessage(b.dataset.q));
+});
 
-        async function checkBackendStatus() {
-            try {
-                const response = await fetch(`${API_URL}/health`);
-                const data = await response.json();
-                updateBotStatus(data.mode);
-            } catch (error) {
-                updateBotStatus('offline');
-            }
-        }
+// smooth scroll
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    const id = a.getAttribute('href');
+    if (id.length > 1) {
+      const target = document.querySelector(id);
+      if (target) {
+        e.preventDefault();
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }
+  });
+});
+</script>
 
-        function updateBotStatus(mode) {
-            chatStatus.style.animation = 'none';
-            
-            if (mode === 'offline') {
-                chatStatus.style.background = '#ef4444';
-                botMode.textContent = 'Offline';
-                chatInput.disabled = true;
-                chatSendBtn.disabled = true;
-            } else if (mode === 'rule-based') {
-                chatStatus.style.background = 'var(--accent)';
-                chatStatus.style.animation = 'pulse 2s infinite';
-                botMode.textContent = 'Rule-based mode - my machine is off :( comeback later for the AI-chatbot';
-                chatInput.disabled = false;
-                chatSendBtn.disabled = false;
-            } else if (mode === 'ai-powered') {
-                chatStatus.style.background = 'var(--success)';
-                chatStatus.style.animation = 'pulse 2s infinite';
-                botMode.textContent = 'AI-powered mode - please be patient, running on my local machine, it will work :)';
-                chatInput.disabled = false;
-                chatSendBtn.disabled = false;
-            }
-        }
-
-        function sendMessage() {
-            const message = chatInput.value.trim();
-            if (!message) return;
-
-            addMessage('user', 'You', message);
-            chatInput.value = '';
-            chatSendBtn.disabled = true;
-
-            conversationHistory.push({ role: 'user', content: message });
-            showTyping();
-
-            const startTime = Date.now();
-
-            fetch(`${API_URL}/chat`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ 
-                    message,
-                    conversationHistory: conversationHistory.slice(0, -1) // Send history without current message
-                }),
-            })
-            .then(response => response.json())
-            .then(data => {
-                hideTyping();
-                logChatMetrics(message, Date.now() - startTime);
-                if (data.mode) updateBotStatus(data.mode);
-                
-                // Add assistant response to history
-                conversationHistory.push({
-                    role: 'assistant',
-                    content: data.reply
-                });
-                
-                addMessage('bot', 'DevOps Assistant', data.reply);
-                chatSendBtn.disabled = false;
-            })
-            .catch(error => {
-                hideTyping();
-                addMessage('bot', 'DevOps Assistant', 'Sorry, I encountered an error. Please try again.');
-                updateBotStatus('offline');
-                chatSendBtn.disabled = false;
-            });
-        }
-
-        function addMessage(type, name, text) {
-            const messageDiv = document.createElement('div');
-            messageDiv.className = `message ${type}`;
-            
-            // Convert markdown-like formatting to HTML
-            const formattedText = text
-                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') // **bold**
-                .replace(/\*(.*?)\*/g, '<em>$1</em>') // *italic*
-                .replace(/`(.*?)`/g, '<code>$1</code>') // `code`
-                .replace(/\n- /g, '\n• ') // bullet points
-                .replace(/\n\n/g, '<br><br>') // paragraphs
-                .replace(/\n/g, '<br>'); // line breaks
-            
-            messageDiv.innerHTML = `
-                <div class="message-avatar">${type === 'bot' ? 'RA' : 'U'}</div>
-                <div class="message-content">
-                    <div class="message-name">${name}</div>
-                    <div class="message-text">${formattedText}</div>
-                </div>
-            `;
-            chatMessages.appendChild(messageDiv);
-            chatMessages.scrollTop = chatMessages.scrollHeight;
-        }
-
-        function showTyping() {
-            const typingDiv = document.createElement('div');
-            typingDiv.className = 'typing-indicator active';
-            typingDiv.id = 'typingIndicator';
-            typingDiv.innerHTML = `
-                <div class="typing-dot"></div>
-                <div class="typing-dot"></div>
-                <div class="typing-dot"></div>
-            `;
-            chatMessages.appendChild(typingDiv);
-            chatMessages.scrollTop = chatMessages.scrollHeight;
-        }
-
-        function hideTyping() {
-            const typingIndicator = document.getElementById('typingIndicator');
-            if (typingIndicator) {
-                typingIndicator.remove();
-            }
-        }
-
-        chatSendBtn.addEventListener('click', sendMessage);
-        chatInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') sendMessage();
-        });
-
-        function askSuggestion(question) {
-            chatInput.value = question;
-            sendMessage();
-        }
-
-        function logChatMetrics(question, responseTimeMs) {
-            if (typeof gtag !== 'undefined') {
-                gtag('event', 'chat_interaction', {
-                    question_length: question.length,
-                    response_time_ms: responseTimeMs
-                });
-            }
-        }
-    </script>
 </body>
 </html>
