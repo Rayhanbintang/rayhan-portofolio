@@ -388,7 +388,10 @@
   .chat-header .dots span:nth-child(2) { background: oklch(0.78 0.15 80); }
   .chat-header .dots span:nth-child(3) { background: oklch(0.72 0.15 150); }
   .chat-header .title { flex: 1; color: var(--ink-3); }
-  .chat-header .status { color: var(--ok); }
+  .chat-header .status { color: var(--ink-3); }
+  .chat-header .status[data-mode="ai-powered"] { color: var(--ok); }
+  .chat-header .status[data-mode="rule-based"] { color: var(--warn); }
+  .chat-header .status[data-mode="offline"] { color: oklch(0.65 0.18 30); }
   .chat-body { flex: 1; padding: 18px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; font-family: 'JetBrains Mono', monospace; font-size: 13px; }
   .msg { display: flex; gap: 10px; align-items: flex-start; }
   .msg-avatar { width: 26px; height: 26px; border-radius: 6px; flex-shrink: 0; display: grid; place-items: center; font-size: 11px; font-weight: 700; }
@@ -912,7 +915,7 @@
       <div class="chat-header mono">
         <div class="dots"><span></span><span></span><span></span></div>
         <span class="title">~/devops-assistant</span>
-        <span class="status">● connected</span>
+        <span class="status" id="chat-status" data-mode="checking">● checking…</span>
       </div>
       <div class="chat-body" id="chat-body">
         <div class="msg bot">
@@ -1080,6 +1083,30 @@ function appendTyping() {
 }
 
 const messages = [];
+const chatStatus = document.getElementById('chat-status');
+
+const STATUS_LABEL = {
+  'ai-powered': '● ai-powered',
+  'rule-based': '● rule-based',
+  'offline':    '● offline',
+  'checking':   '● checking…'
+};
+function setStatus(mode) {
+  if (!STATUS_LABEL[mode]) return;
+  chatStatus.dataset.mode = mode;
+  chatStatus.textContent = STATUS_LABEL[mode];
+}
+
+(async () => {
+  try {
+    const res = await fetch('/api/health');
+    if (!res.ok) throw new Error('health check failed');
+    const data = await res.json();
+    setStatus(data.mode || 'rule-based');
+  } catch {
+    setStatus('offline');
+  }
+})();
 
 async function sendMessage(text) {
   if (!text.trim()) return;
@@ -1097,10 +1124,12 @@ async function sendMessage(text) {
     if (!res.ok) throw new Error('chat request failed');
     const data = await res.json();
     const reply = data.reply;
+    setStatus(data.mode || 'rule-based');
     typing.remove();
     appendMsg('bot', reply || '(no response — try again?)');
     messages.push({ role: 'assistant', content: reply });
   } catch (e) {
+    setStatus('offline');
     typing.remove();
     appendMsg('bot', 'Hmm, my LLM sidecar is napping. Try again or just email rayhanbintang.work@gmail.com directly.');
   }
