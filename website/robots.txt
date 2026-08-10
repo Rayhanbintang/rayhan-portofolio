@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://rayhan-portfolio-seven.vercel.app/sitemap.xml

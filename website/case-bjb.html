@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Greenfield AWS Platform: EKS, GitLab CI &amp; ArgoCD — Rayhan Bintang Abdurrahim</title>
+<meta name="description" content="Case study: building a greenfield Amazon EKS platform for a regional bank. Three clusters, 64 repositories onto GitLab CI and ECR, 63 services healthy under hub-and-spoke ArgoCD, and KEDA scaling on connection count.">
+<link rel="canonical" href="https://rayhan-portfolio-seven.vercel.app/case-bjb.html">
+<meta property="og:title" content="Greenfield AWS Platform: EKS, GitLab CI & ArgoCD">
+<meta property="og:description" content="Three EKS clusters, 64 repositories onboarded, 59 pipelines on shared templates, and the autoscaling signal that CPU could not provide.">
+<meta property="og:url" content="https://rayhan-portfolio-seven.vercel.app/case-bjb.html">
+<meta property="og:type" content="article">
+<meta property="og:image" content="https://rayhan-portfolio-seven.vercel.app/assets/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://rayhan-portfolio-seven.vercel.app/assets/og.png">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="assets/style.css" />
+</head>
+<body>
+
+<div class="grid-bg"></div>
+<div class="root">
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="brand mono"><span class="brand-dot"></span> RA::DevOps</div>
+    <div class="breadcrumbs mono">~/<span>portfolio</span>/<span>case</span>/<span>greenfield-eks</span></div>
+    <div class="topbar-actions">
+      <a class="btn" href="index.html">← home</a>
+      <a class="btn" href="projects.html">All projects →</a>
+      <a class="btn btn-primary" href="assets/Rayhan%20Bintang%20Abdurrahim%20-%20CV.pdf" target="_blank">↓ resume.pdf</a>
+    </div>
+  </div>
+</header>
+
+<article class="case">
+  <div class="case-eyebrow mono">
+    <span>case study</span><span>·</span><span>regional bank · mobile banking</span><span>·</span><span>2026</span>
+  </div>
+  <h1>A greenfield AWS platform, and the 59 pipelines that had to run on it</h1>
+  <p class="standfirst">
+    A regional Indonesian bank needed its mobile banking estate stood up on AWS from nothing: network, clusters,
+    registry, delivery, and enough developer experience that application teams could ship without learning
+    Terraform first. This is what the platform ended up being, and the three decisions I would defend in a review.
+  </p>
+
+  <div class="case-facts">
+    <div class="fact">
+      <div class="fact-value">3</div>
+      <div class="fact-label">EKS clusters<br>20 managed nodes</div>
+    </div>
+    <div class="fact">
+      <div class="fact-value">63</div>
+      <div class="fact-label">services healthy<br>under ArgoCD</div>
+    </div>
+    <div class="fact">
+      <div class="fact-value">59/59</div>
+      <div class="fact-label">pipelines green<br>on shared templates</div>
+    </div>
+    <div class="fact">
+      <div class="fact-value">99.7%</div>
+      <div class="fact-label">success rate at<br>25,000 users</div>
+    </div>
+  </div>
+
+  <h2>Context and constraints</h2>
+  <p>
+    Nothing existed at the start. No landing zone, no network, no registry, no pipelines. The application estate was
+    already written and already had opinions, which meant the platform had to accommodate the applications rather
+    than the other way around.
+  </p>
+  <p>
+    Three constraints shaped everything. It is a bank, so the network design had to survive an audit and the access
+    path to anything private had to be justifiable. The timeline was compressed. And the application teams were not
+    infrastructure teams, so any solution that required each of 64 repositories to author its own CI would have
+    quietly failed at repository forty.
+  </p>
+
+  <h2>What I built</h2>
+
+  <h3>Terraform, in five stacks</h3>
+  <p>
+    Networking, cluster, registry, delivery and workload each own a stack with its own state, driven by
+    <code>for_each</code> so the three clusters are the same code with different inputs rather than three copies that
+    drift apart by month two. Three Amazon EKS clusters on <strong>20 managed nodes</strong>, with the ALB controller,
+    metrics-server and cluster autoscaler installed via Helm.
+  </p>
+  <p>
+    IP space was the interesting part. Pod density on the intended instance sizes did not fit the addresses available
+    in the primary CIDR, so pods run on a <strong>secondary CIDR</strong> through VPC CNI custom networking, with a
+    per-AZ <code>ENIConfig</code> keyed on the zone label, prefix delegation for density, and pod security groups where
+    a workload needed its own network identity. IRSA everywhere, so nothing carries a node role it should not have.
+  </p>
+
+  <h3>Delivery: 64 repositories, three templates</h3>
+  <p>
+    <strong>64 application repositories</strong> onto GitLab CI, building into Amazon ECR, delivered onto the clusters
+    through a hub-and-spoke ArgoCD. At handover, <strong>63 services were running healthy</strong> across the three
+    clusters, every deployable service in the estate.
+  </p>
+  <p>
+    The part I care about most is not the count. Rather than write 64 pipelines, I built <strong>three shared
+    templates</strong> with an opt-in image-bump-and-sync loop: the pipeline builds, tags, pushes, updates the
+    manifest and lets ArgoCD converge. A team enables the whole delivery path by setting a single variable. That
+    carried <strong>59 repositories with every pipeline green</strong>, and it means the next change to how deployment
+    works is one commit in one place instead of a migration.
+  </p>
+
+  <h2>Decisions and trade-offs</h2>
+
+  <div class="callout">
+    <div class="callout-label mono">decision 01 · autoscaling</div>
+    <p>
+      <strong>KEDA on connection count, because CPU was lying.</strong> One service holds long-lived WebSocket
+      connections. Its pods sit at a steady, unremarkable CPU utilization whether they are holding fifty connections
+      or five thousand, so a CPU-based HPA would have scaled late on the way up and not at all on the way down.
+      I moved it to KEDA scaling on connection count. The trade-off is a second scaling mechanism to understand and
+      an external metric source to keep healthy, which is a real cost. It was worth it here because the alternative
+      was an autoscaler that could not observe the thing it was supposed to react to.
+    </p>
+  </div>
+
+  <div class="callout">
+    <div class="callout-label mono">decision 02 · developer experience</div>
+    <p>
+      <strong>Opt-in templates rather than mandated ones.</strong> Shared CI can be imposed, and then every team with
+      an unusual build fights it and forks it. Making adoption a single variable meant teams that fit the pattern got
+      it for free and teams that did not could stay out without blocking anyone. The cost is that the templates have
+      to stay genuinely good, because nothing forces their use. 59 of 64 chose them.
+    </p>
+  </div>
+
+  <div class="callout">
+    <div class="callout-label mono">decision 03 · owning the drift</div>
+    <p>
+      <strong>Reconcile the console back into state, do not import and move on.</strong> During a compressed build,
+      things get clicked. I worked the drift back into Terraform until <code>plan</code> reported no changes, rather
+      than leaving a codebase that describes an estate nobody actually has. Slower in the moment. The alternative is
+      handing over infrastructure-as-code that is neither.
+    </p>
+  </div>
+
+  <h2>Where the platform ended and I kept going</h2>
+  <p>
+    Several services were reported as blocked by on-premise network connectivity. They were not. Every one of them
+    turned out to be a source or configuration defect: services pointing at the wrong dependency, Java applications
+    failing during boot for reasons that surfaced as connection errors much later in the stack.
+  </p>
+  <p>
+    Fixing them meant working inside the application layer, repointing dependencies through <code>settings.xml</code>
+    and Dockerfile build variables, and reading enough of the boot sequence to tell a genuine network reachability
+    problem from an application that never got far enough to open a socket. That is not platform work, strictly.
+    But "the network is blocked" is the most expensive wrong diagnosis available on a migration, and someone has to
+    be willing to open the application to disprove it.
+  </p>
+
+  <h2>Numbers</h2>
+  <ul>
+    <li><strong>3 EKS clusters, 20 managed nodes</strong>, from a five-stack Terraform layout using <code>for_each</code></li>
+    <li><strong>64 repositories</strong> onboarded to GitLab CI and Amazon ECR</li>
+    <li><strong>63 services healthy</strong> under hub-and-spoke ArgoCD, every deployable service in the estate</li>
+    <li><strong>59 repositories</strong> on the three shared pipeline templates, all pipelines green</li>
+    <li><strong>99.7% success rate under a 25,000-user load</strong>, alongside AZ-failure resilience testing</li>
+    <li>An x86 versus Graviton benchmark to inform node group sizing</li>
+    <li><code>terraform plan</code> reporting no changes at handover</li>
+  </ul>
+
+  <h2>What I would do differently</h2>
+  <p>
+    The shared templates arrived after the first wave of repositories was already onboarded, which meant retrofitting
+    teams that had started writing their own CI. Building the template layer first, even in rough form, would have
+    saved that rework. The lesson generalizes: on a platform build, the developer-facing interface is not the thing
+    you add once the infrastructure is stable. It is the thing that determines whether the infrastructure gets used
+    the way you designed it.
+  </p>
+  <p>
+    I would also have pushed harder, earlier, for read access to application source. The week spent proving that
+    "the network is blocked" was actually four application defects was a week that a single afternoon of code
+    reading at the start would have compressed considerably.
+  </p>
+</article>
+
+<nav class="case-nav">
+  <a class="btn" href="case-hibank.html">← GKE to Amazon EKS, rebuilt not lifted</a>
+  <a class="btn" href="index.html#contact">Get in touch →</a>
+</nav>
+
+<footer>
+  <div>© 2026 Rayhan Bintang Abdurrahim · built with infrastructure-as-code principles</div>
+  <div>Jakarta · UTC+7</div>
+</footer>
+
+</div>
+
+</body>
+</html>

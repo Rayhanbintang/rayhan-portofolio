@@ -4,481 +4,25 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Rayhan Bintang Abdurrahim — Architecture</title>
-<meta name="description" content="Rayhan Bintang Abdurrahim — Technical Consultant & DevOps Specialist. 5 years on AWS, EKS/ECS migrations, Terraform IaC. 7× certified. Jakarta.">
-<meta property="og:title" content="Rayhan Bintang Abdurrahim — DevOps Engineer">
-<meta property="og:description" content="Interactive AWS architecture portfolio. EKS migrations, Terraform, GitLab CI/CD. 7× certified.">
+<meta name="description" content="Rayhan Bintang Abdurrahim — infrastructure and platform engineer. Production Amazon EKS, Terraform, ArgoCD and GitLab CI/CD for Indonesian banking and telco. 7× AWS / Red Hat certified. Jakarta, UTC+7.">
+<link rel="canonical" href="https://rayhan-portfolio-seven.vercel.app/">
+<meta property="og:title" content="Rayhan Bintang Abdurrahim — Infrastructure & Platform Engineer">
+<meta property="og:description" content="Production Kubernetes on AWS: 3 EKS clusters, 63 services on ArgoCD, 297 manifests rebuilt for a GKE→EKS migration. Interactive architecture portfolio.">
 <meta property="og:url" content="https://rayhan-portfolio-seven.vercel.app">
 <meta property="og:type" content="website">
+<meta property="og:image" content="https://rayhan-portfolio-seven.vercel.app/assets/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Rayhan Bintang Abdurrahim — Infrastructure & Platform Engineer">
+<meta name="twitter:description" content="Production Kubernetes on AWS: 3 EKS clusters, 63 services on ArgoCD, 297 manifests rebuilt for a GKE→EKS migration.">
+<meta name="twitter:image" content="https://rayhan-portfolio-seven.vercel.app/assets/og.png">
 <meta name="google-site-verification" content="RtmuZ4dUE4JeNxrCGQ3VLAhtI3WDZHY3BFZCOJnwkM8" />
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-<style>
-  :root {
-    --bg: oklch(0.16 0.025 250);
-    --bg-2: oklch(0.20 0.028 250);
-    --bg-3: oklch(0.24 0.030 250);
-    --line: oklch(0.32 0.030 250);
-    --line-soft: oklch(0.26 0.025 250);
-    --ink: oklch(0.96 0.010 250);
-    --ink-2: oklch(0.78 0.020 250);
-    --ink-3: oklch(0.58 0.020 250);
-    --accent: oklch(0.78 0.16 220);
-    --accent-2: oklch(0.78 0.16 60);
-    --ok: oklch(0.78 0.16 150);
-    --warn: oklch(0.80 0.16 80);
-  }
-  * { box-sizing: border-box; }
-  html, body { margin: 0; padding: 0; }
-  body {
-    background: var(--bg);
-    color: var(--ink);
-    font-family: 'Inter', system-ui, sans-serif;
-    font-feature-settings: 'ss01', 'cv11';
-    overflow-x: hidden;
-  }
-  .mono { font-family: 'JetBrains Mono', ui-monospace, monospace; }
-  a { color: inherit; text-decoration: none; }
-  button { font: inherit; color: inherit; background: none; border: none; cursor: pointer; padding: 0; }
-
-  /* dotted grid background */
-  .grid-bg {
-    position: fixed; inset: 0; pointer-events: none; z-index: 0;
-    background-image: radial-gradient(circle, oklch(0.30 0.030 250) 1px, transparent 1px);
-    background-size: 28px 28px;
-    mask-image: radial-gradient(ellipse at center, black 30%, transparent 80%);
-  }
-
-  .root { position: relative; z-index: 1; }
-
-  /* topbar */
-  .topbar {
-    position: sticky; top: 0; z-index: 50;
-    backdrop-filter: blur(10px);
-    background: oklch(0.16 0.025 250 / 0.7);
-    border-bottom: 1px solid var(--line-soft);
-  }
-  .topbar-inner {
-    max-width: 1400px; margin: 0 auto; padding: 14px 28px;
-    display: flex; align-items: center; gap: 20px;
-  }
-  .brand {
-    font-family: 'JetBrains Mono', monospace;
-    font-weight: 700; font-size: 14px;
-    display: flex; align-items: center; gap: 10px;
-  }
-  .brand-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--ok); box-shadow: 0 0 8px var(--ok); animation: pulse 2s infinite; }
-  @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.4; } }
-  .breadcrumbs { color: var(--ink-3); font-family: 'JetBrains Mono', monospace; font-size: 12px; flex: 1; }
-  .breadcrumbs span { color: var(--ink); }
-  .topbar-actions { display: flex; gap: 8px; }
-  .btn {
-    padding: 8px 14px; border-radius: 8px; border: 1px solid var(--line);
-    font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 500;
-    background: var(--bg-2); color: var(--ink);
-    transition: all 0.15s;
-    display: inline-flex; align-items: center; gap: 6px;
-  }
-  .btn:hover { border-color: var(--accent); background: var(--bg-3); }
-  .btn-primary { background: var(--accent); color: oklch(0.15 0.025 250); border-color: var(--accent); font-weight: 600; }
-  .btn-primary:hover { background: oklch(0.85 0.16 220); }
-
-  /* hero / canvas */
-  .hero {
-    max-width: 1400px; margin: 0 auto; padding: 28px 28px 0;
-  }
-  .hero-meta {
-    display: flex; align-items: center; gap: 12px; font-family: 'JetBrains Mono', monospace; font-size: 11px;
-    color: var(--ink-3); margin-bottom: 18px; letter-spacing: 0.04em;
-  }
-  .hero-meta .pill {
-    border: 1px solid var(--line); padding: 4px 10px; border-radius: 999px;
-  }
-  .hero-meta .pill.live { color: var(--ok); border-color: oklch(0.40 0.10 150); }
-  .hero-meta .pill.live::before { content: '●'; margin-right: 6px; animation: pulse 2s infinite; }
-  .hero h1 {
-    font-family: 'Inter', sans-serif;
-    font-size: clamp(36px, 5vw, 72px);
-    line-height: 1.02;
-    margin: 0 0 28px;
-    font-weight: 800;
-    letter-spacing: -0.03em;
-    max-width: 18ch;
-    text-wrap: balance;
-  }
-  .hero h1 .accent { color: var(--accent); }
-  .hero h1 .strike { color: var(--ink-3); text-decoration: line-through; text-decoration-thickness: 3px; }
-  .hero p.lede {
-    font-size: 19px; line-height: 1.5; color: var(--ink-2); max-width: 720px; margin: 0 0 24px;
-  }
-  .hero p.lede code {
-    font-family: 'JetBrains Mono', monospace;
-    background: var(--bg-2); border: 1px solid var(--line-soft); padding: 1px 6px; border-radius: 4px;
-    font-size: 14px; color: var(--accent);
-  }
-  .hero-cta { display: flex; gap: 10px; flex-wrap: wrap; }
-
-  /* DIAGRAM */
-  .diagram-wrap {
-    position: relative; max-width: 1400px; margin: 60px auto 0; padding: 0 28px;
-  }
-  .diagram-title { display: flex; align-items: baseline; gap: 12px; margin-bottom: 20px; }
-  .diagram-title h2 { font-size: 14px; font-family: 'JetBrains Mono', monospace; color: var(--ink-3); margin: 0; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; }
-  .diagram-title .hint { font-size: 12px; color: var(--ink-3); font-family: 'JetBrains Mono', monospace; }
-  .diagram-title .hint kbd {
-    border: 1px solid var(--line); padding: 1px 6px; border-radius: 4px; background: var(--bg-2); font-size: 11px;
-  }
-  .diagram {
-    position: relative;
-    height: 760px;
-    border: 1px solid var(--line-soft);
-    border-radius: 16px;
-    background:
-      linear-gradient(var(--bg-2), var(--bg-2)),
-      radial-gradient(circle at 50% 50%, oklch(0.22 0.04 250), var(--bg-2));
-    background-blend-mode: normal;
-    overflow: hidden;
-  }
-  .diagram::before {
-    content: ''; position: absolute; inset: 0;
-    background-image:
-      linear-gradient(var(--line-soft) 1px, transparent 1px),
-      linear-gradient(90deg, var(--line-soft) 1px, transparent 1px);
-    background-size: 60px 60px;
-    opacity: 0.25;
-    mask-image: radial-gradient(ellipse at center, black 40%, transparent 90%);
-  }
-  .diagram svg.lines { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
-
-  .node {
-    position: absolute; transform: translate(-50%, -50%);
-    background: var(--bg-3);
-    border: 1px solid var(--line);
-    border-radius: 12px;
-    padding: 14px 16px;
-    min-width: 180px;
-    cursor: pointer;
-    transition: all 0.2s;
-    z-index: 2;
-  }
-  .node:hover, .node.active {
-    border-color: var(--accent);
-    background: oklch(0.27 0.04 250);
-    transform: translate(-50%, -50%) translateY(-2px);
-    box-shadow: 0 12px 30px -10px oklch(0.05 0.05 250 / 0.6), 0 0 0 1px var(--accent);
-  }
-  .node-head {
-    display: flex; align-items: center; gap: 10px; margin-bottom: 6px;
-  }
-  .node-icon {
-    width: 28px; height: 28px; border-radius: 6px;
-    background: var(--bg-2); border: 1px solid var(--line);
-    display: grid; place-items: center;
-    font-size: 14px;
-  }
-  .node-title { font-family: 'JetBrains Mono', monospace; font-weight: 600; font-size: 13px; }
-  .node-meta { font-family: 'JetBrains Mono', monospace; font-size: 10.5px; color: var(--ink-3); letter-spacing: 0.04em; }
-  .node-status { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--ok); display: flex; align-items: center; gap: 5px; margin-top: 6px; }
-  .node-status::before { content: ''; width: 6px; height: 6px; background: var(--ok); border-radius: 50%; box-shadow: 0 0 6px var(--ok); }
-
-  .node.center {
-    min-width: 220px;
-    background: linear-gradient(180deg, oklch(0.30 0.05 220), oklch(0.22 0.04 250));
-    border-color: var(--accent);
-    padding: 18px;
-  }
-  .node.center .node-title { font-size: 16px; }
-  .avatar {
-    width: 56px; height: 56px; border-radius: 50%; object-fit: cover;
-    border: 2px solid var(--accent);
-    box-shadow: 0 0 0 4px oklch(0.30 0.05 220);
-  }
-  .center-name { font-size: 17px; font-weight: 700; margin: 10px 0 2px; font-family: 'Inter', sans-serif; letter-spacing: -0.01em; }
-  .center-role { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--ink-2); }
-
-  /* sub-region labels */
-  .region-label {
-    position: absolute;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 10px;
-    color: var(--ink-3);
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    background: var(--bg-2);
-    padding: 3px 8px;
-    border: 1px dashed var(--line);
-    border-radius: 4px;
-    z-index: 1;
-  }
-
-  /* sections */
-  .section {
-    max-width: 1400px; margin: 80px auto 0; padding: 0 28px;
-  }
-  .section-head {
-    display: flex; align-items: end; justify-content: space-between; margin-bottom: 28px;
-    border-bottom: 1px solid var(--line-soft); padding-bottom: 18px;
-  }
-  .section-head h2 {
-    font-size: 36px; font-weight: 700; margin: 0; letter-spacing: -0.02em;
-  }
-  .section-head .tag {
-    font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--ink-3);
-  }
-  .section-head .tag span { color: var(--accent); }
-
-  /* skills */
-  .skills-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 16px;
-  }
-  .skill-card {
-    background: var(--bg-2);
-    border: 1px solid var(--line-soft);
-    border-radius: 12px;
-    padding: 22px;
-    transition: all 0.2s;
-    position: relative;
-    overflow: hidden;
-  }
-  .skill-card:hover { border-color: var(--accent); transform: translateY(-2px); }
-  .skill-card::before {
-    content: attr(data-port);
-    position: absolute; top: 14px; right: 16px;
-    font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--ink-3);
-  }
-  .skill-icon {
-    width: 40px; height: 40px; border-radius: 8px;
-    background: var(--bg-3); border: 1px solid var(--line);
-    display: grid; place-items: center; font-size: 18px;
-    margin-bottom: 14px;
-  }
-  .skill-card h3 { font-size: 17px; margin: 0 0 8px; font-weight: 600; letter-spacing: -0.01em; }
-  .skill-card p { font-size: 13.5px; color: var(--ink-2); line-height: 1.5; margin: 0 0 14px; }
-  .chips { display: flex; flex-wrap: wrap; gap: 6px; }
-  .chip {
-    font-family: 'JetBrains Mono', monospace; font-size: 11px;
-    padding: 3px 8px; border-radius: 4px;
-    background: var(--bg-3); border: 1px solid var(--line-soft); color: var(--ink-2);
-  }
-
-  /* certifications */
-  .certs-grid {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    gap: 14px;
-  }
-  .cert {
-    aspect-ratio: 1;
-    background: var(--bg-2);
-    border: 1px solid var(--line-soft);
-    border-radius: 12px;
-    padding: 16px;
-    display: grid; place-items: center;
-    transition: all 0.2s;
-    position: relative;
-  }
-  .cert:hover { border-color: var(--accent); transform: translateY(-3px); background: var(--bg-3); }
-  .cert img { max-width: 100%; max-height: 100%; }
-  .cert-name {
-    position: absolute; bottom: -8px; left: 50%; transform: translateX(-50%) translateY(8px);
-    background: var(--bg-3); border: 1px solid var(--accent);
-    color: var(--ink); font-family: 'JetBrains Mono', monospace; font-size: 10px;
-    padding: 4px 8px; border-radius: 4px; white-space: nowrap;
-    opacity: 0; transition: all 0.2s; pointer-events: none;
-  }
-  .cert:hover .cert-name { opacity: 1; transform: translateX(-50%) translateY(4px); }
-
-  /* projects */
-  .projects { display: flex; flex-direction: column; gap: 18px; }
-  .project {
-    border: 1px solid var(--line-soft);
-    border-radius: 14px;
-    background: var(--bg-2);
-    overflow: hidden;
-    display: grid;
-    grid-template-columns: 360px 1fr;
-    transition: all 0.2s;
-  }
-  .project:hover { border-color: var(--accent); }
-  .project-visual {
-    position: relative; min-height: 280px;
-    background: var(--bg-3);
-    border-right: 1px solid var(--line-soft);
-    overflow: hidden;
-  }
-  .project-visual::before {
-    content: ''; position: absolute; inset: 0;
-    background-image:
-      linear-gradient(oklch(0.30 0.04 250) 1px, transparent 1px),
-      linear-gradient(90deg, oklch(0.30 0.04 250) 1px, transparent 1px);
-    background-size: 24px 24px;
-  }
-  .project-svg { position: absolute; inset: 0; width: 100%; height: 100%; }
-  .project-body { padding: 28px 32px; display: flex; flex-direction: column; }
-  .project-id { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--ink-3); letter-spacing: 0.05em; margin-bottom: 6px; }
-  .project-body h3 { font-size: 24px; margin: 0 0 14px; letter-spacing: -0.02em; font-weight: 700; }
-  .project-body ul {
-    list-style: none; padding: 0; margin: 0 0 18px;
-    display: flex; flex-direction: column; gap: 8px;
-  }
-  .project-body li {
-    font-size: 14px; color: var(--ink-2); line-height: 1.5;
-    padding-left: 18px; position: relative;
-  }
-  .project-body li::before {
-    content: '→'; position: absolute; left: 0; color: var(--accent); font-family: 'JetBrains Mono', monospace;
-  }
-  .project-body li b { color: var(--ink); font-weight: 600; }
-
-  /* timeline */
-  .timeline {
-    position: relative; padding-left: 28px;
-    border-left: 1px dashed var(--line);
-    display: flex; flex-direction: column; gap: 28px;
-  }
-  .tl-item { position: relative; }
-  .tl-item::before {
-    content: ''; position: absolute; left: -34px; top: 4px;
-    width: 12px; height: 12px; border-radius: 50%;
-    background: var(--bg); border: 2px solid var(--accent);
-  }
-  .tl-item.now::before { background: var(--accent); box-shadow: 0 0 12px var(--accent); }
-  .tl-date { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--accent); margin-bottom: 4px; }
-  .tl-item h4 { margin: 0 0 6px; font-size: 18px; font-weight: 600; }
-  .tl-item p { margin: 0; color: var(--ink-2); font-size: 14px; line-height: 1.55; max-width: 700px; }
-
-  /* stack wall */
-  .stack-wall { display: flex; flex-wrap: wrap; gap: 10px; }
-  .stack-tag {
-    font-family: 'JetBrains Mono', monospace; font-size: 13px;
-    padding: 8px 14px; border-radius: 8px;
-    background: var(--bg-2); border: 1px solid var(--line-soft); color: var(--ink-2);
-    transition: all 0.15s;
-  }
-  .stack-tag:hover { border-color: var(--accent); color: var(--ink); transform: translateY(-1px); }
-  .stack-tag .dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; margin-right: 8px; vertical-align: middle; }
-
-  /* chat */
-  .chat-wrap {
-    display: grid; grid-template-columns: 1fr 1.6fr; gap: 18px;
-    background: var(--bg-2); border: 1px solid var(--line-soft); border-radius: 14px; overflow: hidden;
-  }
-  .chat-side {
-    padding: 28px; border-right: 1px solid var(--line-soft);
-    display: flex; flex-direction: column; gap: 18px;
-  }
-  .chat-side h3 { margin: 0; font-size: 22px; letter-spacing: -0.02em; }
-  .chat-side p { margin: 0; color: var(--ink-2); font-size: 14px; line-height: 1.5; }
-  .quick-q { display: flex; flex-direction: column; gap: 8px; }
-  .quick-q button {
-    padding: 10px 12px; border: 1px solid var(--line-soft); border-radius: 8px;
-    text-align: left; background: var(--bg-3); font-size: 13px; color: var(--ink-2);
-    transition: all 0.15s;
-    font-family: 'JetBrains Mono', monospace;
-  }
-  .quick-q button:hover { border-color: var(--accent); color: var(--ink); transform: translateX(2px); }
-  .chat-window {
-    background: oklch(0.13 0.025 250);
-    display: flex; flex-direction: column; min-height: 460px;
-  }
-  .chat-header {
-    padding: 14px 18px; border-bottom: 1px solid var(--line-soft);
-    display: flex; align-items: center; gap: 10px;
-    font-family: 'JetBrains Mono', monospace; font-size: 12px;
-  }
-  .chat-header .dots { display: flex; gap: 5px; }
-  .chat-header .dots span { width: 10px; height: 10px; border-radius: 50%; background: var(--line); }
-  .chat-header .dots span:nth-child(1) { background: oklch(0.65 0.15 30); }
-  .chat-header .dots span:nth-child(2) { background: oklch(0.78 0.15 80); }
-  .chat-header .dots span:nth-child(3) { background: oklch(0.72 0.15 150); }
-  .chat-header .title { flex: 1; color: var(--ink-3); }
-  .chat-mode { display: flex; flex-direction: column; gap: 2px; text-align: right; }
-  .chat-header .status { color: var(--ink-3); }
-  .chat-header .status[data-mode="ai-powered"] { color: var(--ok); }
-  .chat-header .status[data-mode="rule-based"] { color: var(--warn); }
-  .chat-header .status[data-mode="offline"] { color: var(--warn); }
-  #chat-desc { font-size: 10px; color: var(--ink-3); }
-  .chat-body { flex: 1; padding: 18px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; font-family: 'JetBrains Mono', monospace; font-size: 13px; }
-  .msg { display: flex; gap: 10px; align-items: flex-start; }
-  .msg-avatar { width: 26px; height: 26px; border-radius: 6px; flex-shrink: 0; display: grid; place-items: center; font-size: 11px; font-weight: 700; }
-  .msg.user .msg-avatar { background: var(--accent-2); color: oklch(0.15 0.025 250); }
-  .msg.bot .msg-avatar { background: var(--accent); color: oklch(0.15 0.025 250); }
-  .msg-bubble { padding: 10px 14px; border-radius: 10px; max-width: 80%; line-height: 1.5; }
-  .msg.bot .msg-bubble { background: var(--bg-3); border: 1px solid var(--line-soft); }
-  .msg.user .msg-bubble { background: oklch(0.30 0.10 220); border: 1px solid oklch(0.40 0.12 220); }
-  .chat-input {
-    border-top: 1px solid var(--line-soft); padding: 12px;
-    display: flex; gap: 8px;
-  }
-  .chat-input input {
-    flex: 1; background: var(--bg-3); border: 1px solid var(--line-soft);
-    color: var(--ink); padding: 10px 12px; border-radius: 8px;
-    font-family: 'JetBrains Mono', monospace; font-size: 13px;
-    outline: none;
-  }
-  .chat-input input:focus { border-color: var(--accent); }
-  .typing { display: flex; gap: 4px; align-items: center; padding: 10px; }
-  .typing span { width: 6px; height: 6px; border-radius: 50%; background: var(--ink-3); animation: typing 1.2s infinite; }
-  .typing span:nth-child(2) { animation-delay: 0.15s; }
-  .typing span:nth-child(3) { animation-delay: 0.3s; }
-  @keyframes typing { 0%,60%,100% { opacity: 0.3; transform: translateY(0); } 30% { opacity: 1; transform: translateY(-3px); } }
-
-  /* contact */
-  .contact-grid {
-    display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px;
-  }
-  .contact-card {
-    background: var(--bg-2); border: 1px solid var(--line-soft); border-radius: 12px;
-    padding: 24px; transition: all 0.2s; display: flex; flex-direction: column; gap: 8px;
-  }
-  .contact-card:hover { border-color: var(--accent); transform: translateY(-3px); background: var(--bg-3); }
-  .contact-label { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--ink-3); letter-spacing: 0.06em; text-transform: uppercase; }
-  .contact-value { font-size: 16px; font-weight: 600; }
-  .contact-card .arrow { margin-top: auto; color: var(--accent); font-family: 'JetBrains Mono', monospace; font-size: 13px; }
-
-  /* footer */
-  footer {
-    max-width: 1400px; margin: 80px auto 0; padding: 28px;
-    border-top: 1px solid var(--line-soft);
-    display: flex; justify-content: space-between; align-items: center;
-    font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--ink-3);
-  }
-
-  /* inspector overlay */
-  .inspector {
-    position: fixed; right: 28px; bottom: 28px;
-    width: 340px;
-    background: oklch(0.18 0.025 250 / 0.96);
-    backdrop-filter: blur(12px);
-    border: 1px solid var(--line);
-    border-radius: 12px;
-    padding: 16px;
-    z-index: 60;
-    box-shadow: 0 20px 50px -10px black;
-    transform: translateY(20px); opacity: 0; pointer-events: none;
-    transition: all 0.2s;
-  }
-  .inspector.visible { transform: translateY(0); opacity: 1; pointer-events: auto; }
-  .inspector h4 { margin: 0 0 4px; font-size: 13px; font-family: 'JetBrains Mono', monospace; }
-  .inspector .insp-meta { font-family: 'JetBrains Mono', monospace; font-size: 10.5px; color: var(--ink-3); margin-bottom: 10px; }
-  .inspector p { margin: 0; font-size: 13px; color: var(--ink-2); line-height: 1.5; }
-  .inspector .insp-close { position: absolute; top: 10px; right: 12px; color: var(--ink-3); font-family: 'JetBrains Mono', monospace; font-size: 14px; }
-  .inspector .insp-close:hover { color: var(--ink); }
-  .inspector .insp-link { display: inline-block; margin-top: 12px; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--accent); }
-
-  @media (max-width: 980px) {
-    .skills-grid { grid-template-columns: 1fr 1fr; }
-    .certs-grid { grid-template-columns: repeat(4, 1fr); }
-    .project { grid-template-columns: 1fr; }
-    .project-visual { min-height: 200px; border-right: none; border-bottom: 1px solid var(--line-soft); }
-    .chat-wrap { grid-template-columns: 1fr; }
-    .chat-side { border-right: none; border-bottom: 1px solid var(--line-soft); }
-    .contact-grid { grid-template-columns: 1fr 1fr; }
-    .diagram { height: 1100px; }
-  }
-</style>
+<link rel="stylesheet" href="assets/style.css" />
 </head>
 <body>
 
@@ -488,11 +32,11 @@
 <header class="topbar">
   <div class="topbar-inner">
     <div class="brand mono"><span class="brand-dot"></span> RA::DevOps</div>
-    <div class="breadcrumbs mono">~/<span>portfolio</span>/<span>rayhan</span> · <span style="color: var(--ok);">healthy</span> · uptime <span>3y 4mo</span></div>
+    <div class="breadcrumbs mono">~/<span>portfolio</span>/<span>rayhan</span> · <span style="color: var(--ok);">healthy</span> · <span>UTC+7</span></div>
     <div class="topbar-actions">
       <a class="btn" href="#chat">$ ask</a>
       <a class="btn" href="projects.html">All projects →</a>
-      <a class="btn btn-primary" href="assets/Rayhan%20Bintang%20Abdurrahim_1426.pdf" target="_blank">↓ resume.pdf</a>
+      <a class="btn btn-primary" href="assets/Rayhan%20Bintang%20Abdurrahim%20-%20CV.pdf" target="_blank">↓ resume.pdf</a>
     </div>
   </div>
 </header>
@@ -502,11 +46,12 @@
   <div class="hero-meta mono">
     <span class="pill live">deployed</span>
     <span class="pill">region: ap-southeast-3</span>
-    <span class="pill">v2026.05</span>
+    <span class="pill">jakarta · utc+7</span>
+    <span class="pill">v2026.08</span>
     <span class="pill">fresh-coffee: true</span>
   </div>
   <h1>I build infra that <span class="strike">breaks at 3am</span> <span class="accent">scales at 3am.</span></h1>
-  <p class="lede">Technical Consultant · DevOps Specialist at <strong style="color: var(--ink);">PT Mitra Integrasi Informatika</strong>. 5 years architecting AWS, leading EKS &amp; ECS migrations, and writing <code>terraform apply -auto-approve</code> with confidence — for clients like Telkomsel, BRI Danareksa &amp; Bank Jawa Barat. <strong style="color: var(--ink);">7× AWS / Red Hat certified.</strong></p>
+  <p class="lede">Infrastructure &amp; platform engineer at <strong style="color: var(--ink);">PT Mitra Integrasi Informatika</strong>. 5 years building and running production Kubernetes on AWS: Amazon EKS and its networking, Terraform across multi-account estates, and the shared <code>.gitlab-ci.yml</code> that 59 application repos deploy through. Banking, telco, sovereign wealth. <strong style="color: var(--ink);">7× AWS / Red Hat certified.</strong></p>
   <div class="hero-cta">
     <a class="btn btn-primary" href="#diagram">↳ Explore the architecture</a>
     <a class="btn" href="#projects">View projects</a>
@@ -541,50 +86,50 @@
     <!-- Cloud Infrastructure (top-left) -->
     <div class="node" data-node="cloud" style="left: 18%; top: 22%;">
       <div class="node-head"><span class="node-icon">☁️</span><span class="node-title">cloud-infra</span></div>
-      <div class="node-meta">aws · ec2 · vpc · rds</div>
-      <div class="node-status">5 services up</div>
+      <div class="node-meta">aws · oci · vpc · ecr</div>
+      <div class="node-status">25 accounts</div>
     </div>
 
     <!-- Containers (top-center-ish) -->
     <div class="node" data-node="containers" style="left: 36%; top: 14%;">
       <div class="node-head"><span class="node-icon">🐳</span><span class="node-title">containers</span></div>
-      <div class="node-meta">k8s · docker · helm</div>
-      <div class="node-status">42 pods · 3 nodes</div>
+      <div class="node-meta">eks · helm · kustomize</div>
+      <div class="node-status">3 clusters · 20 nodes</div>
     </div>
 
     <!-- IaC -->
     <div class="node" data-node="iac" style="left: 64%; top: 14%;">
       <div class="node-head"><span class="node-icon">🔧</span><span class="node-title">iac</span></div>
-      <div class="node-meta">terraform · ansible</div>
-      <div class="node-status">drift: 0</div>
+      <div class="node-meta">terraform · for_each</div>
+      <div class="node-status">5 stacks · drift: 0</div>
     </div>
 
     <!-- CI/CD -->
     <div class="node" data-node="cicd" style="left: 82%; top: 22%;">
       <div class="node-head"><span class="node-icon">🔄</span><span class="node-title">ci-cd</span></div>
-      <div class="node-meta">gitlab · jenkins</div>
-      <div class="node-status">green pipeline</div>
+      <div class="node-meta">gitlab · argocd</div>
+      <div class="node-status">59/59 green</div>
     </div>
 
     <!-- Security (bottom-left) -->
     <div class="node" data-node="security" style="left: 18%; top: 78%;">
       <div class="node-head"><span class="node-icon">🔒</span><span class="node-title">security</span></div>
-      <div class="node-meta">iam · waf · kms</div>
-      <div class="node-status">0 critical findings</div>
+      <div class="node-meta">iam · irsa · kms</div>
+      <div class="node-status">least-privilege</div>
     </div>
 
     <!-- Observability (bottom-center-ish) -->
     <div class="node" data-node="observability" style="left: 36%; top: 86%;">
       <div class="node-head"><span class="node-icon">📊</span><span class="node-title">observability</span></div>
-      <div class="node-meta">prom · grafana · cw</div>
-      <div class="node-status">all SLOs met</div>
+      <div class="node-meta">cloudwatch · s3 · athena</div>
+      <div class="node-status">cost-aware retention</div>
     </div>
 
     <!-- Projects -->
     <div class="node" data-node="projects" style="left: 64%; top: 86%;">
       <div class="node-head"><span class="node-icon">📦</span><span class="node-title">projects</span></div>
-      <div class="node-meta">3 deployments live</div>
-      <div class="node-status">99.9% uptime</div>
+      <div class="node-meta">4 platforms built</div>
+      <div class="node-status">63 services healthy</div>
     </div>
 
     <!-- Contact -->
@@ -612,41 +157,41 @@
     <span class="tag mono">// 6 services · <span>all green</span></span>
   </div>
   <div class="skills-grid">
-    <div class="skill-card" data-port=":443">
-      <div class="skill-icon">☁️</div>
-      <h3>Cloud Infrastructure</h3>
-      <p>Scalable AWS solutions — high availability, sane bills, no surprise NAT charges.</p>
-      <div class="chips"><span class="chip">AWS</span><span class="chip">EC2</span><span class="chip">EKS</span><span class="chip">VPC</span><span class="chip">RDS</span></div>
+    <div class="skill-card" data-port=":6443">
+      <div class="skill-icon">🐳</div>
+      <h3>Kubernetes on AWS</h3>
+      <p>Amazon EKS in production, including the networking most people skip: VPC CNI custom networking on a secondary CIDR, per-AZ ENIConfig, prefix delegation, pod security groups.</p>
+      <div class="chips"><span class="chip">Amazon EKS</span><span class="chip">VPC CNI</span><span class="chip">IRSA</span><span class="chip">KEDA</span></div>
     </div>
     <div class="skill-card" data-port=":8080">
       <div class="skill-icon">🔧</div>
-      <h3>Infrastructure as Code</h3>
-      <p>Terraform-first, manual-clicks-last. Modules, state hygiene, drift detection.</p>
-      <div class="chips"><span class="chip">Terraform</span><span class="chip">Ansible</span><span class="chip">CloudFormation</span></div>
-    </div>
-    <div class="skill-card" data-port=":6443">
-      <div class="skill-icon">🐳</div>
-      <h3>Container Orchestration</h3>
-      <p>Kubernetes that behaves: probes that work, autoscaling that doesn't oscillate.</p>
-      <div class="chips"><span class="chip">Kubernetes</span><span class="chip">Docker</span><span class="chip">EKS</span><span class="chip">Helm</span></div>
+      <h3>Terraform, multi-account</h3>
+      <p>Split-stack layouts with <code>for_each</code>, remote state, reusable onboarding modules. When the console drifts, I reconcile it back until <code>plan</code> is clean rather than importing and hoping.</p>
+      <div class="chips"><span class="chip">Terraform</span><span class="chip">Ansible</span><span class="chip">Landing Zone</span></div>
     </div>
     <div class="skill-card" data-port=":2375">
       <div class="skill-icon">🔄</div>
-      <h3>CI / CD Pipelines</h3>
-      <p>Automated deploys that fail safely. Canary, blue/green, rollback in one click.</p>
-      <div class="chips"><span class="chip">GitLab CI</span><span class="chip">Jenkins</span><span class="chip">CodePipeline</span></div>
+      <h3>CI/CD &amp; Runners</h3>
+      <p>GitLab CI on self-hosted amd64 and Graviton runners, building to ECR. Rollback by commit-SHA tag, secrets out of the repo, deploys that fail loudly before they fail quietly.</p>
+      <div class="chips"><span class="chip">GitLab CI</span><span class="chip">Amazon ECR</span><span class="chip">Graviton</span></div>
     </div>
-    <div class="skill-card" data-port=":22">
-      <div class="skill-icon">🔒</div>
-      <h3>Security & Compliance</h3>
-      <p>Least-privilege everything. Threat detection, encryption, automated audit reports.</p>
-      <div class="chips"><span class="chip">IAM</span><span class="chip">GuardDuty</span><span class="chip">SecHub</span><span class="chip">WAF</span></div>
+    <div class="skill-card" data-port=":8443">
+      <div class="skill-icon">🚀</div>
+      <h3>GitOps with ArgoCD</h3>
+      <p>Hub-and-spoke ArgoCD driving three clusters, with Kustomize overlays per environment and an image-bump-and-sync loop so a merge is the whole deployment story.</p>
+      <div class="chips"><span class="chip">ArgoCD</span><span class="chip">Kustomize</span><span class="chip">Helm</span></div>
     </div>
     <div class="skill-card" data-port=":9090">
       <div class="skill-icon">📊</div>
-      <h3>Monitoring & Observability</h3>
-      <p>Dashboards your SREs will actually look at. Alerts that mean something.</p>
-      <div class="chips"><span class="chip">CloudWatch</span><span class="chip">Prometheus</span><span class="chip">Grafana</span></div>
+      <h3>Observability &amp; Cost</h3>
+      <p>CloudWatch for the live signal, S3 and Athena for everything older. Hot log retention is the line item nobody reads until it is the whole bill.</p>
+      <div class="chips"><span class="chip">CloudWatch</span><span class="chip">S3 + Athena</span><span class="chip">Cost Analysis</span></div>
+    </div>
+    <div class="skill-card" data-port=":22">
+      <div class="skill-icon">🛠️</div>
+      <h3>Developer Tooling</h3>
+      <p>Shared pipeline templates and conversion toolchains so application teams ship without writing their own CI. Python and Bash, because the migration you do once is still worth scripting.</p>
+      <div class="chips"><span class="chip">Python</span><span class="chip">Bash</span><span class="chip">Platform DX</span></div>
     </div>
   </div>
 </section>
@@ -655,16 +200,16 @@
 <section class="section" id="certs">
   <div class="section-head">
     <h2>Certifications.</h2>
-    <span class="tag mono">// 7 valid · <span>0 expiring soon</span></span>
+    <span class="tag mono">// 7 active · <span>AWS ×6 + Red Hat</span></span>
   </div>
   <div class="certs-grid">
-    <a class="cert" href="https://www.credly.com/earner/earned/badge/2ad25613-cfb3-479b-b8c4-1fe0a1ca3753" target="_blank"><img src="assets/cert-aws-sap.png" alt="" /><span class="cert-name">AWS SA Pro</span></a>
-    <a class="cert" href="https://www.credly.com/earner/earned/badge/95f9da04-baf8-4321-a959-be0e52283961" target="_blank"><img src="assets/cert-aws-devops.png" alt="" /><span class="cert-name">AWS DevOps Pro</span></a>
-    <a class="cert" href="https://www.credly.com/earner/earned/badge/545106f9-77ef-45be-b6b1-b37d041832a5" target="_blank"><img src="assets/cert-aws-security.png" alt="" /><span class="cert-name">AWS Security Specialty</span></a>
-    <a class="cert" href="https://www.credly.com/earner/earned/badge/7349f1d5-e3d5-44c7-bc25-6559657e6732" target="_blank"><img src="assets/cert-aws-genai.png" alt="" /><span class="cert-name">AWS Gen AI Pro</span></a>
-    <a class="cert" href="https://www.credly.com/earner/earned/badge/1727cb0e-3cac-41d2-aaaa-786b9d835aee" target="_blank"><img src="assets/cert-aws-saa.png" alt="" /><span class="cert-name">AWS SA Associate</span></a>
-    <a class="cert" href="https://www.credly.com/earner/earned/badge/db137dff-c065-4e05-b87d-1778a3b6f200" target="_blank"><img src="assets/cert-aws-sysops.png" alt="" /><span class="cert-name">AWS SysOps</span></a>
-    <a class="cert" href="https://www.credly.com/earner/earned/badge/e91c25eb-c829-4e06-9773-e02d7ddbec43" target="_blank"><img src="assets/cert-rhcsa.png" alt="" /><span class="cert-name">RHCSA</span></a>
+    <a class="cert" href="https://www.credly.com/earner/earned/badge/95f9da04-baf8-4321-a959-be0e52283961" target="_blank" rel="noopener"><img src="assets/cert-aws-devops.png" alt="AWS Certified DevOps Engineer – Professional" /><span class="cert-name">AWS DevOps Pro</span></a>
+    <a class="cert" href="https://www.credly.com/earner/earned/badge/545106f9-77ef-45be-b6b1-b37d041832a5" target="_blank" rel="noopener"><img src="assets/cert-aws-security.png" alt="AWS Certified Security – Specialty" /><span class="cert-name">AWS Security Specialty</span></a>
+    <a class="cert" href="https://www.credly.com/earner/earned/badge/2ad25613-cfb3-479b-b8c4-1fe0a1ca3753" target="_blank" rel="noopener"><img src="assets/cert-aws-sap.png" alt="AWS Certified Solutions Architect – Professional" /><span class="cert-name">AWS SA Pro</span></a>
+    <a class="cert" href="https://www.credly.com/earner/earned/badge/7349f1d5-e3d5-44c7-bc25-6559657e6732" target="_blank" rel="noopener"><img src="assets/cert-aws-genai.png" alt="AWS Certified Gen AI Developer – Professional" /><span class="cert-name">AWS Gen AI Pro</span></a>
+    <a class="cert" href="https://www.credly.com/earner/earned/badge/db137dff-c065-4e05-b87d-1778a3b6f200" target="_blank" rel="noopener"><img src="assets/cert-aws-sysops.png" alt="AWS Certified SysOps Administrator – Associate" /><span class="cert-name">AWS SysOps</span></a>
+    <a class="cert" href="https://www.credly.com/earner/earned/badge/1727cb0e-3cac-41d2-aaaa-786b9d835aee" target="_blank" rel="noopener"><img src="assets/cert-aws-saa.png" alt="AWS Certified Solutions Architect – Associate" /><span class="cert-name">AWS SA Associate</span></a>
+    <a class="cert" href="https://www.credly.com/earner/earned/badge/e91c25eb-c829-4e06-9773-e02d7ddbec43" target="_blank" rel="noopener"><img src="assets/cert-rhcsa.png" alt="Red Hat Certified System Administrator" /><span class="cert-name">RHCSA</span></a>
   </div>
 </section>
 
@@ -672,9 +217,10 @@
 <section class="section" id="projects">
   <div class="section-head">
     <h2>Projects in production.</h2>
-    <span class="tag mono">// 3 deployments · <span>healthy</span></span>
+    <span class="tag mono">// 3 platforms · <span>healthy</span></span>
   </div>
   <div class="projects">
+
     <article class="project">
       <div class="project-visual">
         <svg class="project-svg" viewBox="0 0 360 280" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
@@ -682,158 +228,194 @@
             <pattern id="dots1" width="14" height="14" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1" fill="oklch(0.40 0.04 250)" /></pattern>
           </defs>
           <rect width="360" height="280" fill="url(#dots1)" opacity="0.35"/>
-          <!-- AZ A -->
-          <rect x="30" y="30" width="140" height="100" rx="8" fill="none" stroke="oklch(0.78 0.16 220)" stroke-width="1.2" stroke-dasharray="4 3"/>
-          <text x="40" y="46" font-family="JetBrains Mono" font-size="9" fill="oklch(0.78 0.16 220)">az-a</text>
-          <rect x="44" y="58" width="50" height="22" rx="4" fill="oklch(0.30 0.04 250)" stroke="oklch(0.50 0.04 250)"/>
-          <text x="69" y="73" font-family="JetBrains Mono" font-size="9" fill="oklch(0.85 0.01 250)" text-anchor="middle">eks-1</text>
-          <rect x="100" y="58" width="50" height="22" rx="4" fill="oklch(0.30 0.04 250)" stroke="oklch(0.50 0.04 250)"/>
-          <text x="125" y="73" font-family="JetBrains Mono" font-size="9" fill="oklch(0.85 0.01 250)" text-anchor="middle">rds</text>
-          <rect x="44" y="92" width="106" height="22" rx="4" fill="oklch(0.30 0.04 250)" stroke="oklch(0.50 0.04 250)"/>
-          <text x="97" y="107" font-family="JetBrains Mono" font-size="9" fill="oklch(0.85 0.01 250)" text-anchor="middle">redis · postgres</text>
-          <!-- AZ B -->
-          <rect x="190" y="30" width="140" height="100" rx="8" fill="none" stroke="oklch(0.78 0.16 60)" stroke-width="1.2" stroke-dasharray="4 3"/>
-          <text x="200" y="46" font-family="JetBrains Mono" font-size="9" fill="oklch(0.78 0.16 60)">az-b</text>
-          <rect x="204" y="58" width="50" height="22" rx="4" fill="oklch(0.30 0.04 250)" stroke="oklch(0.50 0.04 250)"/>
-          <text x="229" y="73" font-family="JetBrains Mono" font-size="9" fill="oklch(0.85 0.01 250)" text-anchor="middle">eks-2</text>
-          <rect x="260" y="58" width="50" height="22" rx="4" fill="oklch(0.30 0.04 250)" stroke="oklch(0.50 0.04 250)"/>
-          <text x="285" y="73" font-family="JetBrains Mono" font-size="9" fill="oklch(0.85 0.01 250)" text-anchor="middle">rds-r</text>
-          <rect x="204" y="92" width="106" height="22" rx="4" fill="oklch(0.30 0.04 250)" stroke="oklch(0.50 0.04 250)"/>
-          <text x="257" y="107" font-family="JetBrains Mono" font-size="9" fill="oklch(0.85 0.01 250)" text-anchor="middle">redis · postgres</text>
-          <!-- ALB top -->
-          <rect x="120" y="160" width="120" height="26" rx="6" fill="oklch(0.78 0.16 220)" opacity="0.9"/>
-          <text x="180" y="177" font-family="JetBrains Mono" font-size="10" fill="oklch(0.15 0.025 250)" text-anchor="middle" font-weight="700">ALB + WAF</text>
-          <!-- lines -->
-          <path d="M180 160 L100 130 M180 160 L260 130" stroke="oklch(0.78 0.16 220)" stroke-width="1" stroke-dasharray="3 3" fill="none"/>
-          <!-- bottom: pipeline -->
-          <rect x="30" y="220" width="300" height="36" rx="6" fill="none" stroke="oklch(0.50 0.04 250)" stroke-dasharray="4 3"/>
-          <text x="42" y="236" font-family="JetBrains Mono" font-size="9" fill="oklch(0.65 0.02 250)">ci/cd · 15+ microservices</text>
-          <circle cx="60" cy="246" r="3" fill="oklch(0.78 0.16 150)"/>
-          <circle cx="100" cy="246" r="3" fill="oklch(0.78 0.16 150)"/>
-          <circle cx="140" cy="246" r="3" fill="oklch(0.78 0.16 150)"/>
-          <circle cx="180" cy="246" r="3" fill="oklch(0.78 0.16 150)"/>
-          <circle cx="220" cy="246" r="3" fill="oklch(0.78 0.16 150)"/>
-          <circle cx="260" cy="246" r="3" fill="oklch(0.78 0.16 150)"/>
-          <circle cx="300" cy="246" r="3" fill="oklch(0.78 0.16 150)"/>
+
+          <!-- git -> CI -> ECR chain -->
+          <rect x="24" y="26" width="74" height="24" rx="5" fill="oklch(0.30 0.04 250)" stroke="oklch(0.50 0.04 250)"/>
+          <text x="61" y="42" font-family="JetBrains Mono" font-size="9" fill="oklch(0.85 0.01 250)" text-anchor="middle">64 repos</text>
+          <path d="M98 38 L124 38" stroke="oklch(0.78 0.16 60)" stroke-width="1.2"/>
+          <rect x="124" y="26" width="82" height="24" rx="5" fill="oklch(0.30 0.04 250)" stroke="oklch(0.78 0.16 60)"/>
+          <text x="165" y="42" font-family="JetBrains Mono" font-size="9" fill="oklch(0.78 0.16 60)" text-anchor="middle">gitlab-ci</text>
+          <path d="M206 38 L232 38" stroke="oklch(0.78 0.16 60)" stroke-width="1.2"/>
+          <rect x="232" y="26" width="74" height="24" rx="5" fill="oklch(0.30 0.04 250)" stroke="oklch(0.50 0.04 250)"/>
+          <text x="269" y="42" font-family="JetBrains Mono" font-size="9" fill="oklch(0.85 0.01 250)" text-anchor="middle">ECR</text>
+
+          <!-- ArgoCD hub -->
+          <rect x="128" y="88" width="104" height="30" rx="6" fill="oklch(0.78 0.16 220)" opacity="0.9"/>
+          <text x="180" y="107" font-family="JetBrains Mono" font-size="10" fill="oklch(0.15 0.025 250)" text-anchor="middle" font-weight="700">ArgoCD hub</text>
+          <path d="M269 50 L269 74 Q269 88 232 100" stroke="oklch(0.50 0.04 250)" stroke-width="1" stroke-dasharray="3 3" fill="none"/>
+
+          <!-- three spoke clusters -->
+          <g font-family="JetBrains Mono" font-size="9">
+            <rect x="20" y="156" width="96" height="62" rx="7" fill="oklch(0.24 0.03 250)" stroke="oklch(0.78 0.16 220)" stroke-dasharray="4 3"/>
+            <text x="68" y="174" fill="oklch(0.78 0.16 220)" text-anchor="middle">cluster · digi</text>
+            <text x="68" y="192" fill="oklch(0.85 0.01 250)" text-anchor="middle" font-size="12" font-weight="700">50</text>
+            <text x="68" y="207" fill="oklch(0.58 0.02 250)" text-anchor="middle" font-size="8">services</text>
+
+            <rect x="132" y="156" width="96" height="62" rx="7" fill="oklch(0.24 0.03 250)" stroke="oklch(0.78 0.16 220)" stroke-dasharray="4 3"/>
+            <text x="180" y="174" fill="oklch(0.78 0.16 220)" text-anchor="middle">cluster · merchant</text>
+            <text x="180" y="192" fill="oklch(0.85 0.01 250)" text-anchor="middle" font-size="12" font-weight="700">8</text>
+            <text x="180" y="207" fill="oklch(0.58 0.02 250)" text-anchor="middle" font-size="8">services</text>
+
+            <rect x="244" y="156" width="96" height="62" rx="7" fill="oklch(0.24 0.03 250)" stroke="oklch(0.78 0.16 220)" stroke-dasharray="4 3"/>
+            <text x="292" y="174" fill="oklch(0.78 0.16 220)" text-anchor="middle">cluster · qris</text>
+            <text x="292" y="192" fill="oklch(0.85 0.01 250)" text-anchor="middle" font-size="12" font-weight="700">5</text>
+            <text x="292" y="207" fill="oklch(0.58 0.02 250)" text-anchor="middle" font-size="8">services</text>
+          </g>
+          <path d="M180 118 L68 156 M180 118 L180 156 M180 118 L292 156" stroke="oklch(0.78 0.16 220)" stroke-width="1" stroke-dasharray="3 3" fill="none"/>
+
+          <!-- footer bar -->
+          <rect x="20" y="240" width="320" height="22" rx="5" fill="none" stroke="oklch(0.78 0.16 150)" stroke-dasharray="4 3"/>
+          <text x="180" y="255" font-family="JetBrains Mono" font-size="9" fill="oklch(0.78 0.16 150)" text-anchor="middle">terraform · 5 stacks · for_each · 20 managed nodes</text>
         </svg>
       </div>
       <div class="project-body">
-        <div class="project-id mono">deployment/01 · region:ap-southeast-3</div>
-        <h3>Multi-AZ AWS Production Environment</h3>
+        <div class="project-id mono">platform/01 · greenfield · regional bank</div>
+        <h3>Greenfield AWS Platform: EKS, GitLab CI &amp; ArgoCD</h3>
         <ul>
-          <li><b>99.9% uptime</b> with multi-AZ failover</li>
-          <li><b>Zero-downtime deploys</b> across 15+ microservices</li>
-          <li><b>70% faster</b> deployment via automated CI/CD</li>
-          <li>Cost-optimized: NAT, ALB+WAF, EKS node-group separation</li>
+          <li><b>3 EKS clusters, 20 managed nodes</b> from a five-stack Terraform layout using <code>for_each</code></li>
+          <li><b>64 repositories</b> onboarded to GitLab CI and ECR, <b>63 services healthy</b> under hub-and-spoke ArgoCD</li>
+          <li>Three shared pipeline templates adopted across <b>59 repos, all green</b> — teams opt in with one variable</li>
+          <li><b>99.7% success at 25,000 concurrent users</b> in resilience and stress testing</li>
         </ul>
-        <div class="chips"><span class="chip">AWS</span><span class="chip">EKS</span><span class="chip">Terraform</span><span class="chip">PostgreSQL</span><span class="chip">Redis</span></div>
+        <div class="project-foot">
+          <div class="chips"><span class="chip">Amazon EKS</span><span class="chip">Terraform</span><span class="chip">ArgoCD</span><span class="chip">GitLab CI</span><span class="chip">KEDA</span></div>
+          <a class="read-more mono" href="case-bjb.html">read the case study →</a>
+        </div>
       </div>
     </article>
 
     <article class="project">
       <div class="project-visual">
-        <svg class="project-svg" viewBox="0 0 360 280" preserveAspectRatio="xMidYMid meet">
+        <svg class="project-svg" viewBox="0 0 360 280" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
           <defs>
             <pattern id="dots2" width="14" height="14" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1" fill="oklch(0.40 0.04 250)"/></pattern>
           </defs>
           <rect width="360" height="280" fill="url(#dots2)" opacity="0.35"/>
-          <!-- shield -->
-          <path d="M180 30 L240 50 L240 120 Q240 175 180 200 Q120 175 120 120 L120 50 Z"
-                fill="none" stroke="oklch(0.78 0.16 60)" stroke-width="1.5"/>
-          <text x="180" y="100" font-family="JetBrains Mono" font-size="11" fill="oklch(0.78 0.16 60)" text-anchor="middle">SECURITY</text>
-          <text x="180" y="116" font-family="JetBrains Mono" font-size="11" fill="oklch(0.78 0.16 60)" text-anchor="middle">PERIMETER</text>
-          <!-- layers around -->
-          <g font-family="JetBrains Mono" font-size="9" fill="oklch(0.85 0.01 250)">
-            <rect x="20" y="40" width="80" height="22" rx="4" fill="oklch(0.30 0.04 250)" stroke="oklch(0.50 0.04 250)"/>
-            <text x="60" y="55" text-anchor="middle">IAM</text>
-            <rect x="20" y="80" width="80" height="22" rx="4" fill="oklch(0.30 0.04 250)" stroke="oklch(0.50 0.04 250)"/>
-            <text x="60" y="95" text-anchor="middle">GuardDuty</text>
-            <rect x="20" y="120" width="80" height="22" rx="4" fill="oklch(0.30 0.04 250)" stroke="oklch(0.50 0.04 250)"/>
-            <text x="60" y="135" text-anchor="middle">SecHub</text>
-            <rect x="260" y="40" width="80" height="22" rx="4" fill="oklch(0.30 0.04 250)" stroke="oklch(0.50 0.04 250)"/>
-            <text x="300" y="55" text-anchor="middle">KMS</text>
-            <rect x="260" y="80" width="80" height="22" rx="4" fill="oklch(0.30 0.04 250)" stroke="oklch(0.50 0.04 250)"/>
-            <text x="300" y="95" text-anchor="middle">WAF</text>
-            <rect x="260" y="120" width="80" height="22" rx="4" fill="oklch(0.30 0.04 250)" stroke="oklch(0.50 0.04 250)"/>
-            <text x="300" y="135" text-anchor="middle">CloudTrail</text>
+
+          <!-- source: GKE -->
+          <rect x="20" y="40" width="88" height="86" rx="7" fill="oklch(0.24 0.03 250)" stroke="oklch(0.78 0.16 30)" stroke-dasharray="4 3"/>
+          <text x="64" y="60" font-family="JetBrains Mono" font-size="10" fill="oklch(0.78 0.16 30)" text-anchor="middle">GKE</text>
+          <text x="64" y="84" font-family="JetBrains Mono" font-size="16" fill="oklch(0.85 0.01 250)" text-anchor="middle" font-weight="700">297</text>
+          <text x="64" y="100" font-family="JetBrains Mono" font-size="8" fill="oklch(0.58 0.02 250)" text-anchor="middle">live manifests</text>
+          <text x="64" y="114" font-family="JetBrains Mono" font-size="8" fill="oklch(0.58 0.02 250)" text-anchor="middle">10 kinds</text>
+
+          <!-- toolchain box -->
+          <rect x="130" y="30" width="100" height="106" rx="7" fill="oklch(0.20 0.03 250)" stroke="oklch(0.78 0.16 220)"/>
+          <text x="180" y="48" font-family="JetBrains Mono" font-size="9" fill="oklch(0.78 0.16 220)" text-anchor="middle">46 scripts</text>
+          <g font-family="JetBrains Mono" font-size="7.5" fill="oklch(0.78 0.02 250)">
+            <text x="140" y="66">extract →</text>
+            <text x="140" y="80">sanitize →</text>
+            <text x="140" y="94">convert →</text>
+            <text x="140" y="108">verify →</text>
+            <text x="140" y="122">cutover gate</text>
           </g>
-          <!-- compliance bar -->
-          <rect x="40" y="220" width="280" height="14" rx="3" fill="oklch(0.30 0.04 250)"/>
-          <rect x="40" y="220" width="280" height="14" rx="3" fill="oklch(0.78 0.16 150)"/>
-          <text x="180" y="231" font-family="JetBrains Mono" font-size="9" fill="oklch(0.15 0.025 250)" text-anchor="middle" font-weight="700">100% compliance coverage</text>
-          <text x="40" y="252" font-family="JetBrains Mono" font-size="9" fill="oklch(0.65 0.02 250)">MTTR ↓ 60%</text>
-          <text x="320" y="252" font-family="JetBrains Mono" font-size="9" fill="oklch(0.65 0.02 250)" text-anchor="end">e2e encrypted</text>
+          <path d="M108 83 L130 83" stroke="oklch(0.78 0.16 220)" stroke-width="1.2"/>
+          <path d="M230 83 L252 83" stroke="oklch(0.78 0.16 220)" stroke-width="1.2"/>
+
+          <!-- target: EKS -->
+          <rect x="252" y="40" width="88" height="86" rx="7" fill="oklch(0.24 0.03 250)" stroke="oklch(0.78 0.16 220)" stroke-dasharray="4 3"/>
+          <text x="296" y="60" font-family="JetBrains Mono" font-size="10" fill="oklch(0.78 0.16 220)" text-anchor="middle">Amazon EKS</text>
+          <text x="296" y="84" font-family="JetBrains Mono" font-size="16" fill="oklch(0.85 0.01 250)" text-anchor="middle" font-weight="700">6</text>
+          <text x="296" y="100" font-family="JetBrains Mono" font-size="8" fill="oklch(0.58 0.02 250)" text-anchor="middle">environments</text>
+          <text x="296" y="114" font-family="JetBrains Mono" font-size="8" fill="oklch(0.58 0.02 250)" text-anchor="middle">bootstrapped</text>
+
+          <!-- conversion rows -->
+          <g font-family="JetBrains Mono" font-size="8" fill="oklch(0.78 0.02 250)">
+            <rect x="20" y="158" width="320" height="20" rx="4" fill="oklch(0.20 0.03 250)" stroke="oklch(0.32 0.03 250)"/>
+            <text x="30" y="172">SecretProviderClass</text>
+            <text x="185" y="172" fill="oklch(0.78 0.16 220)">→</text>
+            <text x="205" y="172">native Kubernetes Secrets</text>
+
+            <rect x="20" y="184" width="320" height="20" rx="4" fill="oklch(0.20 0.03 250)" stroke="oklch(0.32 0.03 250)"/>
+            <text x="30" y="198">Filestore volumes</text>
+            <text x="185" y="198" fill="oklch(0.78 0.16 220)">→</text>
+            <text x="205" y="198">EFS CSI</text>
+
+            <rect x="20" y="210" width="320" height="20" rx="4" fill="oklch(0.20 0.03 250)" stroke="oklch(0.32 0.03 250)"/>
+            <text x="30" y="224">GKE Ingress + BackendConfig</text>
+            <text x="185" y="224" fill="oklch(0.78 0.16 220)">→</text>
+            <text x="205" y="224">nginx-ingress + NLB</text>
+
+            <rect x="20" y="236" width="320" height="20" rx="4" fill="oklch(0.20 0.03 250)" stroke="oklch(0.32 0.03 250)"/>
+            <text x="30" y="250">Artifact Registry (65 images)</text>
+            <text x="185" y="250" fill="oklch(0.78 0.16 220)">→</text>
+            <text x="205" y="250">Amazon ECR</text>
+          </g>
         </svg>
       </div>
       <div class="project-body">
-        <div class="project-id mono">deployment/02 · zone:trust-boundary</div>
-        <h3>Enterprise Security Architecture</h3>
+        <div class="project-id mono">platform/02 · migration · core banking &amp; BNPL</div>
+        <h3>GKE to Amazon EKS, Rebuilt Not Lifted</h3>
         <ul>
-          <li><b>100% compliance</b> with automated reporting</li>
-          <li>Real-time threat detection (GuardDuty + SecHub)</li>
-          <li>End-to-end <b>encryption via KMS</b> across all data layers</li>
-          <li><b>MTTR reduced 60%</b> with automated incident response</li>
+          <li><b>297 manifests across 11 resource kinds</b> reconstructed from live cluster state, not copied</li>
+          <li>A <b>46-script Python and Bash toolchain</b> made the conversion repeatable across staging, UAT and production</li>
+          <li>Cutover gated behind IP-to-DNS and readiness verification, so mismatches surfaced <b>before</b> the switch</li>
+          <li>Cluster networking and ingress bootstrapped across <b>6 environments</b> with VPC CNI custom networking</li>
         </ul>
-        <div class="chips"><span class="chip">AWS Security</span><span class="chip">GuardDuty</span><span class="chip">IAM</span><span class="chip">KMS</span></div>
+        <div class="project-foot">
+          <div class="chips"><span class="chip">Amazon EKS</span><span class="chip">Python</span><span class="chip">EFS CSI</span><span class="chip">nginx-ingress</span><span class="chip">Helm</span></div>
+          <a class="read-more mono" href="case-hibank.html">read the case study →</a>
+        </div>
       </div>
     </article>
 
     <article class="project">
       <div class="project-visual">
-        <svg class="project-svg" viewBox="0 0 360 280" preserveAspectRatio="xMidYMid meet">
+        <svg class="project-svg" viewBox="0 0 360 280" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
           <defs>
             <pattern id="dots3" width="14" height="14" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1" fill="oklch(0.40 0.04 250)"/></pattern>
           </defs>
           <rect width="360" height="280" fill="url(#dots3)" opacity="0.35"/>
-          <!-- ALB -->
-          <rect x="120" y="22" width="120" height="22" rx="4" fill="oklch(0.78 0.16 220)" opacity="0.9"/>
-          <text x="180" y="37" font-family="JetBrains Mono" font-size="10" fill="oklch(0.15 0.025 250)" text-anchor="middle" font-weight="700">ALB</text>
-          <!-- two nodes -->
-          <rect x="40" y="70" width="130" height="80" rx="6" fill="oklch(0.30 0.04 250)" stroke="oklch(0.78 0.16 220)"/>
-          <text x="105" y="86" font-family="JetBrains Mono" font-size="10" fill="oklch(0.85 0.01 250)" text-anchor="middle">node-1 (HA)</text>
-          <rect x="50" y="98" width="50" height="18" rx="3" fill="oklch(0.20 0.03 250)"/>
-          <text x="75" y="111" font-family="JetBrains Mono" font-size="8" fill="oklch(0.85 0.01 250)" text-anchor="middle">api</text>
-          <rect x="110" y="98" width="50" height="18" rx="3" fill="oklch(0.20 0.03 250)"/>
-          <text x="135" y="111" font-family="JetBrains Mono" font-size="8" fill="oklch(0.85 0.01 250)" text-anchor="middle">workers</text>
-          <rect x="50" y="122" width="110" height="18" rx="3" fill="oklch(0.20 0.03 250)"/>
-          <text x="105" y="135" font-family="JetBrains Mono" font-size="8" fill="oklch(0.85 0.01 250)" text-anchor="middle">ingress · cert-manager</text>
 
-          <rect x="190" y="70" width="130" height="80" rx="6" fill="oklch(0.30 0.04 250)" stroke="oklch(0.78 0.16 220)"/>
-          <text x="255" y="86" font-family="JetBrains Mono" font-size="10" fill="oklch(0.85 0.01 250)" text-anchor="middle">node-2 (HA)</text>
-          <rect x="200" y="98" width="50" height="18" rx="3" fill="oklch(0.20 0.03 250)"/>
-          <text x="225" y="111" font-family="JetBrains Mono" font-size="8" fill="oklch(0.85 0.01 250)" text-anchor="middle">api</text>
-          <rect x="260" y="98" width="50" height="18" rx="3" fill="oklch(0.20 0.03 250)"/>
-          <text x="285" y="111" font-family="JetBrains Mono" font-size="8" fill="oklch(0.85 0.01 250)" text-anchor="middle">workers</text>
-          <rect x="200" y="122" width="110" height="18" rx="3" fill="oklch(0.20 0.03 250)"/>
-          <text x="255" y="135" font-family="JetBrains Mono" font-size="8" fill="oklch(0.85 0.01 250)" text-anchor="middle">ingress · cert-manager</text>
+          <!-- before -->
+          <text x="24" y="34" font-family="JetBrains Mono" font-size="9" fill="oklch(0.78 0.16 30)">before · build on the host</text>
+          <rect x="24" y="44" width="76" height="24" rx="5" fill="oklch(0.24 0.03 250)" stroke="oklch(0.50 0.04 250)"/>
+          <text x="62" y="60" font-family="JetBrains Mono" font-size="8.5" fill="oklch(0.78 0.02 250)" text-anchor="middle">git push</text>
+          <path d="M100 56 L124 56" stroke="oklch(0.78 0.16 30)" stroke-width="1.2" stroke-dasharray="3 2"/>
+          <rect x="124" y="44" width="92" height="24" rx="5" fill="oklch(0.24 0.03 250)" stroke="oklch(0.78 0.16 30)"/>
+          <text x="170" y="60" font-family="JetBrains Mono" font-size="8.5" fill="oklch(0.78 0.16 30)" text-anchor="middle">ssh → docker build</text>
+          <path d="M216 56 L240 56" stroke="oklch(0.78 0.16 30)" stroke-width="1.2" stroke-dasharray="3 2"/>
+          <rect x="240" y="44" width="96" height="24" rx="5" fill="oklch(0.24 0.03 250)" stroke="oklch(0.50 0.04 250)"/>
+          <text x="288" y="60" font-family="JetBrains Mono" font-size="8.5" fill="oklch(0.78 0.02 250)" text-anchor="middle">prod host</text>
 
-          <!-- storage layer -->
-          <rect x="30" y="180" width="100" height="36" rx="4" fill="oklch(0.20 0.03 250)" stroke="oklch(0.50 0.04 250)"/>
-          <text x="80" y="202" font-family="JetBrains Mono" font-size="10" fill="oklch(0.85 0.01 250)" text-anchor="middle">MinIO · S3-API</text>
-          <rect x="140" y="180" width="80" height="36" rx="4" fill="oklch(0.20 0.03 250)" stroke="oklch(0.50 0.04 250)"/>
-          <text x="180" y="202" font-family="JetBrains Mono" font-size="10" fill="oklch(0.85 0.01 250)" text-anchor="middle">Redis</text>
-          <rect x="230" y="180" width="100" height="36" rx="4" fill="oklch(0.20 0.03 250)" stroke="oklch(0.50 0.04 250)"/>
-          <text x="280" y="202" font-family="JetBrains Mono" font-size="10" fill="oklch(0.85 0.01 250)" text-anchor="middle">PostgreSQL</text>
+          <!-- after -->
+          <text x="24" y="112" font-family="JetBrains Mono" font-size="9" fill="oklch(0.78 0.16 150)">after · build on the runner</text>
+          <rect x="24" y="122" width="76" height="24" rx="5" fill="oklch(0.24 0.03 250)" stroke="oklch(0.50 0.04 250)"/>
+          <text x="62" y="138" font-family="JetBrains Mono" font-size="8.5" fill="oklch(0.78 0.02 250)" text-anchor="middle">git push</text>
+          <path d="M100 134 L124 134" stroke="oklch(0.78 0.16 150)" stroke-width="1.2"/>
+          <rect x="124" y="122" width="92" height="24" rx="5" fill="oklch(0.24 0.03 250)" stroke="oklch(0.78 0.16 150)"/>
+          <text x="170" y="138" font-family="JetBrains Mono" font-size="8.5" fill="oklch(0.78 0.16 150)" text-anchor="middle">runner → ECR</text>
+          <path d="M216 134 L240 134" stroke="oklch(0.78 0.16 150)" stroke-width="1.2"/>
+          <rect x="240" y="122" width="96" height="24" rx="5" fill="oklch(0.24 0.03 250)" stroke="oklch(0.50 0.04 250)"/>
+          <text x="288" y="138" font-family="JetBrains Mono" font-size="8.5" fill="oklch(0.78 0.02 250)" text-anchor="middle">pull by SHA tag</text>
+          <path d="M288 146 L288 162 L170 162 L170 148" stroke="oklch(0.78 0.16 220)" stroke-width="1" stroke-dasharray="3 3" fill="none"/>
+          <text x="230" y="176" font-family="JetBrains Mono" font-size="8" fill="oklch(0.78 0.16 220)" text-anchor="middle">rollback = previous tag</text>
 
-          <!-- pipeline -->
-          <rect x="30" y="240" width="300" height="22" rx="4" fill="none" stroke="oklch(0.78 0.16 60)" stroke-dasharray="4 3"/>
-          <text x="180" y="255" font-family="JetBrains Mono" font-size="9" fill="oklch(0.78 0.16 60)" text-anchor="middle">GitLab CI/CD · zero cloud dependency</text>
+          <!-- private gitlab -->
+          <rect x="24" y="194" width="152" height="66" rx="7" fill="oklch(0.20 0.03 250)" stroke="oklch(0.78 0.16 220)" stroke-dasharray="4 3"/>
+          <text x="100" y="212" font-family="JetBrains Mono" font-size="9" fill="oklch(0.78 0.16 220)" text-anchor="middle">private subnet</text>
+          <text x="100" y="232" font-family="JetBrains Mono" font-size="8.5" fill="oklch(0.78 0.02 250)" text-anchor="middle">GitLab CE · SSM only</text>
+          <text x="100" y="250" font-family="JetBrains Mono" font-size="8.5" fill="oklch(0.78 0.02 250)" text-anchor="middle">44 projects · 6 namespaces</text>
 
-          <!-- lines -->
-          <path d="M180 44 L105 70 M180 44 L255 70" stroke="oklch(0.78 0.16 220)" stroke-dasharray="3 3" fill="none"/>
-          <path d="M105 150 L80 180 M255 150 L280 180" stroke="oklch(0.50 0.04 250)" stroke-dasharray="3 3" fill="none"/>
+          <rect x="188" y="194" width="148" height="66" rx="7" fill="oklch(0.20 0.03 250)" stroke="oklch(0.50 0.04 250)" stroke-dasharray="4 3"/>
+          <text x="262" y="212" font-family="JetBrains Mono" font-size="9" fill="oklch(0.78 0.16 60)" text-anchor="middle">terraform</text>
+          <text x="262" y="232" font-family="JetBrains Mono" font-size="8.5" fill="oklch(0.78 0.02 250)" text-anchor="middle">8 stacks · VPN · prefix lists</text>
+          <text x="262" y="250" font-family="JetBrains Mono" font-size="8.5" fill="oklch(0.78 0.02 250)" text-anchor="middle">4 EKS clusters · k8s 1.36</text>
         </svg>
       </div>
       <div class="project-body">
-        <div class="project-id mono">deployment/03 · location:on-prem</div>
-        <h3>On-Premise Kubernetes Platform</h3>
+        <div class="project-id mono">platform/03 · modernization · survey &amp; inspection</div>
+        <h3>Self-Managed GitLab &amp; CI/CD Modernization</h3>
         <ul>
-          <li><b>Dual-node HA</b> architecture with ALB load balancing</li>
-          <li>Full GitLab CI/CD integration — <b>release cycles cut 50%</b></li>
-          <li>Unified storage / cache / DB (MinIO, Redis, Postgres)</li>
-          <li>Self-hosted, <b>zero cloud dependency</b> — full cost control</li>
+          <li>GitLab CE in a private subnet reachable only through SSM, hosting <b>44 projects across 6 namespaces</b></li>
+          <li>Refactored deploys from build-on-the-host over SSH to <b>runner-built images pushed to ECR</b></li>
+          <li><b>Rollback by commit-SHA tag</b>, with secrets moved out of the repository</li>
+          <li><b>8 Terraform stacks</b> covering multi-account networking, Site-to-Site VPN and managed prefix lists</li>
         </ul>
-        <div class="chips"><span class="chip">Kubernetes</span><span class="chip">MinIO</span><span class="chip">GitLab</span><span class="chip">PostgreSQL</span></div>
+        <div class="project-foot">
+          <div class="chips"><span class="chip">GitLab CE</span><span class="chip">Amazon ECR</span><span class="chip">Terraform</span><span class="chip">Amazon EKS</span></div>
+          <a class="read-more mono" href="projects.html">all engagements →</a>
+        </div>
       </div>
     </article>
   </div>
@@ -849,22 +431,22 @@
     <div class="tl-item now">
       <div class="tl-date mono">Feb 2025 — present</div>
       <h4>Technical Consultant · DevOps Specialist <span style="color: var(--ink-3); font-weight: 400; font-size: 14px;">@ PT Mitra Integrasi Informatika</span></h4>
-      <p>Building and operating containerized platforms on AWS for enterprise clients — EKS &amp; ECS, GitLab CI/CD, Terraform IaC, secure resilient architectures. Recent migrations: <b>Artajasa</b> &amp; <b>Hibank</b> (GKE → EKS), <b>Panin Dai-Ichi</b> (on-prem Rancher → ECS), <b>BRI Danareksa</b> (DR site + API Gateway), <b>Bank Jawa Barat</b> (greenfield AWS w/ EKS &amp; GitLab).</p>
-    </div>
-    <div class="tl-item">
-      <div class="tl-date mono">Dec 2021 — Jul 2024</div>
-      <h4>System Engineer <span style="color: var(--ink-3); font-weight: 400; font-size: 14px;">@ PT Mastersystem Infotama</span></h4>
-      <p>Designed resilient AWS solutions for enterprise clients. Led <b>Telkomsel</b>'s Virtual Assistant &amp; MePro migrations (OpenShift → EKS), modernized MePro with CloudFront + Redis, and delivered <b>Bayan Resources</b>' AWS-based DR site.</p>
-    </div>
-    <div class="tl-item">
-      <div class="tl-date mono">Sep 2020 — Dec 2021</div>
-      <h4>Junior Advisory · Shared Service / Human Capital <span style="color: var(--ink-3); font-weight: 400; font-size: 14px;">@ Pertamina Training Center</span></h4>
-      <p>Analyzed company policies and employee behavior — drove the build of an internal application to optimize operations &amp; compliance. The "before I found Kubernetes" era.</p>
+      <p>Building and operating containerized platforms on AWS for enterprise clients. Amazon EKS and its networking, Terraform across multi-account estates, GitLab CI/CD and ArgoCD delivery, and the shared tooling application teams deploy through. Recent builds: <b>Bank BJB</b> (greenfield EKS platform with GitOps), <b>hibank</b> (GKE → EKS for a core banking and BNPL platform), <b>IDSurvey</b> (GitLab platform and CI/CD modernization), <b>Indonesia Investment Authority</b> (OCI landing zone), plus <b>Artajasa</b>, <b>Panin Dai-Ichi</b> and <b>BRI Danareksa</b>.</p>
     </div>
     <div class="tl-item">
       <div class="tl-date mono">Jul 2024 — Feb 2025</div>
       <h4>Japanese Language Training <span style="color: var(--ink-3); font-weight: 400; font-size: 14px;">· business + technical discussions</span></h4>
       <p>Structured training focused on business communication and technical discussions in Japanese. お疲れ様。</p>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date mono">Dec 2021 — Jul 2024</div>
+      <h4>System Engineer <span style="color: var(--ink-3); font-weight: 400; font-size: 14px;">@ PT Mastersystem Infotama</span></h4>
+      <p>Designed resilient AWS solutions for enterprise clients. Led <b>Telkomsel</b>'s Virtual Assistant and MePro migrations from on-premise OpenShift to Amazon EKS, modernized MePro with CloudFront and Redis, and delivered <b>Bayan Resources</b>' AWS-based DR site.</p>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date mono">Sep 2020 — Dec 2021</div>
+      <h4>Junior Advisory · Shared Service / Human Capital <span style="color: var(--ink-3); font-weight: 400; font-size: 14px;">@ Pertamina Training Center</span></h4>
+      <p>Analyzed company policies and employee behavior, driving the build of an internal application to optimize operations and compliance. The "before I found Kubernetes" era.</p>
     </div>
     <div class="tl-item">
       <div class="tl-date mono">2020</div>
@@ -882,23 +464,51 @@
   </div>
   <div class="stack-wall">
     <span class="stack-tag mono"><span class="dot" style="background: oklch(0.78 0.16 60);"></span>AWS</span>
-    <span class="stack-tag mono"><span class="dot" style="background: oklch(0.78 0.16 220);"></span>Kubernetes</span>
+    <span class="stack-tag mono"><span class="dot" style="background: oklch(0.78 0.16 220);"></span>Amazon EKS</span>
     <span class="stack-tag mono"><span class="dot" style="background: oklch(0.78 0.16 280);"></span>Terraform</span>
+    <span class="stack-tag mono"><span class="dot" style="background: oklch(0.78 0.16 220);"></span>Kubernetes</span>
+    <span class="stack-tag mono"><span class="dot" style="background: oklch(0.78 0.16 150);"></span>ArgoCD</span>
+    <span class="stack-tag mono"><span class="dot" style="background: oklch(0.78 0.16 30);"></span>Helm</span>
+    <span class="stack-tag mono"><span class="dot" style="background: oklch(0.78 0.16 220);"></span>Kustomize</span>
+    <span class="stack-tag mono"><span class="dot" style="background: oklch(0.78 0.16 60);"></span>GitLab CI</span>
+    <span class="stack-tag mono"><span class="dot" style="background: oklch(0.78 0.16 30);"></span>Amazon ECR</span>
+    <span class="stack-tag mono"><span class="dot" style="background: oklch(0.78 0.16 150);"></span>KEDA</span>
     <span class="stack-tag mono"><span class="dot" style="background: oklch(0.78 0.16 220);"></span>Docker</span>
     <span class="stack-tag mono"><span class="dot" style="background: oklch(0.78 0.16 30);"></span>Ansible</span>
-    <span class="stack-tag mono"><span class="dot" style="background: oklch(0.78 0.16 60);"></span>GitLab CI</span>
-    <span class="stack-tag mono"><span class="dot" style="background: oklch(0.78 0.16 80);"></span>Jenkins</span>
-    <span class="stack-tag mono"><span class="dot" style="background: oklch(0.78 0.16 30);"></span>Helm</span>
-    <span class="stack-tag mono"><span class="dot" style="background: oklch(0.78 0.16 0);"></span>Prometheus</span>
-    <span class="stack-tag mono"><span class="dot" style="background: oklch(0.78 0.16 80);"></span>Grafana</span>
-    <span class="stack-tag mono"><span class="dot" style="background: oklch(0.78 0.16 220);"></span>PostgreSQL</span>
-    <span class="stack-tag mono"><span class="dot" style="background: oklch(0.78 0.16 0);"></span>Redis</span>
-    <span class="stack-tag mono"><span class="dot" style="background: oklch(0.78 0.16 150);"></span>MinIO</span>
+    <span class="stack-tag mono"><span class="dot" style="background: oklch(0.78 0.16 80);"></span>Python</span>
+    <span class="stack-tag mono"><span class="dot" style="background: oklch(0.78 0.16 60);"></span>Bash</span>
     <span class="stack-tag mono"><span class="dot" style="background: oklch(0.78 0.16 60);"></span>Linux / RHEL</span>
-    <span class="stack-tag mono"><span class="dot" style="background: oklch(0.78 0.16 220);"></span>IAM</span>
-    <span class="stack-tag mono"><span class="dot" style="background: oklch(0.78 0.16 30);"></span>WAF</span>
+    <span class="stack-tag mono"><span class="dot" style="background: oklch(0.78 0.16 0);"></span>CloudWatch</span>
+    <span class="stack-tag mono"><span class="dot" style="background: oklch(0.78 0.16 280);"></span>Athena</span>
+    <span class="stack-tag mono"><span class="dot" style="background: oklch(0.78 0.16 220);"></span>IAM / IRSA</span>
     <span class="stack-tag mono"><span class="dot" style="background: oklch(0.78 0.16 280);"></span>KMS</span>
-    <span class="stack-tag mono"><span class="dot" style="background: oklch(0.78 0.16 150);"></span>GuardDuty</span>
+    <span class="stack-tag mono"><span class="dot" style="background: oklch(0.78 0.16 0);"></span>Oracle Cloud</span>
+  </div>
+</section>
+
+<!-- SIDE PROJECT -->
+<section class="section" id="side">
+  <div class="section-head">
+    <h2>Nights and weekends.</h2>
+    <span class="tag mono">// side-gig · <span>shipping</span></span>
+  </div>
+  <div class="project-cards">
+    <div class="proj-card" data-num="⚡">
+      <span class="client-badge mono">youtube-clipper</span>
+      <h3>AI Video Pipeline &amp; Side Business</h3>
+      <p class="proj-impact">A Python CLI and local web GUI that turns long-form video into short-form vertical clips, each shipping with per-platform upload copy. The pipeline runs yt-dlp, faster-whisper for word-level transcription, Claude for segment ranking and copywriting, then ffmpeg and mediapipe for face-tracked reframing and karaoke captions. I run the themed accounts it publishes to, so I own the distribution side as well as the tooling.</p>
+      <div class="chips">
+        <span class="chip">Python</span><span class="chip">ffmpeg</span><span class="chip">faster-whisper</span><span class="chip">Claude API</span><span class="chip">mediapipe</span>
+      </div>
+    </div>
+    <div class="proj-card" data-num="⚡">
+      <span class="client-badge mono">this site</span>
+      <h3>Interactive Architecture Portfolio</h3>
+      <p class="proj-impact">Built as an AWS-style architecture diagram, because an infrastructure engineer's site should look like a system diagram. Hand-written HTML and CSS with no framework, deployed on Vercel. The assistant below runs on a self-hosted Ollama instance behind a serverless endpoint, with a rule-based fallback that takes over when the model is not reachable.</p>
+      <div class="chips">
+        <span class="chip">Vanilla HTML/CSS/JS</span><span class="chip">Vercel</span><span class="chip">Ollama</span><span class="chip">Serverless</span>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -911,12 +521,12 @@
   <div class="chat-wrap">
     <div class="chat-side">
       <h3>Ask anything.</h3>
-      <p>It's a chatbot trained on Rayhan's experience, services, and availability. Use it like you'd use a coworker who never goes to lunch.</p>
+      <p>It answers from my actual project history: what I built, how it was delivered, and what I would do differently. Use it like a coworker who never goes to lunch.</p>
       <div class="quick-q">
         <button data-q="What services do you offer?">› What services do you offer?</button>
         <button data-q="Are you available for freelance work?">› Are you available for freelance?</button>
-        <button data-q="Tell me about your AWS experience.">› Tell me about your AWS experience.</button>
-        <button data-q="What's your approach to Kubernetes?">› Approach to Kubernetes?</button>
+        <button data-q="Tell me about your Kubernetes experience.">› Tell me about your EKS experience.</button>
+        <button data-q="How do you approach a GKE to EKS migration?">› How do you approach a migration?</button>
         <button data-q="What's your typical engagement?">› Typical engagement model?</button>
       </div>
     </div>
@@ -932,7 +542,7 @@
       <div class="chat-body" id="chat-body">
         <div class="msg bot">
           <div class="msg-avatar">RA</div>
-          <div class="msg-bubble">👋 Hi! I'm Rayhan's DevOps assistant. Ask me about infrastructure architecture, CI/CD, cloud migration, K8s, security & compliance, project timelines, or rates.</div>
+          <div class="msg-bubble">👋 Hi, I'm Rayhan's assistant. Ask me about Kubernetes platforms, CI/CD and GitOps, cloud migration, Terraform, engagement models, or anything on this page.</div>
         </div>
       </div>
       <div class="chat-input">
@@ -955,17 +565,17 @@
       <div class="contact-value">rayhanbintang.work@gmail.com</div>
       <div class="arrow mono">curl --fastest →</div>
     </a>
-    <a class="contact-card" href="https://github.com/Rayhanbintang" target="_blank">
+    <a class="contact-card" href="https://github.com/Rayhanbintang" target="_blank" rel="noopener">
       <div class="contact-label mono">💻 github · source</div>
       <div class="contact-value">@Rayhanbintang</div>
       <div class="arrow mono">git remote →</div>
     </a>
-    <a class="contact-card" href="https://www.linkedin.com/in/rayhanbintang/" target="_blank">
+    <a class="contact-card" href="https://www.linkedin.com/in/rayhanbintang/" target="_blank" rel="noopener">
       <div class="contact-label mono">💼 linkedin · network</div>
       <div class="contact-value">/in/rayhanbintang</div>
       <div class="arrow mono">connect →</div>
     </a>
-    <a class="contact-card" href="https://contra.com/rayhan_abdurrahim_c13378wy/work?r=rayhan_abdurrahim_c13378wy" target="_blank">
+    <a class="contact-card" href="https://contra.com/rayhan_abdurrahim_c13378wy/work?r=rayhan_abdurrahim_c13378wy" target="_blank" rel="noopener">
       <div class="contact-label mono">🎯 contra · for hire</div>
       <div class="contact-value">@rayhan_abdurrahim</div>
       <div class="arrow mono">book me →</div>
@@ -975,7 +585,7 @@
 
 <footer>
   <div>© 2026 Rayhan Bintang Abdurrahim · built with infrastructure-as-code principles</div>
-  <div>uptime 100% · last deploy: just now</div>
+  <div>Jakarta · UTC+7 · <a href="https://www.credly.com/users/rayhan-abdurrahim/badges" target="_blank" rel="noopener" style="color: var(--accent);">verify certifications</a></div>
 </footer>
 
 </div>
@@ -984,14 +594,14 @@
 // ============ DIAGRAM LINES ============
 const NODE_DATA = {
   me: { title: 'principal-human-engineer', body: 'The center node. Everything else is a managed service of mine. Healthy, accepting traffic, occasionally context-switches to coffee.', link: '#hero' },
-  cloud: { title: 'cloud-infra :: AWS', body: 'EC2, EKS, VPC, RDS. I design multi-AZ, cost-optimized AWS systems with the kind of failover that lets you sleep through Friday-night incidents.', link: '#skills' },
-  containers: { title: 'containers :: K8s', body: 'Kubernetes that doesn\'t flap. EKS in prod, on-prem K8s for cost control. Helm charts, sane probes, autoscaling that doesn\'t fight itself.', link: '#skills' },
-  iac: { title: 'iac :: terraform', body: 'Terraform-first. Modules with versioning, remote state, drift detection. Ansible for the parts Terraform refuses to do.', link: '#skills' },
-  cicd: { title: 'ci-cd :: gitlab+jenkins', body: 'GitLab CI, Jenkins, CodePipeline. Canary, blue/green, rollback in one click. Pipelines that fail loudly and safely.', link: '#skills' },
-  security: { title: 'security :: zero-trust', body: 'IAM least-privilege, WAF, KMS, GuardDuty, Security Hub. 100% compliance coverage. The audit team likes me.', link: '#skills' },
-  observability: { title: 'observability :: prom+grafana', body: 'Prometheus, Grafana, CloudWatch. Alerts that mean something. Dashboards engineers actually open.', link: '#skills' },
-  projects: { title: 'projects :: shipped', body: '3 production deployments visible below. Multi-AZ AWS, enterprise security, and an on-prem K8s platform that runs without cloud bills.', link: '#projects' },
-  contact: { title: 'contact :: open inbox', body: 'Available for DevOps consulting, infrastructure projects, and emergencies that require an SRE who has seen things.', link: '#contact' }
+  cloud: { title: 'cloud-infra :: AWS + OCI', body: 'Multi-account AWS with a Terraform landing-zone baseline, SSO across 25 accounts, and a CIS-benchmarked hub-and-spoke landing zone on Oracle Cloud for the multi-cloud work.', link: '#skills' },
+  containers: { title: 'containers :: Amazon EKS', body: 'Three production clusters on 20 managed nodes, plus six more environments bootstrapped during a GKE migration. VPC CNI custom networking, prefix delegation, pod security groups, KEDA where CPU is the wrong signal.', link: '#skills' },
+  iac: { title: 'iac :: terraform', body: 'Five-stack layouts driven by for_each, remote state, reusable onboarding modules. Live console drift gets reconciled back into state until plan reports no changes.', link: '#skills' },
+  cicd: { title: 'ci-cd :: gitlab + argocd', body: 'Sixty-four repositories onto GitLab CI and ECR, delivered through hub-and-spoke ArgoCD. Three shared templates carry 59 of them, so a team opts into delivery with one variable.', link: '#projects' },
+  security: { title: 'security :: least-privilege', body: 'IAM and IRSA scoped per workload, KMS, CloudTrail and Config baselines, SSM-only access to private instances. Regulated banking clients, so the audit trail is part of the design.', link: '#skills' },
+  observability: { title: 'observability :: cloudwatch + athena', body: 'CloudWatch for the live signal, S3 and Athena for everything older. Moving log analysis off hot retention is usually the fastest bill reduction available.', link: '#skills' },
+  projects: { title: 'projects :: shipped', body: 'Four platforms below and on the projects page: a greenfield EKS build with GitOps, a GKE to EKS rebuild, a GitLab and CI/CD modernization, and an OCI landing zone.', link: '#projects' },
+  contact: { title: 'contact :: open inbox', body: 'Available for platform engineering, Kubernetes and cloud migration work, and the kind of incident that needs someone who has seen it before.', link: '#contact' }
 };
 
 function drawLines() {
@@ -1099,10 +709,10 @@ const chatStatus = document.getElementById('chat-status');
 const chatDesc = document.getElementById('chat-desc');
 
 const STATUS_CONFIG = {
-  'ai-powered': { label: '● connected',       desc: 'running LLM on my local pc, please be patient' },
-  'rule-based': { label: '● rule-based mode', desc: 'my pc is napping, try again later' },
-  'offline':    { label: '● rule-based mode', desc: 'my pc is napping, try again later' },
-  'checking':   { label: '● checking…',       desc: '' }
+  'ai-powered': { label: '● live model',  desc: 'self-hosted, so give it a moment' },
+  'rule-based': { label: '● local mode',  desc: 'answering from a scripted knowledge base' },
+  'offline':    { label: '● local mode',  desc: 'answering from a scripted knowledge base' },
+  'checking':   { label: '● checking…',   desc: '' }
 };
 function setStatus(mode) {
   const cfg = STATUS_CONFIG[mode] || STATUS_CONFIG['checking'];
@@ -1145,7 +755,7 @@ async function sendMessage(text) {
   } catch (e) {
     setStatus('offline');
     typing.remove();
-    appendMsg('bot', 'Hmm, my LLM sidecar is napping. Try again or just email rayhanbintang.work@gmail.com directly.');
+    appendMsg('bot', "Couldn't reach the assistant just now. Email rayhanbintang.work@gmail.com and you'll get a faster answer anyway.");
   }
 }
 

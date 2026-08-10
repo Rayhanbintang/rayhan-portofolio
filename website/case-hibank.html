@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>GKE to Amazon EKS, Rebuilt Not Lifted — Rayhan Bintang Abdurrahim</title>
+<meta name="description" content="Case study: migrating a core banking and BNPL platform from GKE to Amazon EKS. 297 manifests rebuilt from live cluster state behind a 46-script conversion toolchain, with the cutover gated on verification.">
+<link rel="canonical" href="https://rayhan-portfolio-seven.vercel.app/case-hibank.html">
+<meta property="og:title" content="GKE to Amazon EKS, Rebuilt Not Lifted">
+<meta property="og:description" content="297 manifests across 11 resource kinds, a 46-script conversion toolchain, and why the cutover was gated on verification rather than hope.">
+<meta property="og:url" content="https://rayhan-portfolio-seven.vercel.app/case-hibank.html">
+<meta property="og:type" content="article">
+<meta property="og:image" content="https://rayhan-portfolio-seven.vercel.app/assets/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://rayhan-portfolio-seven.vercel.app/assets/og.png">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="assets/style.css" />
+</head>
+<body>
+
+<div class="grid-bg"></div>
+<div class="root">
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="brand mono"><span class="brand-dot"></span> RA::DevOps</div>
+    <div class="breadcrumbs mono">~/<span>portfolio</span>/<span>case</span>/<span>gke-to-eks</span></div>
+    <div class="topbar-actions">
+      <a class="btn" href="index.html">← home</a>
+      <a class="btn" href="projects.html">All projects →</a>
+      <a class="btn btn-primary" href="assets/Rayhan%20Bintang%20Abdurrahim%20-%20CV.pdf" target="_blank">↓ resume.pdf</a>
+    </div>
+  </div>
+</header>
+
+<article class="case">
+  <div class="case-eyebrow mono">
+    <span>case study</span><span>·</span><span>core banking &amp; BNPL platform</span><span>·</span><span>2026</span>
+  </div>
+  <h1>297 manifests, rebuilt from live state instead of lifted</h1>
+  <p class="standfirst">
+    Moving a production Kubernetes estate from GKE to Amazon EKS is only a migration in the marketing sense. The
+    workload definitions are full of platform-specific assumptions that have no equivalent on the other side. This is
+    how I rebuilt them, why I wrote a toolchain instead of editing YAML by hand, and what the cutover gate caught.
+  </p>
+
+  <div class="case-facts">
+    <div class="fact">
+      <div class="fact-value">297</div>
+      <div class="fact-label">manifests rebuilt<br>across 11 kinds</div>
+    </div>
+    <div class="fact">
+      <div class="fact-value">46</div>
+      <div class="fact-label">conversion scripts<br>Python and Bash</div>
+    </div>
+    <div class="fact">
+      <div class="fact-value">6</div>
+      <div class="fact-label">environments<br>bootstrapped</div>
+    </div>
+    <div class="fact">
+      <div class="fact-value">65</div>
+      <div class="fact-label">images moved<br>to Amazon ECR</div>
+    </div>
+  </div>
+
+  <h2>Context and constraints</h2>
+  <p>
+    A core banking and Buy Now Pay Later platform running on Google Kubernetes Engine, moving to Amazon EKS.
+    Regulated financial services, so the cutover window was short and the appetite for discovering problems in
+    production was zero.
+  </p>
+  <p>
+    The workload layer could not simply be copied. GKE-specific constructs were everywhere:
+    <code>SecretProviderClass</code> resources reading from GCP Secret Manager, Filestore-backed volumes, GKE Ingress
+    with <code>BackendConfig</code>, NodePort services fronted by Google load balancers, image references pointing at
+    Artifact Registry, and service discovery resolving through names that would not exist on the other side.
+  </p>
+
+  <h2>Why a toolchain and not an afternoon of find-and-replace</h2>
+  <p>
+    <strong>297 manifests across 11 resource kinds</strong>: 83 SecretProviderClasses, 64 Services, 64 ConfigMaps,
+    61 Deployments, 7 ServiceAccounts, 6 Ingresses, 4 PersistentVolumes, 3 StatefulSets, 2 StorageClasses,
+    2 PersistentVolumeClaims and a BackendConfig. Hand-editing that once is tedious. The problem is that you do not
+    do it once. You do it for
+    staging, then again for UAT, then again for production, and each time the source cluster has moved on.
+  </p>
+  <p>
+    So I wrote <strong>46 scripts</strong> in Python and Bash, structured as a pipeline rather than a pile of
+    one-offs:
+  </p>
+  <ul>
+    <li><strong>Extract</strong> live state from the source cluster, because what is running is the only definition that is actually true</li>
+    <li><strong>Sanitize</strong> away runtime fields, <code>last-applied-configuration</code> annotations and cluster-scoped metadata that would not transplant</li>
+    <li><strong>Convert</strong> each GKE construct to its AWS equivalent</li>
+    <li><strong>Verify</strong> the result against the source before anyone touched DNS</li>
+  </ul>
+  <p>
+    Running the whole thing per environment took minutes and produced the same answer every time. That repeatability
+    is the entire value: it turned "we migrated staging, now do it again from memory" into a command.
+  </p>
+
+  <h3>The conversions</h3>
+  <ul>
+    <li><code>SecretProviderClass</code> reading GCP Secret Manager → native Kubernetes Secrets</li>
+    <li>Filestore volumes → EFS CSI StorageClass, PersistentVolume and Claim</li>
+    <li>GKE Ingress and <code>BackendConfig</code> → nginx-ingress with per-environment Helm values</li>
+    <li>NodePort behind a Google load balancer → ClusterIP behind NLB annotations</li>
+    <li>Artifact Registry image references → Amazon ECR, across a <strong>65-image inventory</strong>, digest-pinned</li>
+    <li>Service-discovery DNS rewritten, and log shipping sidecars re-pointed at the AWS-side collector</li>
+  </ul>
+
+  <h2>Decisions and trade-offs</h2>
+
+  <div class="callout">
+    <div class="callout-label mono">decision 01 · source of truth</div>
+    <p>
+      <strong>Rebuild from the live cluster, not from the repository.</strong> The manifests in version control had
+      drifted from what was actually running, which is normal and is exactly why lift-and-shift migrations fail in
+      week three. Extracting live state meant inheriting some things nobody remembered configuring, and it meant a
+      sanitization step that would not have been necessary otherwise. It also meant the target ran what production
+      ran, rather than what production was believed to run.
+    </p>
+  </div>
+
+  <div class="callout">
+    <div class="callout-label mono">decision 02 · gate the cutover</div>
+    <p>
+      <strong>Verification scripts before DNS, not after.</strong> The estate referenced dependencies by IP in more
+      places than anyone expected: a <strong>92-row inventory of source-side addresses</strong> that had to be
+      re-mapped onto DNS names, plus a 40-row configuration mapping. I wrote checks that compared the mapping and
+      confirmed cluster readiness, and made passing them a precondition for the switch. They caught mismatches while
+      rolling back was still free. The cost is a slower cutover checklist; the alternative is finding out from a
+      customer.
+    </p>
+  </div>
+
+  <div class="callout">
+    <div class="callout-label mono">decision 03 · secrets</div>
+    <p>
+      <strong>Native Secrets rather than reproducing the CSI driver pattern.</strong> Eighty-three
+      SecretProviderClass resources could have been rebuilt against AWS Secrets Manager through the CSI driver,
+      preserving the shape of the original. I converted them to native Kubernetes Secrets instead, because carrying
+      an extra moving part across a migration boundary adds a failure mode precisely when you have the least capacity
+      to debug one. The trade-off is a secret-rotation story that is now the platform's problem rather than the
+      driver's, and that was the right thing to take on deliberately rather than inherit by accident.
+    </p>
+  </div>
+
+  <h2>The cluster underneath</h2>
+  <p>
+    Six environments got the same bootstrap: BNPL staging, UAT and production, plus digital production, ITSM
+    production and an infrastructure management environment. Each one received VPC CNI custom networking with a
+    per-AZ <code>ENIConfig</code> keyed on the zone label, prefix delegation for pod density, pod security groups
+    where a workload needed its own network identity, nginx-ingress installed through Helm with per-environment
+    values behind an NLB, and the AWS Load Balancer Controller.
+  </p>
+  <p>
+    Around the migration itself sat the platform baseline: a Terraform landing zone with CloudTrail, AWS Config,
+    KMS, SSM patching and central backup; AWS SSO rolled out across <strong>25 accounts and 109 assignments</strong>;
+    a Cloud Run job re-platformed onto container-image Lambda; and log analysis moved onto S3 and Athena so retention
+    stopped being billed at hot-storage rates.
+  </p>
+
+  <h2>What I would do differently</h2>
+  <p>
+    The toolchain was written as the migration progressed, which meant early scripts had to be revisited once the
+    later pattern became clear. Spending the first two days designing the pipeline stages before writing any of them
+    would have produced a cleaner set with less overlap.
+  </p>
+  <p>
+    The harder lesson is about what happens after. I handed over infrastructure defined in Terraform. It is now
+    managed without it. That is the customer's call to make and the engagement was scoped as a delivery, but it is
+    the reason I have come to care more about whether a platform is <em>adopted</em> than whether it is
+    <em>correct</em>. Code that describes an estate nobody updates through it is an artifact, not infrastructure.
+    Building the handover to include the operating model, not just the modules, is the thing I would insist on
+    earlier.
+  </p>
+</article>
+
+<nav class="case-nav">
+  <a class="btn" href="case-bjb.html">← Greenfield AWS platform with EKS and GitOps</a>
+  <a class="btn" href="index.html#contact">Get in touch →</a>
+</nav>
+
+<footer>
+  <div>© 2026 Rayhan Bintang Abdurrahim · built with infrastructure-as-code principles</div>
+  <div>Jakarta · UTC+7</div>
+</footer>
+
+</div>
+
+</body>
+</html>
