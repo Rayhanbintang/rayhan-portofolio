@@ -9,7 +9,6 @@ package-lock.json
 
 # Logs
 *.log
-ngrok.log
 npm-debug.log*
 
 # OS files
