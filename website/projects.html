@@ -4,10 +4,10 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Projects — Rayhan Bintang Abdurrahim</title>
-<meta name="description" content="Full project portfolio of Rayhan Bintang Abdurrahim — 11 enterprise cloud engagements across Indonesian banking, telco, energy and sovereign wealth, plus personal builds.">
+<meta name="description" content="Full project portfolio of Rayhan Bintang Abdurrahim — 13 enterprise cloud engagements across Indonesian banking, telco, energy, FMCG and sovereign wealth, plus personal builds.">
 <link rel="canonical" href="https://rayhan-portfolio-seven.vercel.app/projects">
 <meta property="og:title" content="Projects — Rayhan Bintang Abdurrahim">
-<meta property="og:description" content="Greenfield EKS platforms, GKE and OpenShift migrations, GitLab CI/CD modernization, OCI landing zones. 11 client engagements.">
+<meta property="og:description" content="Greenfield EKS platforms, GKE and OpenShift migrations, GitLab CI/CD modernization, OCI landing zones and bank connectivity. 13 client engagements.">
 <meta property="og:url" content="https://rayhan-portfolio-seven.vercel.app/projects">
 <meta property="og:type" content="website">
 <meta property="og:image" content="https://rayhan-portfolio-seven.vercel.app/assets/og.png">
@@ -40,7 +40,7 @@
 <section class="section" id="work">
   <div class="section-head">
     <h2>Work in production.</h2>
-    <span class="tag mono">// 11 engagements · <span>banking · telco · energy</span></span>
+    <span class="tag mono">// 13 engagements · <span>banking · telco · energy · FMCG</span></span>
   </div>
 
   <div class="era-label">PT Mitra Integrasi Informatika · Feb 2025 – present</div>
@@ -57,8 +57,26 @@
     </div>
 
     <div class="proj-card" data-num="#02">
+      <span class="client-badge mono">Bank BJB</span>
+      <h3>PERSIB Jersey Sale Platform on Amazon EKS</h3>
+      <p class="proj-impact">Built dev and production in two new AWS accounts from Terraform in under a week, covering a public ALB with AWS WAF, Amazon EKS with Karpenter, and RDS PostgreSQL Multi-AZ, for a limited-stock jersey sale that BJB ran inside its DIGI mobile banking app. Attached both VPCs to the bank network through a shared Transit Gateway for the savings-balance check. The platform went live on 19 Aug 2026 after BJB's penetration test and served peaks of 9,100 requests per hour at 48 ms average latency.</p>
+      <div class="chips">
+        <span class="chip">Amazon EKS</span><span class="chip">Karpenter</span><span class="chip">AWS WAF</span><span class="chip">RDS PostgreSQL</span><span class="chip">Transit Gateway</span>
+      </div>
+    </div>
+
+    <div class="proj-card" data-num="#03">
+      <span class="client-badge mono">Indonesia Investment Authority</span>
+      <h3>OCI Landing Zone &amp; Bank Host-to-Host Connectivity</h3>
+      <p class="proj-impact">Designed the Oracle Cloud landing zone for Indonesia's sovereign wealth fund through HLD, LLD and runbook releases up to v1.6: 33 compartments, all cross-compartment traffic through the DRG, OCI-native console sign-in with MFA, and Entra federation for applications. Built host-to-host connectivity for nine banks moving off Azure, using IPSec site-to-site VPNs on a shared DRG, a NAT instance for banks that need address translation, and a source-IP-preserving public NLB. Mandiri and BRI deliver statements daily. Built the production SFTP environment in Terraform through OCI Resource Manager, and wrote a time-boxed vendor-access template covered by 14 terraform tests.</p>
+      <div class="chips">
+        <span class="chip">Oracle Cloud</span><span class="chip">Terraform</span><span class="chip">IPSec VPN</span><span class="chip">DRG</span><span class="chip">Resource Manager</span>
+      </div>
+    </div>
+
+    <div class="proj-card" data-num="#04">
       <span class="client-badge mono">hibank</span>
-      <h3>GKE to Amazon EKS Migration — Core Banking &amp; BNPL</h3>
+      <h3>Replatform: GKE to Amazon EKS, Core Banking &amp; BNPL</h3>
       <p class="proj-impact">Rebuilt the production Kubernetes layer for EKS from live GKE state, covering 297 manifests across 11 resource kinds. Wrote a 46-script Python and Bash conversion toolchain to make the work repeatable across staging, UAT and production, and gated the cutover behind IP-to-DNS and readiness verification so mismatches surfaced before the switch. Bootstrapped cluster networking and ingress across six environments.</p>
       <div class="chips">
         <span class="chip">Amazon EKS</span><span class="chip">Python</span><span class="chip">EFS CSI</span><span class="chip">nginx-ingress</span><span class="chip">Helm</span>
@@ -66,7 +84,7 @@
       <p style="margin: 14px 0 0;"><a class="read-more mono" href="/case-hibank">read the case study →</a></p>
     </div>
 
-    <div class="proj-card" data-num="#03">
+    <div class="proj-card" data-num="#05">
       <span class="client-badge mono">IDSurvey</span>
       <h3>GitLab Platform &amp; CI/CD Modernization on AWS</h3>
       <p class="proj-impact">Ran a self-managed GitLab CE instance in a private subnet reachable only through SSM, hosting 44 projects across 6 namespaces. Refactored deployments from build-on-the-host over SSH to runner-built images pushed to ECR and pulled by the target hosts, with rollback by commit-SHA tag and secrets moved out of the repository. Maintained 8 Terraform stacks covering multi-account networking, Site-to-Site VPN and managed prefix lists, plus 4 Amazon EKS clusters.</p>
@@ -75,39 +93,39 @@
       </div>
     </div>
 
-    <div class="proj-card" data-num="#04">
-      <span class="client-badge mono">Indonesia Investment Authority</span>
-      <h3>OCI Landing Zone &amp; Multi-Cloud Platform</h3>
-      <p class="proj-impact">Built a CIS-benchmarked hub-and-spoke landing zone on Oracle Cloud in Terraform, covering 4 compartments, 3 VCNs and a DRG, with a reusable module for onboarding new workloads. Delivered through IaC CI/CD using Resource Manager stacks with pipelines running plan on pull request and apply on merge, alongside Cloud Guard, Security Zones, Vault and a log pipeline into the customer SIEM.</p>
-      <div class="chips">
-        <span class="chip">Oracle Cloud</span><span class="chip">Terraform</span><span class="chip">CIS Benchmark</span><span class="chip">IaC CI/CD</span>
-      </div>
-    </div>
-
-    <div class="proj-card" data-num="#05">
-      <span class="client-badge mono">Artajasa</span>
-      <h3>GKE to Amazon EKS Migration</h3>
-      <p class="proj-impact">Led assessment, architecture design and secure AWS network setup to migrate Kubernetes workloads from Google Kubernetes Engine to Amazon EKS, ensuring scalability and operational stability after the move.</p>
-      <div class="chips">
-        <span class="chip">Amazon EKS</span><span class="chip">Kubernetes</span><span class="chip">AWS Networking</span><span class="chip">Security</span>
-      </div>
-    </div>
-
     <div class="proj-card" data-num="#06">
+      <span class="client-badge mono">Garudafood</span>
+      <h3>Amazon API Gateway &amp; EKS Fargate Upgrade</h3>
+      <p class="proj-impact">Implemented Amazon API Gateway in front of the MyGF mobile app services, from route design through Postman test collections, with handover accepted in February 2026. Upgraded Amazon EKS on Fargate from Kubernetes 1.32 to 1.35 in three sequential phases in one change window, after a deprecated-API scan, a Pod Disruption Budget audit and an add-on version plan for each phase.</p>
+      <div class="chips">
+        <span class="chip">Amazon API Gateway</span><span class="chip">Amazon EKS</span><span class="chip">Fargate</span><span class="chip">Postman</span>
+      </div>
+    </div>
+
+    <div class="proj-card" data-num="#07">
+      <span class="client-badge mono">Artajasa</span>
+      <h3>Replatform: GKE to Amazon EKS</h3>
+      <p class="proj-impact">Led assessment, architecture design and AWS network setup to move Kubernetes workloads from Google Kubernetes Engine to Amazon EKS.</p>
+      <div class="chips">
+        <span class="chip">Amazon EKS</span><span class="chip">Kubernetes</span><span class="chip">AWS Networking</span>
+      </div>
+    </div>
+
+    <div class="proj-card" data-num="#08">
       <span class="client-badge mono">Panin Dai-Ichi Life</span>
-      <h3>On-Premise Rancher to Amazon ECS Migration</h3>
-      <p class="proj-impact">Migrated container workloads from on-premise Rancher to Amazon ECS, covering platform assessment, target design, and AWS networking and security implementation with minimal disruption to production operations.</p>
+      <h3>Replatform: On-Premise Rancher to Amazon ECS</h3>
+      <p class="proj-impact">Rewrote every Rancher (Kubernetes) manifest from scratch as Amazon ECS task definitions and services, covering platform assessment, target design, and AWS networking and security.</p>
       <div class="chips">
         <span class="chip">Amazon ECS</span><span class="chip">Rancher</span><span class="chip">AWS Networking</span><span class="chip">Security</span>
       </div>
     </div>
 
-    <div class="proj-card" data-num="#07">
+    <div class="proj-card" data-num="#09">
       <span class="client-badge mono">BRI Danareksa</span>
-      <h3>DR Site &amp; API Management Migration</h3>
-      <p class="proj-impact">Designed and implemented an AWS-based disaster recovery site and migrated on-premise API management to Amazon API Gateway, with secure network architecture and access controls.</p>
+      <h3>Replatform: API Management to Amazon API Gateway, plus DR</h3>
+      <p class="proj-impact">Moved on-premise API management to Amazon API Gateway and designed and built an AWS disaster recovery site.</p>
       <div class="chips">
-        <span class="chip">AWS</span><span class="chip">Amazon API Gateway</span><span class="chip">Disaster Recovery</span><span class="chip">Security</span>
+        <span class="chip">Amazon API Gateway</span><span class="chip">Disaster Recovery</span><span class="chip">AWS</span>
       </div>
     </div>
 
@@ -116,7 +134,7 @@
   <div class="era-label" style="margin-top: 40px;">PT Mastersystem Infotama · Dec 2021 – Jul 2024</div>
   <div class="project-cards">
 
-    <div class="proj-card" data-num="#08">
+    <div class="proj-card" data-num="#10">
       <span class="client-badge mono">Telkomsel</span>
       <h3>Virtual Assistant — OpenShift to Amazon EKS</h3>
       <p class="proj-impact">Migrated the Virtual Assistant platform from on-premise OpenShift to Amazon EKS, covering assessment, target architecture design, and secure AWS network and security setup at enterprise scale.</p>
@@ -125,7 +143,7 @@
       </div>
     </div>
 
-    <div class="proj-card" data-num="#09">
+    <div class="proj-card" data-num="#11">
       <span class="client-badge mono">Telkomsel</span>
       <h3>MePro — OpenShift to Amazon EKS Migration</h3>
       <p class="proj-impact">Led the migration of the MePro application from on-premise OpenShift to Amazon EKS through platform assessment, architecture design and AWS security implementation.</p>
@@ -134,7 +152,7 @@
       </div>
     </div>
 
-    <div class="proj-card" data-num="#10">
+    <div class="proj-card" data-num="#12">
       <span class="client-badge mono">Telkomsel</span>
       <h3>MePro Extension — AWS Modernization</h3>
       <p class="proj-impact">Modernized the existing AWS environment by enhancing the architecture and integrating CloudFront and Redis to improve performance, scalability and reliability.</p>
@@ -143,7 +161,7 @@
       </div>
     </div>
 
-    <div class="proj-card" data-num="#11">
+    <div class="proj-card" data-num="#13">
       <span class="client-badge mono">PT. Bayan Resources Tbk</span>
       <h3>Disaster Recovery Site on AWS</h3>
       <p class="proj-impact">Delivered the procurement and implementation of an AWS-based disaster recovery site, including architecture design and secure network and access configuration to meet enterprise continuity requirements.</p>
@@ -159,28 +177,34 @@
 <section class="section" id="personal">
   <div class="section-head">
     <h2>Personal builds.</h2>
-    <span class="tag mono">// side-gig · <span>self-hosted</span></span>
+    <span class="tag mono">// side-gig · <span>in production</span></span>
   </div>
   <div class="project-cards">
 
     <div class="proj-card" data-num="⚡">
-      <span class="client-badge mono">youtube-clipper</span>
-      <h3>AI Video Pipeline &amp; Side Business</h3>
-      <p class="proj-impact">A Python CLI and local web GUI that turns long-form video into short-form vertical clips, each shipping with per-platform upload copy for TikTok, Instagram Reels, YouTube Shorts and X. The pipeline runs yt-dlp or a local source, faster-whisper for word-level transcription, Claude for segment ranking and copywriting, then ffmpeg and mediapipe for face-tracked reframing, karaoke captions and overlays. I run the themed accounts it publishes to, so the distribution side is mine as well as the tooling.</p>
+      <span class="client-badge mono">csps-calc</span>
+      <h3>Multi-Cloud Cost Calculator</h3>
+      <p class="proj-impact">Prices one architecture on AWS, Google Cloud, Oracle Cloud and Azure on the same board. Cards nest like the design (disk in VM, VM in cluster), a site moves to another cloud in one step, and each card compares on-demand with commitment discounts. A daily GitHub Actions job pulls list prices with Go fetchers, runs the tests and deploys to Vercel. <a class="read-more mono" href="https://csps-calc.vercel.app" target="_blank" rel="noopener">csps-calc.vercel.app →</a></p>
       <div class="chips">
-        <span class="chip">Python</span><span class="chip">ffmpeg</span><span class="chip">faster-whisper</span><span class="chip">Claude API</span><span class="chip">mediapipe</span>
+        <span class="chip">Go</span><span class="chip">Svelte</span><span class="chip">GitHub Actions</span><span class="chip">Vercel</span><span class="chip">Supabase</span>
       </div>
     </div>
-
+    <div class="proj-card" data-num="⚡">
+      <span class="client-badge mono">bundahara</span>
+      <h3>Personal Finance Web App for Indonesia</h3>
+      <p class="proj-impact">Co-built and in production with open sign-up. An Expo Router web bundle on Cloudflare Pages talks to Supabase Postgres with row-level security, plan gating and multi-currency. Receipt OCR and Midtrans billing keep their keys server-side, and 123 adversarial tests check that no user can read another user's data. <a class="read-more mono" href="https://www.bundahara.app" target="_blank" rel="noopener">bundahara.app →</a></p>
+      <div class="chips">
+        <span class="chip">Expo Router</span><span class="chip">Cloudflare Pages</span><span class="chip">Supabase</span><span class="chip">Postgres RLS</span><span class="chip">Midtrans</span>
+      </div>
+    </div>
     <div class="proj-card" data-num="⚡">
       <span class="client-badge mono">this site</span>
       <h3>Interactive Architecture Portfolio</h3>
-      <p class="proj-impact">Personal portfolio built as an interactive AWS-style architecture diagram, because an infrastructure engineer's site should look like a system diagram. Hand-written HTML and CSS with no framework or build step, deployed on Vercel. The AI assistant runs on a self-hosted Ollama instance served through a serverless endpoint, with a rule-based fallback that takes over automatically when the model is not reachable.</p>
+      <p class="proj-impact">Built as an AWS-style architecture diagram, because an infrastructure engineer's site should look like a system diagram. Hand-written HTML and CSS with no framework, deployed on Vercel. The assistant on the home page runs on Groq through a serverless function, with a scripted fallback for when the model is busy.</p>
       <div class="chips">
-        <span class="chip">Vanilla HTML/CSS/JS</span><span class="chip">Vercel</span><span class="chip">Ollama</span><span class="chip">Serverless</span>
+        <span class="chip">Vanilla HTML/CSS/JS</span><span class="chip">Vercel</span><span class="chip">Groq</span><span class="chip">Serverless</span>
       </div>
     </div>
-
   </div>
 </section>
 

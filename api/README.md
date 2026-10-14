@@ -1,61 +1,34 @@
 # Vercel Serverless Functions
 
-The chatbot backend is now deployed as Vercel serverless functions.
+The chatbot backend runs as Vercel serverless functions on the same domain as the site.
 
-## Structure
+| Endpoint | Method | Returns |
+|---|---|---|
+| `/api/health` | GET | `{ "status": "ok", "mode": "ai-powered" \| "rule-based" }` |
+| `/api/chat` | POST `{ message, conversationHistory }` | `{ "reply": "...", "mode": "...", "model"?: "..." }` |
 
-```
-api/
-├── health.js   - Health check endpoint
-└── chat.js     - Chatbot endpoint
-```
+## How `/api/chat` answers
 
-## Endpoints
+1. With `GROQ_API_KEY` set, it calls Groq (`GROQ_MODEL`, default `openai/gpt-oss-20b`).
+2. On any Groq error, including HTTP 429 when the free-plan limit is hit, it answers from the scripted
+   knowledge base in `getRuleBasedResponse`.
 
-**Health Check:**
-- URL: `https://your-site.vercel.app/api/health`
-- Method: GET
-- Response: `{ "status": "ok", "mode": "rule-based" }`
+Groq meters quota per model. The same key serves csps-calc (`openai/gpt-oss-120b`) and Bundahara
+(`qwen/qwen3.8-27b`), so this site uses a model of its own.
 
-**Chat:**
-- URL: `https://your-site.vercel.app/api/chat`
-- Method: POST
-- Body: `{ "message": "your question" }`
-- Response: `{ "reply": "...", "mode": "rule-based" }`
+Input limits: message up to 1,000 characters, the last 10 history turns, user/assistant roles only.
 
-## Benefits
+## Environment (Vercel project settings)
 
-✅ Same domain as frontend (no CORS issues)
-✅ Auto-deploys with your site
-✅ Always available (no cold starts)
-✅ Free tier: 100k requests/month
-✅ No separate backend to maintain
+| Variable | Required | Value |
+|---|---|---|
+| `GROQ_API_KEY` | yes, for live answers | the shared Groq key (source: `side-gig/finance-tracker/code/.env`) |
+| `GROQ_MODEL` | no | override the model id |
 
-## Local Testing
+## Keeping the facts current
 
-```bash
-# Install Vercel CLI
-npm i -g vercel
-
-# Run locally
-vercel dev
-```
-
-Then visit `http://localhost:3000`
+`SYSTEM_PROMPT` and `getRuleBasedResponse` in `chat.js` carry the CV facts. Update both when the CV changes.
 
 ## Deployment
 
-Just push to GitHub - Vercel auto-deploys everything including API functions.
-
-```bash
-git add .
-git commit -m "Add serverless chatbot backend"
-git push origin main
-```
-
-## Future: AI Integration
-
-To add Ollama/AI mode later:
-1. Keep these functions as fallback
-2. Add external AI service (OpenAI, Anthropic)
-3. Or deploy Ollama on separate VPS and call it from here
+Push `main` from WSL (personal GitHub account). Vercel deploys the site and these functions.
