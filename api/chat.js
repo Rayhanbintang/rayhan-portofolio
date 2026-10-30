@@ -18,7 +18,7 @@ Profile:
 - Currently: Technical Consultant - DevOps Specialist at PT Mitra Integrasi Informatika (Feb 2025 - now). Client engagements across AWS and Oracle Cloud, from design documents through Terraform build, go-live and handover.
 - Previously: System Engineer at PT Mastersystem Infotama (Dec 2021 - Jul 2024), AWS migrations for enterprise clients; Junior Advisory, Human Capital, at Pertamina Training Center (Sep 2020 - Dec 2021).
 - Education: Bachelor's in Biomedical Engineering, Bandung Institute of Technology (ITB), 2020. Japanese language training, business and technical (Jul 2024 - Feb 2025).
-- 7 AWS certifications: Data Engineer Associate (Aug 2026), Gen AI Developer Professional, Security Specialty, DevOps Engineer Professional, Solutions Architect Professional, SysOps Administrator Associate, Solutions Architect Associate. Verifiable at credly.com/users/rayhan-abdurrahim/badges.
+- 9 AWS certifications: Developer Associate and Cloud Practitioner (both Oct 2026), Data Engineer Associate (Aug 2026), Gen AI Developer Professional, Security Specialty, DevOps Engineer Professional, Solutions Architect Professional, SysOps Administrator Associate, Solutions Architect Associate. Also holds AWS Partner accreditations (Technical, Business, Cloud Economics, Well-Architected). Verifiable at credly.com/users/rayhan-abdurrahim/badges.
 
 Work (these numbers are verified; do not round or embellish them):
 - Bank BJB, greenfield AWS platform: 3 Amazon EKS clusters on 20 managed nodes from a five-stack Terraform layout using for_each; VPC CNI custom networking on a secondary CIDR; 64 application repositories onboarded to GitLab CI and Amazon ECR; 63 services healthy under hub-and-spoke ArgoCD; three shared pipeline templates adopted across 59 repositories, every pipeline green; KEDA scaling a WebSocket service on connection count; 99.7% success rate under a 25,000-user load test against a parallel GCP bid.
@@ -193,7 +193,7 @@ function getRuleBasedResponse(message) {
 
   // Experience / background
   if (/experience|background|years|career|about/.test(msg)) {
-    return "Six years of professional experience, the last four-plus in cloud infrastructure for enterprise clients in Indonesia. At PT Mitra Integrasi Informatika since Feb 2025, before that System Engineer at PT Mastersystem Infotama for two and a half years.\n\nHe started in biomedical engineering at ITB, spent his first job in HR advisory, then moved into infrastructure. Seven AWS certifications, three at Professional level.";
+    return "Six years of professional experience, the last four-plus in cloud infrastructure for enterprise clients in Indonesia. At PT Mitra Integrasi Informatika since Feb 2025, before that System Engineer at PT Mastersystem Infotama for two and a half years.\n\nHe started in biomedical engineering at ITB, spent his first job in HR advisory, then moved into infrastructure. Nine AWS certifications, three at Professional level.";
   }
 
   // Default

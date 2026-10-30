@@ -256,9 +256,11 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
 /* certifications */
 .certs-grid {
   display: grid;
-  grid-template-columns: repeat(7, 1fr);
+  grid-template-columns: repeat(9, 1fr);
   gap: 14px;
 }
+.badges-head { margin-top: 48px; }
+.badges-head h3 { font-size: 22px; font-weight: 700; margin: 0; letter-spacing: -0.02em; }
 .cert {
   aspect-ratio: 1;
   background: var(--bg-2);
